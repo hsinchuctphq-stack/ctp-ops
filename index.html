@@ -425,7 +425,7 @@ body{background:var(--bg);color:var(--ink)}
 .pr .crew i{font-style:normal;background:#e3eaf6;padding:1mm 2mm;font-size:7pt;white-space:nowrap}
 .pr .crew div.l i{background:#f3dcec}
 .pr .crew b{padding:1mm 2mm;font-weight:500;font-size:8.5pt}
-.pr .kp{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid #1d2150;margin-top:2.5mm}
+.pr .kp{display:grid;grid-template-columns:repeat(8,1fr);border:1px solid #1d2150;margin-top:2.5mm}
 .pr .kp div{padding:1.3mm 2mm;border-right:1px solid #c8cbdc}.pr .kp div:last-child{border:0}
 .pr .kp i{font-style:normal;font-size:6.6pt;color:#4b5080;display:block}
 .pr .kp b{font:700 12pt var(--f-num)}
@@ -570,9 +570,11 @@ body{background:var(--bg);color:var(--ink)}
 @media (max-width:700px){.sh-form{grid-template-columns:1fr}}
 .chip.bad{background:var(--bad-bg);color:var(--bad)}
 
-.kpis.k7{grid-template-columns:repeat(7,1fr)}
-@media (max-width:1100px){.kpis.k7{grid-template-columns:repeat(4,1fr)}}
-@media (max-width:640px){.kpis.k7{grid-template-columns:repeat(2,1fr)}}
+.kpis.k8{grid-template-columns:repeat(8,1fr)}
+@media (max-width:1100px){.kpis.k8{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:640px){.kpis.k8{grid-template-columns:repeat(2,1fr)}}
+.kpis.k8 .kpi .v{font-size:19px}
+.kpis.k8 .kpi .k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi .ks{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 </head>
@@ -623,10 +625,11 @@ body{background:var(--bg);color:var(--ink)}
       <button class="btn primary" type="button" id="d-print">列印 A4</button>
     </div>
 
-    <div class="kpis k7">
+    <div class="kpis k8">
       <div class="kpi"><div class="k">限時錦標賽流水</div><div class="v" id="k-gross-t">0</div><div class="ks" id="k-gross-t2"></div></div>
-      <div class="kpi"><div class="k">錦標賽（MTT）流水</div><div class="v" id="k-gross-m">0</div><div class="ks" id="k-gross-m2"></div></div>
-      <div class="kpi"><div class="k">發放獎金</div><div class="v" id="k-prize">0</div></div>
+      <div class="kpi"><div class="k" title="限時錦標賽發放獎金">限時錦標賽獎金</div><div class="v" id="k-prize-t">0</div><div class="ks" id="k-prize-t2"></div></div>
+      <div class="kpi"><div class="k" title="錦標賽（MTT）流水">MTT 錦標賽流水</div><div class="v" id="k-gross-m">0</div><div class="ks" id="k-gross-m2"></div></div>
+      <div class="kpi"><div class="k" title="錦標賽（MTT）發放獎金">MTT 錦標賽獎金</div><div class="v" id="k-prize-m">0</div><div class="ks" id="k-prize-m2"></div></div>
       <div class="kpi"><div class="k">場次／人次</div><div class="v" id="k-sess">0</div></div>
       <div class="kpi"><div class="k">應得金額</div><div class="v" id="k-due">0</div></div>
       <div class="kpi hl"><div class="k">本日實得</div><div class="v" id="k-act">—</div></div>
@@ -1215,11 +1218,11 @@ function calcSession(s){
 }
 function compute(d){
   const A={早:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0},跨:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0},晚:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0}};
-  const dist={};const T={jpSess:0,gross:0,grossT:0,grossM:0,sessT:0,sessM:0,headsT:0,headsM:0,prize:0,sup:0,rem:0,remj:0,cash:0,rep:0,heads:0,sess:0,fee:0};
+  const dist={};const T={jpSess:0,gross:0,grossT:0,grossM:0,prizeT:0,prizeM:0,supT:0,supM:0,sessT:0,sessM:0,headsT:0,headsM:0,prize:0,sup:0,rem:0,remj:0,cash:0,rep:0,heads:0,sess:0,fee:0};
   const rows=d.sessions.map(s=>{
     const c=calcSession(s);const a=A[s.shift]||A.早;
     if(num(s.n)>0){
-      T.sess++;if(c.jp)T.jpSess++;T.heads+=num(s.n);T.gross+=c.g;if(isMTT(s.type)){T.grossM+=c.g;T.sessM++;T.headsM+=num(s.n)}else{T.grossT+=c.g;T.sessT++;T.headsT+=num(s.n)}["prize","sup","rem","remj","cash","rep","fee"].forEach(k=>T[k]+=c[k]);
+      T.sess++;if(c.jp)T.jpSess++;T.heads+=num(s.n);T.gross+=c.g;if(isMTT(s.type)){T.grossM+=c.g;T.sessM++;T.headsM+=num(s.n);T.prizeM+=c.prize;T.supM+=c.sup}else{T.grossT+=c.g;T.sessT++;T.headsT+=num(s.n);T.prizeT+=c.prize;T.supT+=c.sup}["prize","sup","rem","remj","cash","rep","fee"].forEach(k=>T[k]+=c[k]);
       const t=tierOf(s.buy);if(t!=null)a.t[t]++;a.fee+=c.fee;a.disc+=num(s.disc);a.tk+=num(s.pr)+num(s.act);
       const b=num(s.buy);if(b)dist[b]=(dist[b]||0)+1;
     }
@@ -1365,7 +1368,8 @@ function refresh(){
   $("c-err-row").className=R.hasCount?(R.err===0?"good":"bad"):"";
   $("c-jp").textContent=fmt(R.jpFee);$("c-jp-note").textContent=`${R.T.jpSess} 場 × ${fmt(cfg.jpPer)}`;$("c-total").textContent=fmt(R.total);
   $("k-gross-t").textContent=fmt(R.T.grossT);$("k-gross-m").textContent=fmt(R.T.grossM);
-  $("k-gross-t2").textContent=`${R.T.sessT} 場・${fmt(R.T.headsT)} 人次`;$("k-gross-m2").textContent=`${R.T.sessM} 場・${fmt(R.T.headsM)} 人次`;$("k-prize").textContent=fmt(R.T.prize);$("k-sess").textContent=`${R.T.sess} / ${fmt(R.T.heads)}`;
+  $("k-gross-t2").textContent=`${R.T.sessT} 場・${fmt(R.T.headsT)} 人次`;$("k-gross-m2").textContent=`${R.T.sessM} 場・${fmt(R.T.headsM)} 人次`;$("k-prize-t").textContent=fmt(R.T.prizeT);$("k-prize-m").textContent=fmt(R.T.prizeM);
+  $("k-prize-t2").textContent=R.T.supT?`含營收補入 ${fmt(R.T.supT)}`:"";$("k-prize-m2").textContent=R.T.supM?`含營收補入 ${fmt(R.T.supM)}`:"";$("k-sess").textContent=`${R.T.sess} / ${fmt(R.T.heads)}`;
   $("k-due").textContent=fmt(R.due);$("k-act").textContent=fmt(R.should);$("k-err").textContent=R.hasCount?fmt(R.err):"—";
   $("k-err-box").className="kpi"+(R.hasCount?(R.err===0?" good":" bad"):"");
   const names=["大眾場次 1,200–3,400","中階場次 6,600–11,000","高額 22k–33k","豪客 54k+"];
@@ -1495,7 +1499,7 @@ function printHTML(d){
   return `<div class="pr">
     <div class="mast"><div><div class="org">華人德州撲克競技協會 · 竹科旗艦館</div><div class="ttl">工作日誌</div></div><div class="dt">${d.date.replace(/-/g,"/")}<span>（${wdOf(d.date)}）</span></div></div>
     <div class="crew"><div><i>早班值班</i><b>${esc(d.staff.em)}</b></div><div><i>早班櫃台</i><b>${esc(d.staff.ec)}</b></div><div class="l"><i>晚班值班</i><b>${esc(d.staff.lm)}</b></div><div class="l"><i>晚班櫃台</i><b>${esc(d.staff.lc)}</b></div></div>
-    <div class="kp"><div><i>限時錦標賽流水</i><b>${fmt(R.T.grossT)}</b></div><div><i>錦標賽（MTT）流水</i><b>${fmt(R.T.grossM)}</b></div><div><i>發放獎金</i><b>${fmt(R.T.prize)}</b></div><div><i>場次／人次</i><b>${R.T.sess} / ${fmt(R.T.heads)}</b></div>
+    <div class="kp"><div><i>限時流水</i><b>${fmt(R.T.grossT)}</b></div><div><i>限時發放獎金</i><b>${fmt(R.T.prizeT)}</b></div><div><i>MTT 流水</i><b>${fmt(R.T.grossM)}</b></div><div><i>MTT 發放獎金</i><b>${fmt(R.T.prizeM)}</b></div><div><i>場次／人次</i><b>${R.T.sess} / ${fmt(R.T.heads)}</b></div>
       <div><i>應得金額</i><b>${fmt(R.due)}</b></div><div class="hl"><i>本日實得</i><b>${fmt(R.should)}</b></div><div class="${R.hasCount&&R.err!==0?"bad":""}"><i>錯帳金額</i><b>${R.hasCount?fmt(R.err):""}</b></div></div>
     <h3>賽事明細 <small>獎池＝人次 × 入獎池（MTT 進位至百位）；未達保底／保證由營收補入；MTT 不含大祕寶</small></h3>
     <table class="st">${head}<tbody>${body||`<tr><td colspan="17" style="color:#8a8fa8">本日無場次</td></tr>`}</tbody>
