@@ -552,6 +552,23 @@ body{background:var(--bg);color:var(--ink)}
 .cr-pays div{display:flex;gap:14px;align-items:center;font-size:12.5px}
 .cr-pays b{min-width:80px;text-align:right}
 .icon-x.armed{color:var(--bad);border-color:var(--bad)}
+
+/* 跨班、右側阿米巴 */
+.sess.cross{border-left-color:#c9952b;background:linear-gradient(90deg,var(--early-bg),var(--late-bg))}
+.seg button.on.x{background:#c9952b;color:#fff}
+.amoeba th.x{color:#c9952b}
+.pr .st tr.x td.sh{color:#a8781a;font-weight:700}.pr .st tr.x td{background:#fbf5e6}
+@media (min-width:1280px){
+  .day-aside{max-height:calc(100vh - 24px);overflow-y:auto;scrollbar-width:thin}
+  .day-aside .amoeba-card{margin-top:12px}
+  .day-aside .amoeba td,.day-aside .amoeba th{padding:4px 5px;font-size:12.5px}
+  .day-main .amoeba-card.bottom{display:none}
+}
+@media (max-width:1279px){.day-aside .amoeba-card.side{display:none}}
+
+.sh-form{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+@media (max-width:700px){.sh-form{grid-template-columns:1fr}}
+.chip.bad{background:var(--bad-bg);color:var(--bad)}
 </style>
 </head>
 <body>
@@ -631,6 +648,11 @@ body{background:var(--bg);color:var(--ink)}
           <tr id="c-err-row"><td>錯帳金額 <small>實際點收 − 有加大祕寶</small></td><td class="op"></td><td class="v" id="c-err">—</td></tr>
         </table>
       </div>
+      <div class="card amoeba-card side">
+        <div class="card-h"><h2>阿米巴 <span class="sub">依班別自動彙整</span></h2></div>
+        <div class="tbl-wrap"><table class="amoeba" id="amoeba-side"></table></div>
+        <div class="dist" id="dist-side"></div>
+      </div>
     </aside>
     <div class="day-main">
     <div class="card">
@@ -684,8 +706,8 @@ body{background:var(--bg);color:var(--ink)}
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-h"><h2>阿米巴 <span class="sub">依早／晚班自動彙整</span></h2></div>
+    <div class="card amoeba-card bottom">
+      <div class="card-h"><h2>阿米巴 <span class="sub">依班別自動彙整</span></h2></div>
       <div class="tbl-wrap"><table class="amoeba" id="amoeba"></table></div>
       <div class="dist" id="dist"></div>
     </div>
@@ -1015,6 +1037,10 @@ body{background:var(--bg);color:var(--ink)}
       <div class="card-h"><h2>雲端同步（多人共用）</h2><span class="spacer"></span><span id="cc-state" class="chip">只存在這台電腦</span></div>
       <div id="cc-body"></div>
     </div>
+    <div class="card cloud-card" id="sheet-card">
+      <div class="card-h"><h2>試算表備份</h2><span class="spacer"></span><span id="sh-state"></span></div>
+      <div id="sh-body"></div>
+    </div>
     <div class="grid3">
       <div class="card">
         <div class="card-h"><h2>保底限時／一般賽事</h2><span class="spacer"></span><button class="btn sm add" type="button" data-addref="tlt">＋ 新增</button></div>
@@ -1182,7 +1208,7 @@ function calcSession(s){
   return {g,cash,inpool,fee,sup,prize,round:base-inpool,rem,jp,tkv,tro,pc,pcSet,pdiff,np,ne,npBad:isMTT(s.type)&&num(s.np)>n,remj:rem+(jp?num(cfg.jpPer):0),rep:cash+num(s.pool),found:L.found||!buy};
 }
 function compute(d){
-  const A={早:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0},晚:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0}};
+  const A={早:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0},跨:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0},晚:{t:[0,0,0,0],fee:0,disc:0,tk:0,meal:0,support:0}};
   const dist={};const T={jpSess:0,gross:0,prize:0,sup:0,rem:0,remj:0,cash:0,rep:0,heads:0,sess:0,fee:0};
   const rows=d.sessions.map(s=>{
     const c=calcSession(s);const a=A[s.shift]||A.早;
@@ -1229,6 +1255,7 @@ function setStatus(){
 
 /* ================= 今日報表：繪製 ================= */
 const $=id=>document.getElementById(id);
+const segS=(path,val)=>`<div class="seg seg-sh" data-seg="${path}"><button type="button" class="${val==="早"?"on e":""}" data-v="早">早</button><button type="button" class="${val==="跨"?"on x":""}" data-v="跨" title="跨班：早班開始、晚班結束">跨</button><button type="button" class="${val==="晚"?"on l":""}" data-v="晚">晚</button></div>`;
 const seg=(path,val)=>`<div class="seg" data-seg="${path}"><button type="button" class="${val==="早"?"on e":""}" data-v="早">早</button><button type="button" class="${val==="晚"?"on l":""}" data-v="晚">晚</button></div>`;
 const numIn=(path,val,ph="")=>`<input class="in n" data-k="${path}" value="${esc(show(val))}" inputmode="numeric" placeholder="${ph}">`;
 const txtIn=(path,val,ph="",extra="")=>`<input class="in" data-k="${path}" value="${esc(val)}" placeholder="${ph}" ${extra}>`;
@@ -1242,10 +1269,10 @@ function renderSessions(){
     const b=`sessions.${i}`;const opts=buys(isMTT(s.type)?cfg.mttList:cfg.tlt);const cur=num(s.buy);if(cur&&!opts.includes(cur))opts.push(cur);
     const dsum=num(s.pr)+num(s.act)+num(s.disc)+num(s.jp)+num(s.pool);
     const open=openDisc.has(s.id)||dsum>0;
-    return `<div class="sess ${s.shift==="晚"?"late":""}" data-sid="${s.id}">
+    return `<div class="sess ${s.shift==="晚"?"late":s.shift==="跨"?"cross":""}" data-sid="${s.id}">
       <div class="sess-row">
         <span class="s-idx">${i+1}</span>
-        <div class="f"><span>班別</span>${seg(b+".shift",s.shift)}</div>
+        <div class="f"><span>班別</span>${segS(b+".shift",s.shift)}</div>
         <label class="f w-type"><span>類型</span><select class="in" data-k="${b}.type" data-rebuild="1">${Object.entries(TYPE).map(([k,v])=>`<option value="${k}"${s.type===k?" selected":""}>${v}</option>`).join("")}</select></label>
         ${isMTT(s.type)?`<label class="f w-name"><span>賽事名稱</span>${txtIn(b+".name",s.name,"選擇或輸入",'list="dl-names"')}</label>`:""}
         <label class="f w-buy"><span>買入</span><select class="in num" data-k="${b}.buy"><option value=""></option>${opts.map(l=>`<option value="${l}"${cur===l?" selected":""}>${l.toLocaleString("en-US")}</option>`).join("")}</select></label>
@@ -1335,12 +1362,14 @@ function refresh(){
   $("k-due").textContent=fmt(R.due);$("k-act").textContent=fmt(R.should);$("k-err").textContent=R.hasCount?fmt(R.err):"—";
   $("k-err-box").className="kpi"+(R.hasCount?(R.err===0?" good":" bad"):"");
   const names=["大眾場次 1,200–3,400","中階場次 6,600–11,000","高額 22k–33k","豪客 54k+"];
-  $("amoeba").innerHTML=`<tr><th>項目</th><th class="e">早班</th><th class="l">晚班</th><th>合計</th></tr>`+
-    names.map((n,i)=>`<tr><td>${n}</td><td class="v">${R.A.早.t[i]}</td><td class="v">${R.A.晚.t[i]}</td><td class="v">${R.A.早.t[i]+R.A.晚.t[i]}</td></tr>`).join("")+
+  const hx=R.A.跨.t.some(x=>x)||R.A.跨.fee>0;const SH=hx?["早","跨","晚"]:["早","晚"];
+  const amHTML=`<tr><th>項目</th>${SH.map(k=>`<th class="${{早:"e",跨:"x",晚:"l"}[k]}">${k}班</th>`).join("")}<th>合計</th></tr>`+
+    names.map((n,i)=>`<tr><td>${n}</td>${SH.map(k=>`<td class="v">${R.A[k].t[i]}</td>`).join("")}<td class="v">${SH.reduce((a,k)=>a+R.A[k].t[i],0)}</td></tr>`).join("")+
     [["行政費總額（原價）","fee"],["優惠與折抵（減項）","disc"],["活動／公關票券（非獎池）","tk"],["點餐與公關開銷（支出）","meal"],["人力支援（人事成本）","support"]]
-      .map(([n,k])=>`<tr><td>${n}</td><td class="v">${fmt(R.A.早[k])}</td><td class="v">${fmt(R.A.晚[k])}</td><td class="v">${fmt(R.A.早[k]+R.A.晚[k])}</td></tr>`).join("");
+      .map(([n,k])=>`<tr><td>${n}</td>${SH.map(x=>`<td class="v">${fmt(R.A[x][k])}</td>`).join("")}<td class="v">${fmt(SH.reduce((a,x)=>a+R.A[x][k],0))}</td></tr>`).join("");
+  $("amoeba").innerHTML=amHTML;$("amoeba-side").innerHTML=amHTML;
   const lv=[...new Set([...buys(cfg.tlt),...Object.keys(R.dist).map(Number)])].sort((a,b)=>a-b);
-  $("dist").innerHTML=lv.map(l=>`<span class="${R.dist[l]?"":"zero"}">${l.toLocaleString("en-US")}<b>${R.dist[l]||0}</b></span>`).join("");
+  $("dist").innerHTML=lv.map(l=>`<span class="${R.dist[l]?"":"zero"}">${l.toLocaleString("en-US")}<b>${R.dist[l]||0}</b></span>`).join("");$("dist-side").innerHTML=$("dist").innerHTML;
 }
 
 /* ================= 今日報表：操作 ================= */
@@ -1415,7 +1444,7 @@ function printHTML(d){
     const sub={cash:0,prize:0,sup:0,rem:0,remj:0,rep:0,n:0};
     const rows=g.list.map(({s,c})=>{n++;["cash","prize","sup","rem","remj","rep"].forEach(k=>sub[k]+=c[k]);sub.n+=num(s.n);
       const label=isMTT(s.type)?`${esc(s.name||"")} ${esc(s.no||"")}${c.np?`<small style="display:block;color:#666">不計入獎池 ${fmt(c.np)} 人次</small>`:""}${c.tkv||c.tro?`<small style="display:block;color:#666">現金 ${fmt(c.pc)}／票券 ${fmt(c.tkv)}／獎盃 ${fmt(c.tro)}</small>`:""}`:`${esc(s.no||"")}${s.type==="tlt"&&s.fmt?" "+esc(s.fmt):""}${s.type==="bd"&&s.over?"　過保 "+esc(s.over):""}${num(s.tables)>1?"　"+num(s.tables)+" 桌":""}`;
-      return `<tr class="${s.shift==="晚"?"l":"e"}"><td>${n}</td><td class="sh">${s.shift}</td><td style="text-align:left;padding-left:1.5mm;overflow:hidden;white-space:nowrap">${label}</td>
+      return `<tr class="${s.shift==="晚"?"l":s.shift==="跨"?"x":"e"}"><td>${n}</td><td class="sh">${s.shift}</td><td style="text-align:left;padding-left:1.5mm;overflow:hidden;white-space:nowrap">${label}</td>
         <td class="r b">${fmt(num(s.buy))}</td><td class="r">${z(s.n)}</td><td class="r">${z(s.gtd)}</td>
         <td class="r">${z(s.pr)}</td><td class="r">${z(s.act)}</td><td class="r">${z(s.disc)}</td><td class="r">${z(s.jp)}</td><td class="r">${z(s.pool)}</td>
         <td class="r b">${fmt(c.cash)}</td><td class="r">${fmt(c.prize)}</td><td class="r sup">${c.sup?fmt(c.sup):""}</td><td class="r b ${c.rem<0?"neg":""}">${fmt(c.rem)}</td><td class="r">${c.jp?fmt(c.remj):"—"}</td><td class="r rep b">${fmt(c.rep)}</td></tr>`}).join("");
@@ -1447,9 +1476,10 @@ function printHTML(d){
     <tr><td>實際點收現金（含大祕寶）</td><td class="op"></td><td class="v">${R.hasCount?fmt(R.counted):""}</td></tr>
     <tr class="${R.hasCount&&R.err!==0?"bad":""}"><td>錯帳金額（點收−有加大祕寶）</td><td class="op"></td><td class="v">${R.hasCount?fmt(R.err):""}</td></tr></table>`;
   const am=[["大眾 1.2k–3.4k",0],["中階 6.6k–11k",1],["高額 22k–33k",2],["豪客 54k+",3]];
-  const amoeba=`<table class="lg am"><tr><th>項目</th><th>早班</th><th>晚班</th></tr>
-    ${am.map(([nm,i])=>`<tr><td>${nm}</td><td class="v">${R.A.早.t[i]}</td><td class="v">${R.A.晚.t[i]}</td></tr>`).join("")}
-    ${[["行政費總額（原價）","fee"],["優惠與折抵（減）","disc"],["活動票券（非獎池）","tk"],["點餐與公關（支出）","meal"],["人力支援（人事）","support"]].map(([nm,k])=>`<tr><td>${nm}</td><td class="v">${fmt(R.A.早[k])}</td><td class="v">${fmt(R.A.晚[k])}</td></tr>`).join("")}</table>`;
+  const PSH=(R.A.跨.t.some(x=>x)||R.A.跨.fee>0)?["早","跨","晚"]:["早","晚"];
+  const amoeba=`<table class="lg am"><tr><th>項目</th>${PSH.map(k=>`<th>${k}班</th>`).join("")}</tr>
+    ${am.map(([nm,i])=>`<tr><td>${nm}</td>${PSH.map(k=>`<td class="v">${R.A[k].t[i]}</td>`).join("")}</tr>`).join("")}
+    ${[["行政費總額（原價）","fee"],["優惠與折抵（減）","disc"],["活動票券（非獎池）","tk"],["點餐與公關（支出）","meal"],["人力支援（人事）","support"]].map(([nm,k])=>`<tr><td>${nm}</td>${PSH.map(x=>`<td class="v">${fmt(R.A[x][k])}</td>`).join("")}</tr>`).join("")}</table>`;
   const lv=[...new Set([...buys(cfg.tlt),...Object.keys(R.dist).map(Number)])].sort((a,b)=>a-b);
   const lab=l=>l>=1000?(l/1000)+"k":l;
   const dst=`<table class="dst"><tr>${lv.map(l=>`<th class="${R.dist[l]?"":"z"}">${lab(l)}</th>`).join("")}</tr><tr>${lv.map(l=>`<td class="${R.dist[l]?"":"z"}">${R.dist[l]||0}</td>`).join("")}</tr></table>`;
@@ -1498,7 +1528,7 @@ function renderHistory(){
   const list=store.days().filter(x=>x.startsWith(m)).map(loadDay);
   const tot={sess:0,heads:0,gross:0,prize:0,sup:0,due:0,actual:0,err:0,fe:0,fl:0};
   const rows=list.map(d=>{const R=compute(d);
-    tot.sess+=R.T.sess;tot.heads+=R.T.heads;tot.gross+=R.T.gross;tot.prize+=R.T.prize;tot.sup+=R.T.sup;tot.due+=R.due;tot.actual+=R.should;tot.err+=R.err||0;tot.fe+=R.A.早.fee;tot.fl+=R.A.晚.fee;
+    tot.sess+=R.T.sess;tot.heads+=R.T.heads;tot.gross+=R.T.gross;tot.prize+=R.T.prize;tot.sup+=R.T.sup;tot.due+=R.due;tot.actual+=R.should;tot.err+=R.err||0;tot.fe+=R.A.早.fee+R.A.跨.fee/2;tot.fl+=R.A.晚.fee+R.A.跨.fee/2;
     return `<tr class="${d.date===D.date?"cur":""}"><td>${d.date.slice(5).replace("-","/")} ${wdOf(d.date)}</td><td>${R.T.sess}</td><td>${fmt(R.T.heads)}</td><td>${fmt(R.T.gross)}</td><td>${fmt(R.T.prize)}</td><td>${R.T.sup?fmt(R.T.sup):""}</td><td>${fmt(R.A.早.fee)}</td><td>${fmt(R.A.晚.fee)}</td><td>${fmt(R.due)}</td><td>${fmt(R.should)}</td>
       <td class="${R.hasCount?(R.err===0?"ok":"bad"):""}">${R.hasCount?fmt(R.err):"未點收"}</td>
       <td class="act"><button class="btn sm" data-open="${d.date}">開啟</button><button class="btn sm" data-print="${d.date}">列印</button><button class="btn sm danger" data-del="${d.date}">刪除</button></td></tr>`}).join("");
@@ -1599,12 +1629,12 @@ function monthData(m){
     S.vOut+=vOut;S.vIn+=vIn;
     if(!saved.has(date)){rows.push({date,has:false,vOut,vIn});continue}
     const R=compute(loadDay(date));
-    const disc=R.A.早.disc+R.A.晚.disc,fee=R.A.早.fee+R.A.晚.fee;
+    const disc=R.A.早.disc+R.A.跨.disc+R.A.晚.disc,fee=R.A.早.fee+R.A.跨.fee+R.A.晚.fee;
     const r={date,has:R.T.sess>0||R.hasCount||R.crBack>0,R,fee,disc,vOut,vIn};rows.push(r);
     if(!r.has)continue;
     S.days+=R.T.sess?1:0;S.sess+=R.T.sess;S.heads+=R.T.heads;S.gross+=R.T.gross;S.fee+=fee;S.disc+=disc;S.sup+=R.T.sup;S.prize+=R.T.prize;
     S.rem+=R.T.rem;S.exp+=R.E.total;S.petty+=R.E.petty;S.due+=R.due;S.should+=R.should;S.jp+=R.jpFee;S.crNew+=R.crNew;S.crBack+=R.crBack;
-    S.fe+=R.A.早.fee;S.fl+=R.A.晚.fee;
+    S.fe+=R.A.早.fee+R.A.跨.fee/2;S.fl+=R.A.晚.fee+R.A.跨.fee/2;
     if(R.hasCount){S.err+=R.err;S.counted+=R.counted;if(R.err)S.errDays++}
   }
   const cats={};vlist.filter(e=>e.kind==="out"&&!e.auto).forEach(e=>{const k=e.cat||"其他";cats[k]=(cats[k]||0)+num(e.amt)});
@@ -2746,7 +2776,7 @@ function showView(v){
   curView=v;
   if(v==="day")renderDay();
   if(v==="history"){if(!$("h-month").value)$("h-month").value=D.date.slice(0,7);renderHistory()}
-  if(v==="settings"){renderCloud();renderSettings();renderFinSettings()}
+  if(v==="settings"){renderCloud();shRender();renderSettings();renderFinSettings()}
   window.scrollTo(0,0);
 }
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>showView(t.dataset.view)));
@@ -3117,6 +3147,91 @@ document.addEventListener("submit",async e=>{if(e.target.id!=="cc-add")return;e.
   const em=$("cc-email").value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast("請輸入正確的 email");return}
   const list=[...new Set([...(CLOUD.ws.members||[]),em])];
   try{await CLOUD.api.setMembers(list);CLOUD.ws.members=list;renderCloud();toast(`已加入 ${em}，請對方打開網址並用這個帳號登入`)}catch(err){toast("加入失敗："+(err&&err.message||err))}});
+
+/* ================= 試算表備份（Google Apps Script 網頁應用程式） =================
+   每次存檔後，把變動的資料送到 Google 試算表：
+   ・原始資料：每個資料鍵一列（完整 JSON，可用來還原）
+   ・日報、場次、零用金庫、掛帳、手動交易：整理成表格，方便直接查看與追蹤 */
+const SHK={pend:"ctp-hs~shpend",last:"ctp-hs~shlast",err:"ctp-hs~sherr"};
+const SHEET={pend:new Set(),touched:{},timer:null,busy:false};
+try{SHEET.pend=new Set(JSON.parse(lsGet(SHK.pend)||"[]"))}catch(e){}
+const shSave=()=>lsSet(SHK.pend,JSON.stringify([...SHEET.pend]));
+const shOn=()=>!!(cfg.sheet&&cfg.sheet.url&&cfg.sheet.token);
+function sheetTouch(k){SHEET.pend.add(k);SHEET.touched[k]=Date.now();shSave();if(!shOn())return;clearTimeout(SHEET.timer);SHEET.timer=setTimeout(sheetFlush,4000)}
+{const h=store.hook;store.hook=k=>{try{h&&h(k)}catch(e){}try{sheetTouch(k)}catch(e){}}}
+const SH_DAY_H=["日期","星期","早班值班","早班櫃台","晚班值班","晚班櫃台","場次數","總人次","總流水","發放獎金","營收補入","賽事剩餘現金","支出合計","補充零用金","應得金額","入會費","貼咖盈虧","其他收入／回帳","掛帳未收","收回掛帳","本日實得金額","大祕寶費用","有加大祕寶","實際點收現金","錯帳金額","錯帳明細","錯帳補充說明","其他備註","更新時間","更新者"];
+const SH_SESS_H=["日期","星期","序","班別","類型","買入","場次","形式／賽事名稱","總人次","不計入獎池人次","桌數","保底／保證獎池","公關票券／優惠券","活動","賽事優惠","HHJP票券","獎池票券","含大祕寶","現金","應發獎金","營收補入","剩餘現金","發放現金","發放獎池票券","發放獎盃"];
+const SH_VAULT_H=["日期","時間","類型","類別","項目說明","金額","請款人","經手人","金庫餘額","盤點誤差"];
+const SH_CR_H=["掛帳日","玩家","場次","掛帳金額","已回帳","未收餘額","經手人","狀態","回帳紀錄"];
+const SH_TX_H=["日期","館別","收支","一級科目","二級科目","項目","金額","付款方式","付款日期","歸屬月份","預估","備註"];
+function shOps(k,v){
+  const by=(CLOUD.user&&CLOUD.user.email)||"";const ts=new Date().toISOString();
+  if(k.startsWith("day:")){const date=k.slice(4);
+    if(!v)return [{op:"replace",sheet:"日報",header:SH_DAY_H,key:date,rows:[]},{op:"replace",sheet:"場次",header:SH_SESS_H,key:date,rows:[]}];
+    const d=Object.assign(blankDay(date),v);const R=compute(d);const st=d.staff||{};
+    const errs=(d.errs||[]).filter(r=>num(r.amt)||(r.note||"").trim()).map(r=>`${r.shift||""}班 ${r.sess||""} ${r.who||""} ${r.type||""} ${num(r.amt)} ${r.note||""}`.replace(/\s+/g," ").trim()).join("；");
+    const day=[date,wdOf(date),st.em||"",st.ec||"",st.lm||"",st.lc||"",R.T.sess,R.T.heads,R.T.gross,R.T.prize,R.T.sup,R.T.rem,R.E.total,R.E.petty,R.due,num(d.join),R.pl,R.E.oth,R.crNew,R.crBack,R.should,R.jpFee,R.total,R.hasCount?R.counted:"",R.hasCount?R.err:"",errs,d.errNote||"",d.note||"",ts,by];
+    const TY={bd:"保底限時",tlt:"一般賽事",gtd:"MTT 有保底",mtt:"MTT 無保底"};
+    const sess=d.sessions.map((s,i)=>{if(num(s.n)<=0)return null;const c=R.rows[i];
+      return [date,wdOf(date),i+1,s.shift||"",TY[s.type]||s.type,num(s.buy),s.no||"",isMTT(s.type)?(s.name||""):(s.fmt||""),num(s.n),isMTT(s.type)?num(s.np):"",num(s.tables)||"",num(s.gtd)||"",num(s.pr),num(s.act),num(s.disc),num(s.jp),num(s.pool),c.jp?"是":"",c.cash,c.prize,c.sup,c.rem,isMTT(s.type)?c.pc:"",isMTT(s.type)?c.tkv:"",isMTT(s.type)?c.tro:""]}).filter(Boolean);
+    return [{op:"upsert",sheet:"日報",header:SH_DAY_H,key:date,row:day},{op:"replace",sheet:"場次",header:SH_SESS_H,key:date,rows:sess}]}
+  if(k==="vault"){const {list}=vaultCalc();
+    return [{op:"rewrite",sheet:"零用金庫",header:SH_VAULT_H,rows:list.map(e=>[e.date,e.time||"",e.auto?"取出（日報）":(VK[e.kind]||e.kind),e.cat||"",e.desc||"",e.kind==="out"?-num(e.amt):num(e.amt),e.req||"",e.hand||"",e.after,e.diff??""])}]}
+  if(k==="credit"){
+    return [{op:"rewrite",sheet:"掛帳",header:SH_CR_H,rows:credit.filter(c=>c.player||num(c.amt)).slice().sort((a,b)=>a.date<b.date?-1:1).map(c=>[c.date,c.player||"",c.sess||"",num(c.amt),crPaidAmt(c),crLeft(c),c.hand||"",crOpen(c)?(crPaidAmt(c)?"部分回帳":"未收"):"已收清",crPays(c).map(p=>`${p.date} ${num(p.amt)} ${p.recv||""}${p.note?" "+p.note:""}`).join("；")])}]}
+  if(k==="fin:tx"){
+    return [{op:"rewrite",sheet:"手動交易",header:SH_TX_H,rows:(v||[]).slice().sort((a,b)=>a.date<b.date?-1:1).map(t=>[t.date,t.branch||"",t.dir==="in"?"收入":"支出",t.l1,t.l2,t.item||"",num(t.amt),t.pay||"",t.paydate||"",t.period||"",t.est?"是":"",t.note||""])}]}
+  return [];
+}
+function shItem(k){const v=store.get(k);
+  return {key:k,ts:new Date().toISOString(),by:(CLOUD.user&&CLOUD.user.email)||"",json:v==null?"":JSON.stringify(v),ops:shOps(k,v)}}
+async function sheetFlush(){
+  if(!shOn()||SHEET.busy||!SHEET.pend.size)return;
+  clearTimeout(SHEET.timer);SHEET.busy=true;shRender();
+  const keys=[...SHEET.pend].sort((a,b)=>(a.startsWith("day:")?1:0)-(b.startsWith("day:")?1:0)).slice(0,12);const sentAt=Date.now();
+  try{
+    const items=keys.map(shItem);
+    const r=await fetch(cfg.sheet.url,{method:"POST",body:JSON.stringify({token:cfg.sheet.token,items})});
+    const j=await r.json();if(!j.ok)throw new Error(j.err||"試算表回覆失敗");
+    (j.done||keys).forEach(k=>{if(!(SHEET.touched[k]>sentAt))SHEET.pend.delete(k)});shSave();
+    lsSet(SHK.last,String(Date.now()));lsDel(SHK.err);SHEET.busy=false;shRender();
+    if(SHEET.pend.size)SHEET.timer=setTimeout(sheetFlush,600);
+  }catch(e){
+    lsSet(SHK.err,String(e&&e.message||e));SHEET.busy=false;shRender();
+    SHEET.timer=setTimeout(sheetFlush,60000);
+  }
+}
+function shRender(){
+  const el=$("sh-body");if(!el||curView!=="settings")return;
+  const last=+lsGet(SHK.last),err=lsGet(SHK.err),c=cfg.sheet||{};
+  const st=!shOn()?`<span class="chip">尚未設定</span>`:SHEET.busy?`<span class="chip">上傳中…</span>`:err?`<span class="chip bad">上傳失敗</span>`:SHEET.pend.size?`<span class="chip">待上傳 ${SHEET.pend.size} 筆</span>`:`<span class="chip ok">已備份</span>`;
+  $("sh-state").innerHTML=st;
+  el.innerHTML=`<p class="note" style="margin-top:0">每次存檔後，資料會另外寫進一份 Google 試算表（日報、場次、零用金庫、掛帳、手動交易，以及可還原的完整原始資料）。網站或雲端出問題時，可以從試算表追查與還原。</p>
+    <div class="sh-form">
+      <label class="f"><span>Apps Script 網頁應用程式網址</span><input class="in" id="sh-url" value="${esc(c.url||"")}" placeholder="https://script.google.com/macros/s/…/exec"></label>
+      <label class="f"><span>驗證碼（TOKEN）</span><input class="in" id="sh-token" value="${esc(c.token||"")}" placeholder="和 Apps Script 裡設定的一樣"></label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+      <button class="btn primary" type="button" id="sh-save">儲存並測試</button>
+      ${shOn()?`<button class="btn" type="button" id="sh-all">全部上傳（第一次或要重建時）</button><button class="btn" type="button" id="sh-now"${SHEET.pend.size?"":" disabled"}>立即上傳</button>`:""}
+    </div>
+    <p class="note">${last?`最後成功：${new Date(last).toLocaleString("zh-TW",{hour12:false})}`:"尚未上傳過"}${SHEET.pend.size?`　待上傳 ${SHEET.pend.size} 筆`:""}${err?`<br><span style="color:var(--bad)">錯誤：${esc(err)}（系統會每分鐘自動重試）</span>`:""}</p>`;
+}
+document.addEventListener("click",async e=>{
+  const t=e.target;
+  if(t.id==="sh-save"){const url=$("sh-url").value.trim(),token=$("sh-token").value.trim();
+    if(!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec/.test(url)){toast("網址格式不對，應為 https://script.google.com/macros/s/…/exec");return}
+    if(token.length<6){toast("請輸入驗證碼");return}
+    t.disabled=true;t.textContent="測試中…";
+    try{const r=await fetch(url,{method:"POST",body:JSON.stringify({token,ping:1})});const j=await r.json();
+      if(!j.ok)throw new Error(j.err||"失敗");cfg.sheet={url,token};saveCfg();lsDel(SHK.err);toast("連線成功，已儲存。第一次使用請按「全部上傳」")}
+    catch(err){toast("連線失敗："+(err&&err.message||err)+"。請確認網址、驗證碼，以及部署時「誰可以存取」選「所有人」")}
+    shRender();return}
+  if(t.id==="sh-all"){localKeys().forEach(k=>{SHEET.pend.add(k);SHEET.touched[k]=Date.now()});shSave();toast(`開始上傳 ${SHEET.pend.size} 筆，約需 1–3 分鐘，可以繼續操作`);sheetFlush();return}
+  if(t.id==="sh-now"){lsDel(SHK.err);sheetFlush();return}
+});
+setTimeout(()=>{if(shOn()&&SHEET.pend.size)sheetFlush()},6000);
+window.addEventListener("online",()=>{if(shOn())sheetFlush()});
 
 fillLists();renderDay();cloudInit();
 })();
