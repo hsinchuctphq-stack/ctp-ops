@@ -157,6 +157,7 @@ select.in{padding-right:4px}
 .grp-h b{font-family:var(--f-num)}
 .line{display:grid;grid-template-columns:1fr 110px 30px;gap:6px;margin-bottom:5px;align-items:center}
 .line.w-shift{grid-template-columns:1fr 84px 110px 30px}
+.line.w-shift3{grid-template-columns:1fr 120px 110px 30px}
 .settle{width:100%;border-collapse:collapse}
 .settle td{padding:6px 4px;border-bottom:1px solid var(--line)}
 .settle td.op{width:22px;color:var(--muted);text-align:center}
@@ -1315,9 +1316,9 @@ function fillSupportList(){const set=new Set();try{store.days().forEach(x=>{cons
   const el=document.getElementById("dl-support");if(el)el.innerHTML=[...set].map(n=>`<option value="${esc(n)}">`).join("")}
 function renderLines(){fillSupportList();
   const grp=(key,title,cols,label)=>`<div class="grp"><div class="grp-h"><span>${title}</span><b id="sum-${key}">0</b></div>
-    ${D[key].map((r,i)=>`<div class="line ${cols.includes("shift")?"w-shift":""}">
+    ${D[key].map((r,i)=>`<div class="line ${cols.includes("shift")?(key==="meal"?"w-shift3":"w-shift"):""}">
       ${cols[0]==="who"&&key!=="support"?personSel(`${key}.${i}.who`,r.who,label):txtIn(`${key}.${i}.${cols[0]}`,r[cols[0]],label,key==="support"?'list="dl-support"':"")}
-      ${cols.includes("shift")?seg(`${key}.${i}.shift`,r.shift):""}
+      ${cols.includes("shift")?(key==="meal"?segS:seg)(`${key}.${i}.shift`,r.shift):""}
       ${numIn(`${key}.${i}.amt`,r.amt,"金額")}
       <button type="button" class="icon-x" data-delline="${key}.${i}" aria-label="刪除">×</button></div>`).join("")}
     <button type="button" class="btn sm add" data-addline="${key}">＋ 新增</button></div>`;
@@ -1373,7 +1374,7 @@ function refresh(){
   $("k-due").textContent=fmt(R.due);$("k-act").textContent=fmt(R.should);$("k-err").textContent=R.hasCount?fmt(R.err):"—";
   $("k-err-box").className="kpi"+(R.hasCount?(R.err===0?" good":" bad"):"");
   const names=["大眾場次 1,200–3,400","中階場次 6,600–11,000","高額 22k–33k","豪客 54k+"];
-  const hx=R.A.跨.t.some(x=>x)||R.A.跨.fee>0;const SH=hx?["早","跨","晚"]:["早","晚"];
+  const hx=R.A.跨.t.some(x=>x)||["fee","disc","tk","meal","support"].some(k=>R.A.跨[k]);const SH=hx?["早","跨","晚"]:["早","晚"];
   const amHTML=`<tr><th>項目</th>${SH.map(k=>`<th class="${{早:"e",跨:"x",晚:"l"}[k]}">${k}班</th>`).join("")}<th>合計</th></tr>`+
     names.map((n,i)=>`<tr><td>${n}</td>${SH.map(k=>`<td class="v">${R.A[k].t[i]}</td>`).join("")}<td class="v">${SH.reduce((a,k)=>a+R.A[k].t[i],0)}</td></tr>`).join("")+
     [["行政費總額（原價）","fee"],["優惠與折抵（減項）","disc"],["活動／公關票券（非獎池）","tk"],["點餐與公關開銷（支出）","meal"],["人力支援（人事成本）","support"]]
@@ -1487,7 +1488,7 @@ function printHTML(d){
     <tr><td>實際點收現金（含大祕寶）</td><td class="op"></td><td class="v">${R.hasCount?fmt(R.counted):""}</td></tr>
     <tr class="${R.hasCount&&R.err!==0?"bad":""}"><td>錯帳金額（點收−有加大祕寶）</td><td class="op"></td><td class="v">${R.hasCount?fmt(R.err):""}</td></tr></table>`;
   const am=[["大眾 1.2k–3.4k",0],["中階 6.6k–11k",1],["高額 22k–33k",2],["豪客 54k+",3]];
-  const PSH=(R.A.跨.t.some(x=>x)||R.A.跨.fee>0)?["早","跨","晚"]:["早","晚"];
+  const PSH=(R.A.跨.t.some(x=>x)||["fee","disc","tk","meal","support"].some(k=>R.A.跨[k]))?["早","跨","晚"]:["早","晚"];
   const amoeba=`<table class="lg am"><tr><th>項目</th>${PSH.map(k=>`<th>${k}班</th>`).join("")}</tr>
     ${am.map(([nm,i])=>`<tr><td>${nm}</td>${PSH.map(k=>`<td class="v">${R.A[k].t[i]}</td>`).join("")}</tr>`).join("")}
     ${[["行政費總額（原價）","fee"],["優惠與折抵（減）","disc"],["活動票券（非獎池）","tk"],["點餐與公關（支出）","meal"],["人力支援（人事）","support"]].map(([nm,k])=>`<tr><td>${nm}</td>${PSH.map(x=>`<td class="v">${fmt(R.A[x][k])}</td>`).join("")}</tr>`).join("")}</table>`;
