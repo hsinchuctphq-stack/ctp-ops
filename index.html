@@ -577,6 +577,12 @@ body{background:var(--bg);color:var(--ink)}
 .kpis.k8 .kpi .v{font-size:19px}
 .kpis.k8 .kpi .k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi .ks{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.mem-line{display:grid;grid-template-columns:180px auto auto 1fr 30px;gap:10px;align-items:center;margin-bottom:6px}
+.mem-line .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;cursor:pointer}
+.mem-line .chk input{width:16px;height:16px}
+@media (max-width:760px){.mem-line{display:flex;flex-wrap:wrap}.mem-line .in[data-k$=".mid"]{flex:1 1 140px}.mem-line .in[data-k$=".note"]{flex:1 1 calc(100% - 40px)}}
+.mem-sum{font-size:12.5px;color:var(--ink-2)}.mem-sum b{font-family:var(--f-num);color:var(--ink)}.mem-sum .bad{color:var(--bad)}
 </style>
 </head>
 <body>
@@ -590,6 +596,7 @@ body{background:var(--bg);color:var(--ink)}
       <button class="tab" role="tab" data-view="history" aria-selected="false">歷史紀錄</button>
       <button class="tab" role="tab" data-view="credit" aria-selected="false">掛帳</button>
       <button class="tab" role="tab" data-view="err" aria-selected="false">錯帳統計</button>
+      <button class="tab" role="tab" data-view="mem" aria-selected="false">新會員</button>
       <button class="tab" role="tab" data-view="play" aria-selected="false">貼咖統整</button>
       <button class="tab" role="tab" data-view="vault" aria-selected="false">零用金庫</button>
       <button class="tab" role="tab" data-view="jp" aria-selected="false">大祕寶</button>
@@ -698,6 +705,11 @@ body{background:var(--bg);color:var(--ink)}
       </div>
     </div>
 
+    <div class="card" id="mem-card">
+      <div class="card-h"><h2>新會員 <span class="sub">勾選「收取入會費」會自動帶入右側入會費</span></h2><span class="spacer"></span><span id="mem-sum" class="mem-sum"></span></div>
+      <div id="mems"></div>
+    </div>
+
     <div class="card" id="err-card">
       <div class="card-h"><h2>錯帳明細 <span class="sub">多收填正數、少收填負數；合計會和右側「錯帳金額」核對</span></h2></div>
       <div id="errs"></div>
@@ -790,6 +802,23 @@ body{background:var(--bg);color:var(--ink)}
       <p class="note">新增掛帳請在「今日報表」的「掛帳玩家」區塊填寫。收款後，金額會自動計入收款當天日報的本日實得。</p>
     </div>
     <div class="card"><div class="card-h"><h2>未收款：依玩家</h2></div><table class="amoeba" id="cr-byp"></table></div>
+  </section>
+
+  <!-- ========== 新會員 ========== -->
+  <section id="view-mem" hidden>
+    <div class="kpis" id="mm-kpis"></div>
+    <div class="card">
+      <div class="card-h"><h2>新會員紀錄</h2>
+        <div class="seg seg3" id="mm-scope"><button type="button" data-v="month">單月</button><button type="button" data-v="all">全部</button></div>
+        <input class="in" type="month" id="mm-month" style="width:160px">
+        <input class="in" id="mm-q" placeholder="查詢會員 ID（查全部日期）" style="width:220px">
+        <span class="spacer"></span>
+        <button class="btn" type="button" id="mm-csv">匯出 CSV</button>
+      </div>
+      <div class="tbl-wrap"><table class="hist" id="mm-table" style="min-width:760px"></table></div>
+      <p class="note">新會員在「今日報表」的「新會員」區塊登記。同一個 ID 重複登記會標示「重複」。</p>
+    </div>
+    <div class="card" id="mm-mcard"><div class="card-h"><h2>依月份</h2></div><div class="tbl-wrap"><table class="hist" id="mm-months"></table></div></div>
   </section>
 
   <!-- ========== 錯帳統計 ========== -->
@@ -1066,6 +1095,7 @@ body{background:var(--bg);color:var(--ink)}
           <label class="f"><span>零用金請款類別（一行一個）</span><textarea class="in" id="cfg-vcats" rows="6"></textarea></label>
           <label class="f" style="margin-top:8px"><span>MTT 比賽名稱（一行一個）</span><textarea class="in" id="cfg-names" rows="7"></textarea></label>
           <label class="f" style="margin-top:8px"><span>大祕寶每場提撥</span><input class="in n" id="cfg-jp" inputmode="numeric"></label>
+          <label class="f" style="margin-top:8px"><span>入會費（每位新會員）</span><input class="in n" id="cfg-joinfee" inputmode="numeric"></label>
         </div>
         <div class="card">
           <div class="card-h"><h2>備份</h2></div>
@@ -1180,9 +1210,9 @@ const saveCfg=()=>store.set("cfg",cfg);
 const todayISO=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
 function blankDay(date){return {date,staff:{em:"",ec:"",lm:"",lc:""},sessions:[],
   daily:[{item:"",amt:""}],meal:[{item:"",shift:"早",amt:""}],ref:[{who:"",shift:"早",amt:""}],petty:[{who:"",amt:""}],
-  support:[{who:"",shift:"晚",amt:""}],oth:[{item:"",amt:""}],play:[{who:"",sess:"",pl:""}],errs:[],actual:"",join:"",errNote:"",note:"",updatedAt:0}}
+  support:[{who:"",shift:"晚",amt:""}],oth:[{item:"",amt:""}],play:[{who:"",sess:"",pl:""}],errs:[],mem:[],actual:"",join:"",errNote:"",note:"",updatedAt:0}}
 const loadDay=date=>Object.assign(blankDay(date),store.get("day:"+date)||{});
-const hasContent=d=>d.sessions.length||String(d.actual??"").trim()!==""||d.note||d.errNote||(d.errs||[]).some(r=>num(r.amt)||(r.note||"").trim());
+const hasContent=d=>(d.mem||[]).some(r=>(r.mid||"").trim())||d.sessions.length||String(d.actual??"").trim()!==""||d.note||d.errNote||(d.errs||[]).some(r=>num(r.amt)||(r.note||"").trim());
 const ERR_TYPES=["找錯錢","獎金發放錯誤","漏收買入","優惠／票券登記錯誤","掛帳未登記","點收錯誤","其他"];
 
 /* ================= 數字工具 ================= */
@@ -1323,6 +1353,14 @@ function renderLines(){fillSupportList();
       <button type="button" class="icon-x" data-delline="${key}.${i}" aria-label="刪除">×</button></div>`).join("")}
     <button type="button" class="btn sm add" data-addline="${key}">＋ 新增</button></div>`;
   $("exp").innerHTML=grp("daily","日常支出",["item"],"項目")+grp("support","人力支援（人事成本）",["who","shift"],"輸入支援人員姓名")+grp("meal","限時餐點",["item","shift"],"場次，如 11#1")+grp("ref","舊帶新紅包",["who","shift"],"負責人")+grp("petty","補充零用金（從金庫拿上來，現金＋）",["who"],"負責人")+grp("oth","其他收入／回帳（現金＋）",["item"],"項目，如 竹北獎池回款");
+  if(!Array.isArray(D.mem))D.mem=[];
+  $("mems").innerHTML=D.mem.map((r,i)=>`<div class="line mem-line">
+      ${txtIn(`mem.${i}.mid`,r.mid,"新會員 ID")}
+      <label class="chk"><input type="checkbox" data-k="mem.${i}.fee"${r.fee?" checked":""}> 收取入會費</label>
+      <label class="chk"><input type="checkbox" data-k="mem.${i}.ticket"${r.ticket?" checked":""}> 發放新人票券</label>
+      ${txtIn(`mem.${i}.note`,r.note,"備註（選填）")}
+      <button type="button" class="icon-x" data-delline="mem.${i}" aria-label="刪除">×</button></div>`).join("")+
+    `<button type="button" class="btn sm add" data-addline="mem">＋ 新增新會員</button>`;
   if(!Array.isArray(D.errs))D.errs=[];
   $("errs").innerHTML=D.errs.map((r,i)=>`<div class="line err-line">
       ${seg(`errs.${i}.shift`,r.shift)}
@@ -1363,6 +1401,10 @@ function refresh(){
   $("c-rem").textContent=fmt(R.T.rem);$("c-exp").textContent=fmt(R.E.total);$("c-due").textContent=fmt(R.due);
   $("c-pl").textContent=fmt(R.pl);$("c-should").textContent=fmt(R.should);
   $("c-err").textContent=R.hasCount?fmt(R.err):"—";$("c-petty").textContent=fmt(R.E.petty);$("c-crnew").textContent=fmt(R.crNew);$("c-crback").textContent=fmt(R.crBack);$("c-oth").textContent=fmt(R.E.oth);$("c-oth-row").hidden=!R.E.oth;
+  {const M=D.mem||[],withId=M.filter(r=>(r.mid||"").trim()),feeN=withId.filter(r=>r.fee).length,tkN=withId.filter(r=>r.ticket).length,per=num(cfg.joinFee??200),exp=feeN*per;
+   if(M.length&&(String(D.join??"").trim()===""||num(D.join)===num(D.joinAuto))){if(num(D.join)!==exp||String(D.join??"")===""){D.join=exp?exp:"";const fj=$("f-join");if(fj&&document.activeElement!==fj)fj.value=show(D.join)}D.joinAuto=exp}
+   const mis=M.length&&num(D.join)!==exp;const noId=M.length-withId.length;
+   $("mem-sum").innerHTML=M.length?`${withId.length} 位・入會費 ${feeN} 位 × ${fmt(per)} = <b>${fmt(exp)}</b>・新人票券 ${tkN} 張${noId?`・<span class="bad">${noId} 位未填 ID</span>`:""}${mis?`・<span class="bad">右側入會費 ${fmt(num(D.join))} 與新會員不符</span>`:""}`:"今天還沒有新會員";}
   {const es=(D.errs||[]).reduce((a,r)=>a+num(r.amt),0),left=R.hasCount?R.err-es:null;
    $("err-sum").innerHTML=`<span>錯帳金額（點收 − 有加大祕寶）<b class="${R.hasCount&&R.err?"bad":""}">${R.hasCount?fmt(R.err):"尚未點收"}</b></span><span>已登記明細<b>${fmt(es)}</b></span>`+
      (R.hasCount?(left?`<span class="bad">尚未說明 <b>${fmt(left)}</b></span>`:(R.err?`<span class="ok">✓ 已全部說明</span>`:`<span class="ok">✓ 無錯帳</span>`)):"");}
@@ -1411,9 +1453,9 @@ day.addEventListener("click",e=>{
     toast(`已刪除第 ${i+1} 場`,()=>{D.sessions.splice(i,0,removed);renderSessions();refresh();save()});return}
   if(t.dataset.tog){const id=t.dataset.tog;openDisc.has(id)?openDisc.delete(id):openDisc.add(id);renderSessions();refresh();return}
   if(t.dataset.addline){const k=t.dataset.addline;D[k].push(newLine(k));renderLines();refresh();const ins=day.querySelectorAll(`[data-k^="${k}.${D[k].length-1}."]`);ins[0]&&ins[0].focus();return}
-  if(t.dataset.delline){const [k,i]=t.dataset.delline.split(".");D[k].splice(+i,1);if(!D[k].length&&k!=="errs")D[k].push(newLine(k));renderLines();refresh();save();return}
+  if(t.dataset.delline){const [k,i]=t.dataset.delline.split(".");D[k].splice(+i,1);if(!D[k].length&&k!=="errs"&&k!=="mem")D[k].push(newLine(k));renderLines();refresh();save();return}
 });
-const newLine=k=>({errs:{id:uid(),shift:"晚",sess:"",who:"",type:"",amt:"",note:""},oth:{item:"",amt:""},support:{who:"",shift:"晚",amt:""},daily:{item:"",amt:""},meal:{item:"",shift:"早",amt:""},ref:{who:"",shift:"早",amt:""},petty:{who:"",amt:""},play:{who:"",sess:"",pl:""}}[k]);
+const newLine=k=>({mem:{id:uid(),mid:"",fee:true,ticket:true,note:""},errs:{id:uid(),shift:"晚",sess:"",who:"",type:"",amt:"",note:""},oth:{item:"",amt:""},support:{who:"",shift:"晚",amt:""},daily:{item:"",amt:""},meal:{item:"",shift:"早",amt:""},ref:{who:"",shift:"早",amt:""},petty:{who:"",amt:""},play:{who:"",sess:"",pl:""}}[k]);
 function defaultBuy(type,except){
   const same=D.sessions.filter(s=>s!==except&&s.type===type&&s.buy);if(same.length)return same[same.length-1].buy;
   if(isMTT(type)){const o=D.sessions.filter(s=>s!==except&&isMTT(s.type)&&s.buy);if(o.length)return o[o.length-1].buy}
@@ -1513,7 +1555,7 @@ function printHTML(d){
     <div class="cols">
       <div><div class="bx-h">貼咖盈虧<b>${fmt(R.pl)}</b></div>${playTbl}</div>
       <div><div class="bx-h">錯帳明細</div><div class="memo">${(d.errs||[]).filter(r=>num(r.amt)||(r.note||"").trim()).map(r=>`${esc(r.shift||"")}班 ${esc(r.sess||"")} ${esc(r.who||"")} ${esc(r.type||"")} ${fmt(num(r.amt))} ${esc(r.note||"")}`).join("<br>")}${d.errNote?`${(d.errs||[]).some(r=>num(r.amt))?"<br>":""}${esc(d.errNote)}`:""}</div></div>
-      <div><div class="bx-h">其他備註</div><div class="memo">${esc(d.note)}</div></div>
+      <div><div class="bx-h">其他備註</div><div class="memo">${(d.mem||[]).filter(r=>(r.mid||"").trim()).length?`新會員：${(d.mem||[]).filter(r=>(r.mid||"").trim()).map(r=>`${esc(r.mid)}${r.fee?"":"（未收入會費）"}${r.ticket?"":"（未發票券）"}`).join("、")}<br>`:""}${esc(d.note)}</div></div>
     </div>
     <div class="sign"><div>早班值班簽核</div><div>晚班值班簽核</div><div>店長覆核</div></div>
     <div class="foot"><span>竹科旗艦館 · 每日報表</span><span>列印時間 ${new Date().toLocaleString("zh-TW",{hour12:false})}</span></div>
@@ -1574,7 +1616,7 @@ function renderSettings(){
     return `<tr class="${bad?"bad":""}"><td><input class="in n" data-ref="${key}.${i}.buy" value="${esc(r.buy)}" inputmode="numeric"></td><td><input class="in n" data-ref="${key}.${i}.pool" value="${esc(r.pool)}" inputmode="numeric"></td><td><input class="in n" data-ref="${key}.${i}.fee" value="${esc(r.fee)}" inputmode="numeric"></td>${key==="tlt"?`<td><input class="in n" data-ref="${key}.${i}.dur" value="${esc(r.dur??"")}" inputmode="numeric"></td>`:""}<td class="x"><button type="button" class="icon-x" data-delref="${key}.${i}" aria-label="刪除">×</button></td></tr>`};
   $("ref-tlt").innerHTML=cfg.tlt.map((r,i)=>row("tlt",r,i)).join("");
   $("ref-mtt").innerHTML=cfg.mttList.map((r,i)=>row("mttList",r,i)).join("");
-  $("cfg-vcats").value=cfg.vaultCats.join("\n");$("cfg-names").value=cfg.names.join("\n");$("cfg-jp").value=cfg.jpPer;
+  $("cfg-vcats").value=cfg.vaultCats.join("\n");$("cfg-names").value=cfg.names.join("\n");$("cfg-jp").value=cfg.jpPer;$("cfg-joinfee").value=cfg.joinFee??200;
   let bytes=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith(P))bytes+=(localStorage.getItem(k)||"").length*2}}catch(e){}
   $("bk-info").textContent=`目前存有 ${store.days().length} 天報表，約 ${(bytes/1024).toFixed(0)} KB（瀏覽器上限約 5,000 KB，足夠存好幾年）。`;
   fillLists();
@@ -1590,6 +1632,7 @@ setv.addEventListener("input",e=>{
   if(e.target.id==="cfg-vcats"){cfg.vaultCats=e.target.value.split("\n").map(s=>s.trim()).filter(Boolean);saveCfg()}
   if(e.target.id==="cfg-names"){cfg.names=e.target.value.split("\n").map(s=>s.trim()).filter(Boolean);saveCfg();fillLists()}
   if(e.target.id==="cfg-jp"){cfg.jpPer=num(e.target.value);saveCfg()}
+  if(e.target.id==="cfg-joinfee"){cfg.joinFee=num(e.target.value);saveCfg()}
 });
 setv.addEventListener("change",e=>{const p=e.target.dataset.ref;if(!p)return;const k=p.split(".")[0];cfg[k].sort((a,b)=>(num(a.buy)||1e12)-(num(b.buy)||1e12));saveCfg();renderSettings()});
 setv.addEventListener("click",e=>{
@@ -1872,6 +1915,44 @@ $("cr-table").addEventListener("click",e=>{
     const c=credit.find(x=>x.id===cid);crSync(c);const i=pid==="legacy"?0:c.pays.findIndex(x=>x.id===pid);if(i<0)return;const rm=c.pays.splice(i,1)[0];crSync(c);saveCredit();renderCredit();
     toast(`已刪除 ${fmt(num(rm.amt))} 的回帳紀錄`,()=>{c.pays.splice(i,0,rm);crSync(c);saveCredit();renderCredit()})}
 });
+
+
+/* ================= 新會員 ================= */
+let mmScope="month";
+function memRows(){const out=[];store.days().forEach(x=>{const d=store.get("day:"+x);if(!d||!Array.isArray(d.mem))return;
+  d.mem.forEach(r=>{const id=(r.mid||"").trim();if(!id)return;out.push({date:x,mid:id,fee:!!r.fee,ticket:!!r.ticket,note:r.note||"",st:d.staff||{}})})});
+  return out.sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0)}
+function renderMem(){
+  document.querySelectorAll("#mm-scope button").forEach(b=>b.className=b.dataset.v===mmScope?"on o":"");
+  const m=$("mm-month").value||todayISO().slice(0,7),q=($("mm-q").value||"").trim().toLowerCase();const per=num(cfg.joinFee??200);
+  const all=memRows();const cnt={};all.forEach(r=>{const k=r.mid.toLowerCase();cnt[k]=(cnt[k]||0)+1});
+  const scoped=all.filter(r=>mmScope==="all"||r.date.startsWith(m));
+  const list=q?all.filter(r=>r.mid.toLowerCase().includes(q)):scoped;
+  const base=q?list:scoped;const fee=base.filter(r=>r.fee).length,tk=base.filter(r=>r.ticket).length;
+  const lbl=q?`查詢「${esc(q)}」`:mmScope==="all"?"全部期間":`${+m.slice(5)} 月`;
+  const days=new Set(base.map(r=>r.date)).size;
+  $("mm-kpis").innerHTML=`<div class="kpi hl" style="grid-column:span 2"><div class="k">${lbl}新會員</div><div class="v">${base.length} 位</div></div>
+    <div class="kpi"><div class="k">收取入會費</div><div class="v">${fee} 位</div></div>
+    <div class="kpi"><div class="k">入會費金額</div><div class="v">${fmt(fee*per)}</div></div>
+    <div class="kpi"><div class="k">發放新人票券</div><div class="v">${tk} 張</div></div>
+    <div class="kpi ${base.length-fee?"bad":""}"><div class="k">未收入會費</div><div class="v">${base.length-fee} 位</div></div>`;
+  $("mm-table").innerHTML=`<thead><tr><th>日期</th><th style="text-align:left">會員 ID</th><th>收取入會費</th><th>發放新人票券</th><th style="text-align:left">備註</th><th>早班</th><th>晚班</th><th></th></tr></thead><tbody>`+
+    (list.map(r=>`<tr><td>${r.date.slice(5).replace("-","/")} ${wdOf(r.date)}${mmScope==="all"||q?`<div style="font-size:11px;color:var(--muted)">${r.date.slice(0,4)}</div>`:""}</td>
+      <td style="text-align:left;font-family:var(--f-body)"><b>${esc(r.mid)}</b>${cnt[r.mid.toLowerCase()]>1?` <span class="tag t-out">重複</span>`:""}</td>
+      <td>${r.fee?`<span class="tag t-in">已收</span>`:`<span class="tag t-out">未收</span>`}</td><td>${r.ticket?`<span class="tag t-in">已發</span>`:`<span class="tag">未發</span>`}</td>
+      <td style="text-align:left;font-family:var(--f-body);white-space:normal">${esc(r.note)}</td><td style="font-family:var(--f-body)">${esc(r.st.ec||r.st.em||"")}</td><td style="font-family:var(--f-body)">${esc(r.st.lc||r.st.lm||"")}</td>
+      <td class="act"><button class="btn sm" type="button" data-mmopen="${r.date}">開啟日報</button></td></tr>`).join("")
+    ||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px;font-family:var(--f-body)">${q?"找不到這個會員 ID":"這段期間沒有新會員"}</td></tr>`)+`</tbody>`;
+  $("mm-mcard").hidden=!(mmScope==="all"&&!q);
+  if(mmScope==="all"&&!q){const by={};all.forEach(r=>{const k=r.date.slice(0,7);by[k]=by[k]||{n:0,fee:0,tk:0};by[k].n++;if(r.fee)by[k].fee++;if(r.ticket)by[k].tk++});
+    $("mm-months").innerHTML=`<thead><tr><th>月份</th><th>新會員</th><th>收取入會費</th><th>入會費金額</th><th>發放新人票券</th></tr></thead><tbody>${Object.keys(by).sort().reverse().map(k=>`<tr><td><a href="#" data-mmm="${k}">${k.slice(0,4)} 年 ${+k.slice(5)} 月</a></td><td><b>${by[k].n}</b></td><td>${by[k].fee}</td><td>${fmt(by[k].fee*per)}</td><td>${by[k].tk}</td></tr>`).join("")||`<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">沒有資料</td></tr>`}</tbody>`}
+}
+$("mm-scope").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;mmScope=b.dataset.v;renderMem()});
+$("mm-month").addEventListener("change",renderMem);$("mm-q").addEventListener("input",renderMem);
+$("view-mem").addEventListener("click",e=>{const o=e.target.closest("[data-mmopen]");if(o){goDate(o.dataset.mmopen);showView("day");setTimeout(()=>$("mem-card")&&$("mem-card").scrollIntoView({block:"center"}),80);return}
+  const mm=e.target.closest("[data-mmm]");if(mm){e.preventDefault();$("mm-month").value=mm.dataset.mmm;mmScope="month";renderMem()}});
+$("mm-csv").addEventListener("click",()=>{const L=memRows();if(!L.length){toast("沒有新會員資料");return}
+  download(`新會員_${todayISO().replace(/-/g,"")}.csv`,"﻿"+[["日期","星期","會員ID","收取入會費","發放新人票券","備註","早班","晚班"],...L.slice().reverse().map(r=>[r.date,wdOf(r.date),r.mid,r.fee?"是":"否",r.ticket?"是":"否",r.note,r.st.ec||r.st.em||"",r.st.lc||r.st.lm||""])].map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
 
 /* ================= 錯帳統計 ================= */
 let erScope="month";
@@ -2769,7 +2850,7 @@ function toast(msg,undo){
 function showView(v){
   flush();
   document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.view===v));
-  ["day","history","month","credit","err","jp","vault","people","settings","fin","mpl","tx","events","year","bs","cfs","funds","play"].forEach(x=>$("view-"+x).hidden=x!==v);
+  ["day","history","month","credit","err","mem","jp","vault","people","settings","fin","mpl","tx","events","year","bs","cfs","funds","play"].forEach(x=>$("view-"+x).hidden=x!==v);
   if(v==="fin")renderFin();
   if(v==="mpl")renderMPL();
   if(v==="play"){if(!$("pl-month").value)$("pl-month").value=D.date.slice(0,7);renderPlay()}
@@ -2783,6 +2864,7 @@ function showView(v){
   if(v==="vault"){if(!$("v-month").value)$("v-month").value=todayISO().slice(0,7);renderVaultForm();renderVault()}
   if(v==="people")renderPeople();
   if(v==="credit"){crCollect=null;renderCredit()}
+  if(v==="mem"){if(!$("mm-month").value)$("mm-month").value=D.date.slice(0,7);renderMem()}
   if(v==="err"){if(!$("er-month").value)$("er-month").value=D.date.slice(0,7);renderErr()}
   if(v==="month"){if(!$("mo-month").value)$("mo-month").value=D.date.slice(0,7);renderMonth()}
   curView=v;
@@ -3171,7 +3253,8 @@ const shSave=()=>lsSet(SHK.pend,JSON.stringify([...SHEET.pend]));
 const shOn=()=>!!(cfg.sheet&&cfg.sheet.url&&cfg.sheet.token);
 function sheetTouch(k){SHEET.pend.add(k);SHEET.touched[k]=Date.now();shSave();if(!shOn())return;clearTimeout(SHEET.timer);SHEET.timer=setTimeout(sheetFlush,4000)}
 {const h=store.hook;store.hook=k=>{try{h&&h(k)}catch(e){}try{sheetTouch(k)}catch(e){}}}
-const SH_DAY_H=["日期","星期","早班值班","早班櫃台","晚班值班","晚班櫃台","場次數","總人次","總流水","發放獎金","營收補入","賽事剩餘現金","支出合計","補充零用金","應得金額","入會費","貼咖盈虧","其他收入／回帳","掛帳未收","收回掛帳","本日實得金額","大祕寶費用","有加大祕寶","實際點收現金","錯帳金額","錯帳明細","錯帳補充說明","其他備註","更新時間","更新者"];
+const SH_DAY_H=["日期","星期","早班值班","早班櫃台","晚班值班","晚班櫃台","場次數","總人次","總流水","發放獎金","營收補入","賽事剩餘現金","支出合計","補充零用金","應得金額","入會費","貼咖盈虧","其他收入／回帳","掛帳未收","收回掛帳","本日實得金額","大祕寶費用","有加大祕寶","實際點收現金","錯帳金額","錯帳明細","錯帳補充說明","其他備註","更新時間","更新者","新會員數"];
+const SH_MEM_H=["日期","星期","會員ID","收取入會費","發放新人票券","備註"];
 const SH_SESS_H=["日期","星期","序","班別","類型","買入","場次","形式／賽事名稱","總人次","不計入獎池人次","桌數","保底／保證獎池","公關票券／優惠券","活動","賽事優惠","HHJP票券","獎池票券","含大祕寶","現金","應發獎金","營收補入","剩餘現金","發放現金","發放獎池票券","發放獎盃"];
 const SH_VAULT_H=["日期","時間","類型","類別","項目說明","金額","請款人","經手人","金庫餘額","盤點誤差"];
 const SH_CR_H=["掛帳日","玩家","場次","掛帳金額","已回帳","未收餘額","經手人","狀態","回帳紀錄"];
@@ -3179,14 +3262,15 @@ const SH_TX_H=["日期","館別","收支","一級科目","二級科目","項目"
 function shOps(k,v){
   const by=(CLOUD.user&&CLOUD.user.email)||"";const ts=new Date().toISOString();
   if(k.startsWith("day:")){const date=k.slice(4);
-    if(!v)return [{op:"replace",sheet:"日報",header:SH_DAY_H,key:date,rows:[]},{op:"replace",sheet:"場次",header:SH_SESS_H,key:date,rows:[]}];
+    if(!v)return [{op:"replace",sheet:"日報",header:SH_DAY_H,key:date,rows:[]},{op:"replace",sheet:"場次",header:SH_SESS_H,key:date,rows:[]},{op:"replace",sheet:"新會員",header:SH_MEM_H,key:date,rows:[]}];
     const d=Object.assign(blankDay(date),v);const R=compute(d);const st=d.staff||{};
     const errs=(d.errs||[]).filter(r=>num(r.amt)||(r.note||"").trim()).map(r=>`${r.shift||""}班 ${r.sess||""} ${r.who||""} ${r.type||""} ${num(r.amt)} ${r.note||""}`.replace(/\s+/g," ").trim()).join("；");
-    const day=[date,wdOf(date),st.em||"",st.ec||"",st.lm||"",st.lc||"",R.T.sess,R.T.heads,R.T.gross,R.T.prize,R.T.sup,R.T.rem,R.E.total,R.E.petty,R.due,num(d.join),R.pl,R.E.oth,R.crNew,R.crBack,R.should,R.jpFee,R.total,R.hasCount?R.counted:"",R.hasCount?R.err:"",errs,d.errNote||"",d.note||"",ts,by];
+    const day=[date,wdOf(date),st.em||"",st.ec||"",st.lm||"",st.lc||"",R.T.sess,R.T.heads,R.T.gross,R.T.prize,R.T.sup,R.T.rem,R.E.total,R.E.petty,R.due,num(d.join),R.pl,R.E.oth,R.crNew,R.crBack,R.should,R.jpFee,R.total,R.hasCount?R.counted:"",R.hasCount?R.err:"",errs,d.errNote||"",d.note||"",ts,by,(d.mem||[]).filter(r=>(r.mid||"").trim()).length];
     const TY={bd:"保底限時",tlt:"一般賽事",gtd:"MTT 有保底",mtt:"MTT 無保底"};
     const sess=d.sessions.map((s,i)=>{if(num(s.n)<=0)return null;const c=R.rows[i];
       return [date,wdOf(date),i+1,s.shift||"",TY[s.type]||s.type,num(s.buy),s.no||"",isMTT(s.type)?(s.name||""):(s.fmt||""),num(s.n),isMTT(s.type)?num(s.np):"",num(s.tables)||"",num(s.gtd)||"",num(s.pr),num(s.act),num(s.disc),num(s.jp),num(s.pool),c.jp?"是":"",c.cash,c.prize,c.sup,c.rem,isMTT(s.type)?c.pc:"",isMTT(s.type)?c.tkv:"",isMTT(s.type)?c.tro:""]}).filter(Boolean);
-    return [{op:"upsert",sheet:"日報",header:SH_DAY_H,key:date,row:day},{op:"replace",sheet:"場次",header:SH_SESS_H,key:date,rows:sess}]}
+    const mems=(d.mem||[]).filter(r=>(r.mid||"").trim()).map(r=>[date,wdOf(date),r.mid.trim(),r.fee?"是":"否",r.ticket?"是":"否",r.note||""]);
+    return [{op:"upsert",sheet:"日報",header:SH_DAY_H,key:date,row:day},{op:"replace",sheet:"場次",header:SH_SESS_H,key:date,rows:sess},{op:"replace",sheet:"新會員",header:SH_MEM_H,key:date,rows:mems}]}
   if(k==="vault"){const {list}=vaultCalc();
     return [{op:"rewrite",sheet:"零用金庫",header:SH_VAULT_H,rows:list.map(e=>[e.date,e.time||"",e.auto?"取出（日報）":(VK[e.kind]||e.kind),e.cat||"",e.desc||"",e.kind==="out"?-num(e.amt):num(e.amt),e.req||"",e.hand||"",e.after,e.diff??""])}]}
   if(k==="credit"){
