@@ -582,6 +582,7 @@ body{background:var(--bg);color:var(--ink)}
 .mem-line .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;cursor:pointer}
 .mem-line .chk input{width:16px;height:16px}
 @media (max-width:760px){.mem-line{display:flex;flex-wrap:wrap}.mem-line .in[data-k$=".mid"]{flex:1 1 140px}.mem-line .in[data-k$=".note"]{flex:1 1 calc(100% - 40px)}}
+#f-join.auto{background:transparent;border-style:dashed;cursor:default}
 .mem-sum{font-size:12.5px;color:var(--ink-2)}.mem-sum b{font-family:var(--f-num);color:var(--ink)}.mem-sum .bad{color:var(--bad)}
 </style>
 </head>
@@ -653,7 +654,7 @@ body{background:var(--bg);color:var(--ink)}
           <tr><td>支出合計 <small>日常＋人力支援＋餐點＋舊帶新</small></td><td class="op">−</td><td class="v" id="c-exp">0</td></tr>
           <tr><td>補充零用金 <small>從金庫拿上來</small></td><td class="op">＋</td><td class="v" id="c-petty">0</td></tr>
           <tr class="sum"><td>應得金額</td><td class="op">=</td><td class="v" id="c-due">0</td></tr>
-          <tr><td>入會費</td><td class="op">＋</td><td class="v"><input class="in n" id="f-join" data-k="join" inputmode="numeric"></td></tr>
+          <tr><td>入會費 <small id="join-note"></small></td><td class="op">＋</td><td class="v"><input class="in n" id="f-join" data-k="join" inputmode="numeric"></td></tr>
           <tr><td>貼咖盈虧 <small>由下方貼咖欄加總</small></td><td class="op">±</td><td class="v" id="c-pl">0</td></tr>
           <tr id="c-oth-row" hidden><td>其他收入／回帳 <small>支出區填寫</small></td><td class="op">＋</td><td class="v" id="c-oth">0</td></tr>
           <tr><td>掛帳未收 <small>今日新增</small></td><td class="op">−</td><td class="v" id="c-crnew">0</td></tr>
@@ -706,7 +707,7 @@ body{background:var(--bg);color:var(--ink)}
     </div>
 
     <div class="card" id="mem-card">
-      <div class="card-h"><h2>新會員 <span class="sub">勾選「收取入會費」會自動帶入右側入會費</span></h2><span class="spacer"></span><span id="mem-sum" class="mem-sum"></span></div>
+      <div class="card-h"><h2>新會員 <span class="sub">勾選「收取入會費」的人數 × 200，自動計入右側入會費</span></h2><span class="spacer"></span><span id="mem-sum" class="mem-sum"></span></div>
       <div id="mems"></div>
     </div>
 
@@ -1401,10 +1402,14 @@ function refresh(){
   $("c-rem").textContent=fmt(R.T.rem);$("c-exp").textContent=fmt(R.E.total);$("c-due").textContent=fmt(R.due);
   $("c-pl").textContent=fmt(R.pl);$("c-should").textContent=fmt(R.should);
   $("c-err").textContent=R.hasCount?fmt(R.err):"—";$("c-petty").textContent=fmt(R.E.petty);$("c-crnew").textContent=fmt(R.crNew);$("c-crback").textContent=fmt(R.crBack);$("c-oth").textContent=fmt(R.E.oth);$("c-oth-row").hidden=!R.E.oth;
-  {const M=D.mem||[],withId=M.filter(r=>(r.mid||"").trim()),feeN=withId.filter(r=>r.fee).length,tkN=withId.filter(r=>r.ticket).length,per=num(cfg.joinFee??200),exp=feeN*per;
-   if(M.length&&(String(D.join??"").trim()===""||num(D.join)===num(D.joinAuto))){if(num(D.join)!==exp||String(D.join??"")===""){D.join=exp?exp:"";const fj=$("f-join");if(fj&&document.activeElement!==fj)fj.value=show(D.join)}D.joinAuto=exp}
-   const mis=M.length&&num(D.join)!==exp;const noId=M.length-withId.length;
-   $("mem-sum").innerHTML=M.length?`${withId.length} 位・入會費 ${feeN} 位 × ${fmt(per)} = <b>${fmt(exp)}</b>・新人票券 ${tkN} 張${noId?`・<span class="bad">${noId} 位未填 ID</span>`:""}${mis?`・<span class="bad">右側入會費 ${fmt(num(D.join))} 與新會員不符</span>`:""}`:"今天還沒有新會員";}
+  {const M=D.mem||[],withId=M.filter(r=>(r.mid||"").trim()),feeN=M.filter(r=>r.fee).length,tkN=M.filter(r=>r.ticket).length,per=num(cfg.joinFee??200),exp=feeN*per;
+   const fj=$("f-join");
+   if(M.length){if(num(D.join)!==exp||(exp===0&&String(D.join??"")!=="")){D.join=exp?exp:"";}D.joinAuto=exp;
+     if(fj){fj.readOnly=true;fj.classList.add("auto");fj.title="依新會員勾選「收取入會費」自動計算";if(document.activeElement!==fj)fj.value=show(D.join)}}
+   else{if(D.joinAuto!=null&&String(D.join??"")!==""&&num(D.join)===num(D.joinAuto)){D.join="";if(fj)fj.value=""}D.joinAuto=null;if(fj){fj.readOnly=false;fj.classList.remove("auto");fj.title=""}}
+   const noId=M.length-withId.length;
+   $("mem-sum").innerHTML=M.length?`${M.length} 位・入會費 ${feeN} 位 × ${fmt(per)} = <b>${fmt(exp)}</b>・新人票券 ${tkN} 張${noId?`・<span class="bad">${noId} 位未填 ID</span>`:""}`:"今天還沒有新會員";
+   const jn=$("join-note");if(jn)jn.textContent=M.length?`新會員 ${feeN} 位 × ${fmt(per)}`:"";}
   {const es=(D.errs||[]).reduce((a,r)=>a+num(r.amt),0),left=R.hasCount?R.err-es:null;
    $("err-sum").innerHTML=`<span>錯帳金額（點收 − 有加大祕寶）<b class="${R.hasCount&&R.err?"bad":""}">${R.hasCount?fmt(R.err):"尚未點收"}</b></span><span>已登記明細<b>${fmt(es)}</b></span>`+
      (R.hasCount?(left?`<span class="bad">尚未說明 <b>${fmt(left)}</b></span>`:(R.err?`<span class="ok">✓ 已全部說明</span>`:`<span class="ok">✓ 無錯帳</span>`)):"");}
