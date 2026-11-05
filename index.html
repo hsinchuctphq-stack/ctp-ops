@@ -540,6 +540,8 @@ body{background:var(--bg);color:var(--ink)}
 /* 錯帳明細、掛帳分次回帳 */
 .err-line{display:grid;grid-template-columns:auto 110px 130px 150px 110px 1fr 30px;gap:8px;align-items:center;margin-bottom:6px}
 @media (max-width:900px){.err-line{grid-template-columns:auto 1fr 1fr 30px}.err-line .in[data-k$=".note"]{grid-column:1/-2}}
+.err-help{font-size:12.5px;line-height:1.6;color:var(--ink-2);background:var(--head);border-radius:8px;padding:8px 12px;margin:0 0 10px}
+.err-help b{color:var(--ink)}
 .err-sum{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line-2);font-size:13px;color:var(--ink-2)}
 .err-sum b{font-family:var(--f-num);margin-left:6px;color:var(--ink)}
 .err-sum .bad,.err-sum .bad b{color:var(--bad)}.err-sum .ok{color:var(--good)}
@@ -653,8 +655,8 @@ body{background:var(--bg);color:var(--ink)}
           <tr><td>賽事剩餘現金合計</td><td class="op"></td><td class="v" id="c-rem">0</td></tr>
           <tr><td>支出合計 <small>日常＋人力支援＋餐點＋舊帶新</small></td><td class="op">−</td><td class="v" id="c-exp">0</td></tr>
           <tr><td>補充零用金 <small>從金庫拿上來</small></td><td class="op">＋</td><td class="v" id="c-petty">0</td></tr>
-          <tr class="sum"><td>應得金額</td><td class="op">=</td><td class="v" id="c-due">0</td></tr>
           <tr><td>入會費 <small id="join-note"></small></td><td class="op">＋</td><td class="v"><input class="in n" id="f-join" data-k="join" inputmode="numeric"></td></tr>
+          <tr class="sum"><td>應得金額 <small>含入會費</small></td><td class="op">=</td><td class="v" id="c-due">0</td></tr>
           <tr><td>貼咖盈虧 <small>由下方貼咖欄加總</small></td><td class="op">±</td><td class="v" id="c-pl">0</td></tr>
           <tr id="c-oth-row" hidden><td>其他收入／回帳 <small>支出區填寫</small></td><td class="op">＋</td><td class="v" id="c-oth">0</td></tr>
           <tr><td>掛帳未收 <small>今日新增</small></td><td class="op">−</td><td class="v" id="c-crnew">0</td></tr>
@@ -663,7 +665,7 @@ body{background:var(--bg);color:var(--ink)}
           <tr><td>大祕寶費用 <small id="c-jp-note"></small></td><td class="op"></td><td class="v" id="c-jp">0</td></tr>
           <tr class="sum"><td>有加大祕寶 <small>應有現金（含大祕寶）</small></td><td class="op">=</td><td class="v" id="c-total">0</td></tr>
           <tr><td>實際點收現金 <small>點完現金填這裡，含大祕寶的錢</small></td><td class="op"></td><td class="v"><input class="in n" id="f-actual" data-k="actual" inputmode="numeric" placeholder="輸入"></td></tr>
-          <tr id="c-err-row"><td>錯帳金額 <small>實際點收 − 有加大祕寶</small></td><td class="op"></td><td class="v" id="c-err">—</td></tr>
+          <tr id="c-err-row"><td>錯帳金額 <small>實際點收 − 有加大祕寶；只顯示差額，不計入實得</small></td><td class="op"></td><td class="v" id="c-err">—</td></tr>
         </table>
       </div>
       <div class="card amoeba-card side">
@@ -712,7 +714,8 @@ body{background:var(--bg);color:var(--ink)}
     </div>
 
     <div class="card" id="err-card">
-      <div class="card-h"><h2>錯帳明細 <span class="sub">多收填正數、少收填負數；合計會和右側「錯帳金額」核對</span></h2></div>
+      <div class="card-h"><h2>錯帳明細 <span class="sub">多收填正數、少收填負數</span></h2></div>
+      <div class="err-help"><b>這裡只用來說明錯帳原因，填寫後不會加減「本日實得金額」。</b>本日實得由系統依場次、支出、入會費等自動計算；錯帳金額＝實際點收現金 − 有加大祕寶，是點收後自動算出的差額。明細合計會和這個差額核對，看是否每一筆差額都有交代。</div>
       <div id="errs"></div>
       <div class="err-sum" id="err-sum"></div>
     </div>
@@ -1265,11 +1268,11 @@ function compute(d){
   d.meal.forEach(r=>{if(A[r.shift])A[r.shift].meal+=num(r.amt)});
   (d.support||[]).forEach(r=>{if(A[r.shift])A[r.shift].support+=num(r.amt)});
   d.ref.forEach(r=>{if(A[r.shift])A[r.shift].disc+=num(r.amt)});
-  const due=T.rem-E.total+E.petty;
+  const due=T.rem-E.total+E.petty+num(d.join);   // 應得金額含入會費
   const pl=d.play.reduce((x,r)=>x+num(r.pl),0);
   const crNew=credit.filter(c=>c.date===d.date).reduce((x,c)=>x+Math.max(0,num(c.amt)-crPaidOn(c,d.date)),0);   // 今日新增、扣掉當天已回的部分
   const crBack=credit.filter(c=>c.date!==d.date).reduce((x,c)=>x+crPaidOn(c,d.date),0);   // 今日收回以前的掛帳（可分次）
-  const should=due+num(d.join)+pl+E.oth-crNew+crBack;  // 本日實得（自動）
+  const should=due+pl+E.oth-crNew+crBack;  // 本日實得（自動）
   const hasCount=String(d.actual??"").trim()!=="";  // d.actual＝實際點收現金（選填）
   const jpFee=T.jpSess*num(cfg.jpPer);
   const err=hasCount?num(d.actual)-(should+jpFee):null;   // 點收現金（含大祕寶）− 應有現金（含大祕寶）
@@ -1411,7 +1414,7 @@ function refresh(){
    $("mem-sum").innerHTML=M.length?`${M.length} 位・入會費 ${feeN} 位 × ${fmt(per)} = <b>${fmt(exp)}</b>・新人票券 ${tkN} 張${noId?`・<span class="bad">${noId} 位未填 ID</span>`:""}`:"今天還沒有新會員";
    const jn=$("join-note");if(jn)jn.textContent=M.length?`新會員 ${feeN} 位 × ${fmt(per)}`:"";}
   {const es=(D.errs||[]).reduce((a,r)=>a+num(r.amt),0),left=R.hasCount?R.err-es:null;
-   $("err-sum").innerHTML=`<span>錯帳金額（點收 − 有加大祕寶）<b class="${R.hasCount&&R.err?"bad":""}">${R.hasCount?fmt(R.err):"尚未點收"}</b></span><span>已登記明細<b>${fmt(es)}</b></span>`+
+   $("err-sum").innerHTML=`<span>錯帳金額（點收 − 有加大祕寶，不計入實得）<b class="${R.hasCount&&R.err?"bad":""}">${R.hasCount?fmt(R.err):"尚未點收"}</b></span><span>已登記明細<b>${fmt(es)}</b></span>`+
      (R.hasCount?(left?`<span class="bad">尚未說明 <b>${fmt(left)}</b></span>`:(R.err?`<span class="ok">✓ 已全部說明</span>`:`<span class="ok">✓ 無錯帳</span>`)):"");}
   $("c-err-row").className=R.hasCount?(R.err===0?"good":"bad"):"";
   $("c-jp").textContent=fmt(R.jpFee);$("c-jp-note").textContent=`${R.T.jpSess} 場 × ${fmt(cfg.jpPer)}`;$("c-total").textContent=fmt(R.total);
@@ -1523,8 +1526,8 @@ function printHTML(d){
     <tr><td>賽事剩餘現金合計</td><td class="op"></td><td class="v">${fmt(R.T.rem)}</td></tr>
     <tr><td>支出合計</td><td class="op">−</td><td class="v">${fmt(R.E.total)}</td></tr>
     <tr><td>補充零用金</td><td class="op">＋</td><td class="v">${fmt(R.E.petty)}</td></tr>
-    <tr class="sm"><td>應得金額</td><td class="op">=</td><td class="v">${fmt(R.due)}</td></tr>
     <tr><td>入會費</td><td class="op">＋</td><td class="v">${fmt(num(d.join))}</td></tr>
+    <tr class="sm"><td>應得金額（含入會費）</td><td class="op">=</td><td class="v">${fmt(R.due)}</td></tr>
     <tr><td>貼咖盈虧</td><td class="op">±</td><td class="v">${fmt(R.pl)}</td></tr>
     ${R.E.oth?`<tr><td>其他收入／回帳</td><td class="op">＋</td><td class="v">${fmt(R.E.oth)}</td></tr>`:""}
     ${R.crNew?`<tr><td>掛帳未收</td><td class="op">−</td><td class="v">${fmt(R.crNew)}</td></tr>`:""}
