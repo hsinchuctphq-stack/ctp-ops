@@ -596,6 +596,50 @@ body{background:var(--bg);color:var(--ink)}
 .sp-add{display:grid;grid-template-columns:1.2fr .8fr .8fr 1.2fr 1.4fr auto;gap:8px;margin-top:12px}
 @media (max-width:760px){.sp-add{grid-template-columns:1fr 1fr}}
 #sp-roster td .in{min-width:0;width:100%}#sp-roster tr.off td{opacity:.5}
+
+/* 人員表、班表、找支援 */
+.p-table{min-width:1000px}
+.p-table td{text-align:left;font-family:var(--f-body);padding:4px 5px}
+.p-table td .in{height:30px;padding:4px 6px}
+.p-table td .in.n{width:72px}
+.p-table tr.off td{opacity:.5}
+.p-table th{text-align:left}
+.shchip{display:inline-flex;gap:3px}
+.shchip button{border:1px solid var(--line-2);background:var(--panel2);color:var(--muted);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:700}
+.shchip button.on[data-s="早"]{background:var(--early);border-color:var(--early);color:#fff}
+.shchip button.on[data-s="跨"]{background:#c9952b;border-color:#c9952b;color:#fff}
+.shchip button.on[data-s="晚"]{background:var(--late);border-color:var(--late);color:#fff}
+.sc-grid{min-width:0;font-size:12px}
+.sc-grid th,.sc-grid td{padding:4px 3px;text-align:center}
+.sc-grid th.dh{cursor:pointer;min-width:30px;line-height:1.2}
+.sc-grid th.dh small{display:block;font-weight:400;color:var(--muted);font-size:10.5px}
+.sc-grid th.dh.we small{color:var(--late)}
+.sc-grid th.dh.td{box-shadow:inset 0 -2px 0 var(--gold)}
+.sc-grid td.nm{text-align:left;font-family:var(--f-body);white-space:nowrap;position:sticky;left:0;background:var(--card);z-index:1}
+.sc-grid td.nm small{color:var(--muted);margin-left:5px}
+.sc-grid td.c{cursor:pointer;font-family:var(--f-body);font-weight:700;min-width:28px;user-select:none;font-size:11px;padding:4px 1px;letter-spacing:-.02em}
+.sc-grid td.c.k4{font-family:var(--f-num);font-size:11.5px}
+.sc-grid td.c:hover{outline:1px solid var(--ink-2);outline-offset:-1px}
+.sc-grid td.k-早{background:var(--early-bg);color:var(--early)}
+.sc-grid td.k-晚{background:var(--late-bg);color:var(--late)}
+.sc-grid td.k-跨{background:#2a2312;color:#e0b452}
+.sc-grid td.k-off{color:var(--muted)}
+.sc-grid td.k-x{background:#22252d;color:var(--ink);font-weight:500;font-size:11px}
+.sc-grid tr.cnt td{color:var(--ink-2);font-family:var(--f-num);font-weight:400;background:#1a1f27}
+.sc-grid tr.unk td.nm{color:var(--warn)}
+.sc-res{width:100%;border-collapse:collapse;font-size:13px}
+.sc-res th{font-size:11.5px;font-weight:500;color:var(--muted);text-align:left;padding:5px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.sc-res td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.sc-res td.r{text-align:right;font-family:var(--f-num)}
+.sc-res tr.gh td{background:var(--head);font-weight:700;font-size:12.5px;padding:5px 8px}
+.sc-res tr.gh td small{font-weight:400;color:var(--muted);margin-left:6px}
+.sc-why{font-size:12px;color:var(--ink-2)}
+.sc-why b{color:var(--good);font-weight:500}
+.sc-pv{border:1px solid #6b5420;background:#1d1a12;border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.sc-pv .sc-grid td.c{cursor:default}
+#op-body .g2>.panel,#op-body .g2>div>.panel{margin-top:0}
+#op-body .g2+.g2,#op-body .g2+.panel,#op-body .panel+.g2{margin-top:14px}
+#op-body .lst td,#op-body .lst th{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -611,17 +655,20 @@ body{background:var(--bg);color:var(--ink)}
       <button class="tab" role="tab" data-view="err" aria-selected="false">錯帳統計</button>
       <button class="tab" role="tab" data-view="mem" aria-selected="false">新會員</button>
       <button class="tab" role="tab" data-view="sup" aria-selected="false">支援人員</button>
+      <button class="tab" role="tab" data-view="sched" aria-selected="false">班表／找支援</button>
       <button class="tab" role="tab" data-view="play" aria-selected="false">貼咖統整</button>
       <button class="tab" role="tab" data-view="vault" aria-selected="false">零用金庫</button>
       <button class="tab" role="tab" data-view="jp" aria-selected="false">大祕寶</button>
       <span class="tab-group">財務管理</span>
       <button class="tab" role="tab" data-view="fin" aria-selected="false">財務總覽</button>
+      <button class="tab" role="tab" data-view="ops" aria-selected="false">營運分析</button>
       <button class="tab" role="tab" data-view="mpl" aria-selected="false">月度損益表</button>
       <button class="tab" role="tab" data-view="year" aria-selected="false">年度損益表</button>
       <button class="tab" role="tab" data-view="cfs" aria-selected="false">現金流量表</button>
       <button class="tab" role="tab" data-view="funds" aria-selected="false">資金與月結</button>
       <button class="tab" role="tab" data-view="tx" aria-selected="false">交易資料</button>
       <button class="tab" role="tab" data-view="events" aria-selected="false">賽事財務</button>
+      <button class="tab" role="tab" data-view="proj" aria-selected="false">活動專案</button>
       <button class="tab" role="tab" data-view="month" aria-selected="false">月營收統計</button>
       <span class="tab-group">系統</span>
       <button class="tab" role="tab" data-view="people" aria-selected="false">人員</button>
@@ -837,16 +884,38 @@ body{background:var(--bg);color:var(--ink)}
       <div class="tbl-wrap"><table class="hist" id="sp-days" style="min-width:820px"></table></div>
     </div>
     <div class="card">
-      <div class="card-h"><h2>支援人員名冊 <span class="sub">預設時薪與車資會在日報選到這個人時自動帶入</span></h2></div>
-      <div class="tbl-wrap"><table class="hist" id="sp-roster" style="min-width:760px"></table></div>
-      <form class="sp-add" id="sp-add">
-        <input class="in" id="spa-name" placeholder="姓名" required>
-        <input class="in n" id="spa-rate" placeholder="預設時薪" inputmode="numeric">
-        <input class="in n" id="spa-travel" placeholder="預設車資" inputmode="numeric">
-        <input class="in" id="spa-contact" placeholder="聯絡方式（選填）">
-        <input class="in" id="spa-note" placeholder="備註（選填）">
-        <button class="btn primary" type="submit">加入名冊</button>
-      </form>
+      <div class="card-h"><h2>支援人員名冊</h2></div>
+      <p class="note" style="margin:0">名冊已併入「人員」頁：每位人員可設定館別、身分（正職／PT／外部支援）、預設時薪與車資；平常上什麼班由上傳的班表推測。日報選到名單上的人會自動帶入時薪與車資。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn" type="button" data-go="people">到人員頁編輯</button><button class="btn" type="button" data-go="sched">班表／找支援</button></div>
+    </div>
+  </section>
+
+  <!-- ========== 班表／找支援 ========== -->
+  <section id="view-sched" hidden>
+    <div class="card" id="sc-find">
+      <div class="card-h"><h2>找支援人員 <span class="sub">依上傳的班表與館別，列出這個時段可以詢問的人</span></h2></div>
+      <div class="v-form">
+        <label class="f"><span>日期</span><input class="in" type="date" id="sc-date"></label>
+        <div class="f" style="width:auto"><span>需要支援的班別</span><div class="seg seg3" id="sc-shift"><button type="button" data-v="早">早班</button><button type="button" data-v="跨">跨班</button><button type="button" data-v="晚">晚班</button></div></div>
+        <label class="f"><span>哪個館缺人</span><select class="in" id="sc-branch"></select></label>
+        <label class="jpchk"><input type="checkbox" id="sc-other" checked> 含其他館人員</label>
+        <label class="jpchk"><input type="checkbox" id="sc-ext" checked> 含外部支援</label>
+      </div>
+      <div id="sc-result" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>月班表</h2>
+        <input class="in" type="month" id="sc-month" style="width:160px">
+        <select class="in" id="sc-gbranch" style="width:auto;min-width:140px"></select>
+        <span class="spacer"></span>
+        <label class="btn primary" for="sc-file" style="display:inline-flex;align-items:center">上傳班表（.xlsx／.csv）</label><input type="file" id="sc-file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+        <button class="btn" type="button" id="sc-tpl">下載本月範本／匯出 CSV</button>
+        <button class="btn danger" type="button" id="sc-clear">清除本月班表</button>
+      </div>
+      <div id="sc-preview"></div>
+      <div class="tbl-wrap"><table class="hist sc-grid" id="sc-grid"></table></div>
+      <p class="note"><b>排班系統的班表</b>：打開排班系統的 Google 試算表 →「檔案 → 下載 → Microsoft Excel（.xlsx）」，整本上傳即可。系統會自動選「班表」分頁（要匯入上個月請在預覽裡選「班表_年-月」），並讀取「設定」分頁的時段班別；「員工」分頁可順便同步人員名單（不讀 PIN 碼）。中班（例如 1600 開始）會跨到晚上，找支援時視為早晚都在班。<br>點格子可以直接修改（空白 → 早 → 晚 → 跨 → 休 → 空白）；點日期可帶到上方「找支援」。上傳檔案格式：第一欄（或「姓名」欄）放人名，同一列放日期 1–31（也可以是 11/1、2026/11/1 或 Excel 日期），格子填 早、晚、跨（全天）、休（例、特休、病假、事假都算休），或 14:00-23:00 這類時間。
+        也接受「日期、姓名、班別」三欄的清單格式。時間格式以 <input class="in n" id="sc-split" style="width:62px;height:26px;display:inline-block" inputmode="numeric"> 點為早晚班分界：開始時間早於分界算早班，結束時間晚於分界算晚班。Google 試算表請先「下載 → .xlsx 或 .csv」。</p>
     </div>
   </section>
 
@@ -921,14 +990,24 @@ body{background:var(--bg);color:var(--ink)}
   <!-- ========== 人員 ========== -->
   <section id="view-people" hidden>
     <div class="card">
-      <div class="card-h"><h2>人員名單 <span class="sub">報表、零用金庫的人員選單都從這裡來</span></h2></div>
+      <div class="card-h"><h2>人員名單 <span class="sub">報表、零用金庫的人員選單、日報支援時薪與「找支援」都從這裡來</span></h2></div>
       <form class="p-add" id="p-form">
         <label class="f"><span>姓名／暱稱</span><input class="in" id="p-name" placeholder="例如：七七" required></label>
         <label class="f"><span>職稱（選填）</span><input class="in" id="p-role" placeholder="例如：櫃台、荷官、店長"></label>
+        <label class="f" style="width:130px"><span>身分</span><select class="in" id="p-kind"></select></label>
+        <label class="f" style="width:150px"><span>館別</span><select class="in" id="p-branch"></select></label>
+        <label class="f" style="width:110px"><span>時薪</span><input class="in n" id="p-rate" inputmode="numeric"></label>
         <button class="btn primary" type="submit">＋ 新增人員</button>
       </form>
-      <div class="p-list" id="p-list"></div>
-      <p class="note">停用的人員不會出現在選單裡，過去的報表與請款紀錄仍保留名字。任何人員選單最下面也有「＋ 新增人員…」可以臨時加人。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <select class="in" id="p-fbranch" style="width:auto;min-width:140px"></select>
+        <select class="in" id="p-fkind" style="width:auto;min-width:120px"></select>
+        <input class="in" id="p-q" placeholder="搜尋姓名" style="width:150px">
+        <label class="jpchk"><input type="checkbox" id="p-off"> 顯示停用人員</label>
+        <span class="spacer" style="flex:1"></span><span class="note" id="p-count" style="margin:0"></span>
+      </div>
+      <div class="tbl-wrap"><table class="hist p-table" id="p-table"></table></div>
+      <p class="note">停用的人員不會出現在選單與「找支援」裡，過去的報表與請款紀錄仍保留名字。「外部支援」身分不會出現在值班、請款人等店內人員選單。「平常時段」由上傳的班表推測（看這個月與上個月實際排的上班時間），找支援時用來判斷誰平常就上那個班。</p>
     </div>
   </section>
 
@@ -964,6 +1043,19 @@ body{background:var(--bg);color:var(--ink)}
       <button class="btn primary" type="button" id="r-print">列印月財報</button>
     </div>
     <div id="r-body"></div>
+  </section>
+
+  <!-- ================= 營運分析 ================= -->
+  <section id="view-ops" class="fin" hidden>
+    <div class="filters">
+      <div style="flex-basis:100%"><h1 class="period-title" id="op-title">營運分析</h1></div>
+      <label class="f"><span>月份</span><input class="in" type="month" id="op-month"></label>
+      <div class="f" style="width:auto"><span>期間</span><div class="seg" id="op-scope"><button type="button" data-v="1">單月</button><button type="button" data-v="3">近 3 個月</button><button type="button" data-v="y">今年累計</button><button type="button" data-v="12">近 12 個月</button></div></div>
+      <div class="f"><span>&nbsp;</span><div style="display:flex;gap:6px"><button class="btn" type="button" data-opstep="-1" aria-label="上個月">◀</button><button class="btn" type="button" data-opstep="1" aria-label="下個月">▶</button></div></div>
+      <span class="sp"></span>
+      <button class="btn" type="button" id="op-csv">匯出近 12 個月 CSV</button>
+    </div>
+    <div id="op-body"></div>
   </section>
 
   <!-- ================= 月度損益表 ================= -->
@@ -1116,6 +1208,24 @@ body{background:var(--bg);color:var(--ink)}
     </div>
   </section>
 
+  <!-- ========== 活動專案 ========== -->
+  <section id="view-proj" hidden>
+    <div class="kpis" id="pj-kpis"></div>
+    <div class="card">
+      <div class="card-h"><h2>活動專案 <span class="sub">自行新增的活動，追蹤活動票券、公關支出與獎品（竹科／竹北分開）</span></h2>
+        <div class="seg seg3" id="pj-st"><button type="button" data-v="now">進行中</button><button type="button" data-v="soon">即將開始</button><button type="button" data-v="done">已結束</button><button type="button" data-v="all">全部</button></div>
+        <select class="in" id="pj-venue" style="width:auto;min-width:120px"></select>
+        <input class="in" id="pj-q" placeholder="搜尋活動名稱" style="width:160px">
+        <span class="spacer"></span>
+        <button class="btn" type="button" id="pj-csv">匯出 CSV</button>
+        <button class="btn primary" type="button" id="pj-new">＋ 新增活動</button>
+      </div>
+      <div class="tbl-wrap"><table class="hist" id="pj-table" style="min-width:1000px"></table></div>
+      <p class="note">活動專案只用來追蹤，不計入損益表：日報的活動票券、公關票券與零用金庫的活動支出已經各自入帳，避免重複計算。</p>
+    </div>
+    <div id="pj-detail"></div>
+  </section>
+
   <!-- ========== 設定 ========== -->
   <section id="view-settings" hidden>
     <div class="card cloud-card" id="cloud-card">
@@ -1145,7 +1255,7 @@ body{background:var(--bg);color:var(--ink)}
         </div>
         <div class="card">
           <div class="card-h"><h2>備份</h2></div>
-          <p class="note" style="margin:0 0 10px">日報、掛帳、大祕寶、零用金庫、人員、財務交易都只存在這台電腦的瀏覽器。清除瀏覽資料或換電腦就會不見，建議每週下載一次備份。</p>
+          <p class="note" style="margin:0 0 10px">登入雲端同步後，資料會存在 Firebase，並另外備份到 Google 試算表；這台電腦的瀏覽器也會保留一份。完整備份檔可以留存特定時間點的所有資料，建議每月或大改之前下載一次。</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn primary" type="button" id="bk-export">下載完整備份</button>
             <label class="btn" for="bk-file">從備份還原</label>
@@ -1236,10 +1346,11 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 const uid=()=>Math.random().toString(36).slice(2,9);
 
 /* ================= 儲存 ================= */
+let DATAV=0;   // 資料版本：每次存檔或收到雲端修改就 +1，彙整快取（財務、支援人員名單）依此判斷是否要重算
 const store={
   get(k){try{return JSON.parse(localStorage.getItem(P+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){return false}try{store.hook&&store.hook(k)}catch(e){}return true},
-  del(k){try{localStorage.removeItem(P+k)}catch(e){}try{store.hook&&store.hook(k)}catch(e){}},
+  set(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){return false}DATAV++;try{store.hook&&store.hook(k)}catch(e){}return true},
+  del(k){try{localStorage.removeItem(P+k)}catch(e){}DATAV++;try{store.hook&&store.hook(k)}catch(e){}},
   days(){const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith(P+"day:"))out.push(k.slice((P+"day:").length))}}catch(e){}return out.sort()}
 };
 try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
@@ -1388,7 +1499,11 @@ function renderSessions(){
       <div class="s-out" data-out="${i}"></div>
     </div>`}).join("");
 }
-function fillSupportList(){const set=new Set(supRoster().filter(p=>p.active!==false).map(p=>p.name));try{store.days().forEach(x=>{const d=store.get("day:"+x);(d&&d.support||[]).forEach(r=>{if((r.who||"").trim())set.add(r.who.trim())})})}catch(e){}
+let SUPN=null;   // 歷史日報出現過的支援人員姓名（只在第一次或雲端有新資料時掃描全部日報）
+function fillSupportList(){
+  if(!SUPN){SUPN=new Set();try{store.days().forEach(x=>{const d=store.get("day:"+x);(d&&d.support||[]).forEach(r=>{if((r.who||"").trim())SUPN.add(r.who.trim())})})}catch(e){}}
+  (D.support||[]).forEach(r=>{if((r.who||"").trim())SUPN.add(r.who.trim())});
+  const set=new Set([...supRoster().filter(p=>p.active!==false).map(p=>p.name),...SUPN]);
   const el=document.getElementById("dl-support");if(el)el.innerHTML=[...set].map(n=>`<option value="${esc(n)}">`).join("")}
 function renderLines(){fillSupportList();
   const grp=(key,title,cols,label)=>`<div class="grp"><div class="grp-h"><span>${title}</span><b id="sum-${key}">0</b></div>
@@ -1408,7 +1523,7 @@ function renderLines(){fillSupportList();
       <label class="sf"><span>車資</span>${numIn(`support.${i}.travel`,r.travel,"0")}</label>
       <label class="sf tot"><span>總額</span><input class="in n${det?" auto":""}" data-k="support.${i}.amt" value="${esc(show(r.amt))}" inputmode="numeric" placeholder="自動"${det?" readonly":""}></label>
     </div>`}).join("")}
-    <button type="button" class="btn sm add" data-addline="support">＋ 新增支援人員</button>
+    <button type="button" class="btn sm add" data-addline="support">＋ 新增支援人員</button> <button type="button" class="btn sm" data-findsup="1">找可支援人員</button>
     <p class="note" style="margin:4px 0 0">總額＝時數 × 時薪 ＋ 車資。名冊裡的人員會自動帶入預設時薪與車資。</p></div>`;
   $("exp").innerHTML=grp("daily","日常支出",["item"],"項目")+supGrp+grp("meal","限時餐點",["item","shift"],"場次，如 11#1")+grp("ref","舊帶新紅包",["who","shift"],"負責人")+grp("petty","補充零用金（從金庫拿上來，現金＋）",["who"],"負責人")+grp("oth","其他收入／回帳（現金＋）",["item"],"項目，如 竹北獎池回款");
   if(!Array.isArray(D.mem))D.mem=[];
@@ -1512,6 +1627,7 @@ day.addEventListener("click",e=>{
   const segEl=t.closest("[data-seg]");
   if(segEl){setPath(segEl.dataset.seg,t.dataset.v);segEl.dataset.seg.startsWith("sessions.")?renderSessions():renderLines();refresh();save();return}
   if(t.dataset.addsess){addSession(t.dataset.addsess);return}
+  if(t.dataset.findsup){flush();$("sc-date").value=D.date;$("sc-month").value=D.date.slice(0,7);showView("sched");return}
   if(t.dataset.delsess!=null){const i=+t.dataset.delsess;const removed=D.sessions.splice(i,1)[0];renderSessions();refresh();save();
     toast(`已刪除第 ${i+1} 場`,()=>{D.sessions.splice(i,0,removed);renderSessions();refresh();save()});return}
   if(t.dataset.tog){const id=t.dataset.tog;openDisc.has(id)?openDisc.delete(id):openDisc.add(id);renderSessions();refresh();return}
@@ -1643,15 +1759,16 @@ window.addEventListener("afterprint",()=>{$("print-root").innerHTML=""});
 function renderHistory(){
   const m=$("h-month").value||todayISO().slice(0,7);
   const list=store.days().filter(x=>x.startsWith(m)).map(loadDay);
-  const tot={sess:0,heads:0,gross:0,prize:0,sup:0,due:0,actual:0,err:0,fe:0,fl:0};
-  const rows=list.map(d=>{const R=compute(d);
-    tot.sess+=R.T.sess;tot.heads+=R.T.heads;tot.gross+=R.T.gross;tot.prize+=R.T.prize;tot.sup+=R.T.sup;tot.due+=R.due;tot.actual+=R.should;tot.err+=R.err||0;tot.fe+=R.A.早.fee+R.A.跨.fee/2;tot.fl+=R.A.晚.fee+R.A.跨.fee/2;
-    return `<tr class="${d.date===D.date?"cur":""}"><td>${d.date.slice(5).replace("-","/")} ${wdOf(d.date)}</td><td>${R.T.sess}</td><td>${fmt(R.T.heads)}</td><td>${fmt(R.T.gross)}</td><td>${fmt(R.T.prize)}</td><td>${R.T.sup?fmt(R.T.sup):""}</td><td>${fmt(R.A.早.fee)}</td><td>${fmt(R.A.晚.fee)}</td><td>${fmt(R.due)}</td><td>${fmt(R.should)}</td>
+  const tot={sess:0,heads:0,gross:0,prize:0,sup:0,due:0,actual:0,err:0,fe:0,fx:0,fl:0};
+  const RS=list.map(d=>compute(d));const hx=RS.some(R=>R.A.跨.fee);   // 有跨班行政費才顯示「跨班」欄
+  const rows=list.map((d,i)=>{const R=RS[i];
+    tot.sess+=R.T.sess;tot.heads+=R.T.heads;tot.gross+=R.T.gross;tot.prize+=R.T.prize;tot.sup+=R.T.sup;tot.due+=R.due;tot.actual+=R.should;tot.err+=R.err||0;tot.fe+=R.A.早.fee;tot.fx+=R.A.跨.fee;tot.fl+=R.A.晚.fee;
+    return `<tr class="${d.date===D.date?"cur":""}"><td>${d.date.slice(5).replace("-","/")} ${wdOf(d.date)}</td><td>${R.T.sess}</td><td>${fmt(R.T.heads)}</td><td>${fmt(R.T.gross)}</td><td>${fmt(R.T.prize)}</td><td>${R.T.sup?fmt(R.T.sup):""}</td><td>${fmt(R.A.早.fee)}</td>${hx?`<td>${R.A.跨.fee?fmt(R.A.跨.fee):""}</td>`:""}<td>${fmt(R.A.晚.fee)}</td><td>${fmt(R.due)}</td><td>${fmt(R.should)}</td>
       <td class="${R.hasCount?(R.err===0?"ok":"bad"):""}">${R.hasCount?fmt(R.err):"未點收"}</td>
       <td class="act"><button class="btn sm" data-open="${d.date}">開啟</button><button class="btn sm" data-print="${d.date}">列印</button><button class="btn sm danger" data-del="${d.date}">刪除</button></td></tr>`}).join("");
-  $("hist").innerHTML=`<thead><tr><th>日期</th><th>場次</th><th>人次</th><th>總流水</th><th>發放獎金</th><th>營收補入</th><th>早班行政費</th><th>晚班行政費</th><th>應得</th><th>實得</th><th>錯帳</th><th></th></tr></thead>
+  $("hist").innerHTML=`<thead><tr><th>日期</th><th>場次</th><th>人次</th><th>總流水</th><th>發放獎金</th><th>營收補入</th><th>早班行政費</th>${hx?"<th>跨班行政費</th>":""}<th>晚班行政費</th><th>應得</th><th>實得</th><th>錯帳</th><th></th></tr></thead>
     <tbody>${rows||`<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px">這個月還沒有報表</td></tr>`}</tbody>
-    ${list.length?`<tfoot><tr><td>本月合計（${list.length} 天）</td><td>${tot.sess}</td><td>${fmt(tot.heads)}</td><td>${fmt(tot.gross)}</td><td>${fmt(tot.prize)}</td><td>${tot.sup?fmt(tot.sup):""}</td><td>${fmt(tot.fe)}</td><td>${fmt(tot.fl)}</td><td>${fmt(tot.due)}</td><td>${fmt(tot.actual)}</td><td class="${tot.err?"bad":"ok"}">${fmt(tot.err)}</td><td></td></tr></tfoot>`:""}`;
+    ${list.length?`<tfoot><tr><td>本月合計（${list.length} 天）</td><td>${tot.sess}</td><td>${fmt(tot.heads)}</td><td>${fmt(tot.gross)}</td><td>${fmt(tot.prize)}</td><td>${tot.sup?fmt(tot.sup):""}</td><td>${fmt(tot.fe)}</td>${hx?`<td>${fmt(tot.fx)}</td>`:""}<td>${fmt(tot.fl)}</td><td>${fmt(tot.due)}</td><td>${fmt(tot.actual)}</td><td class="${tot.err?"bad":"ok"}">${fmt(tot.err)}</td><td></td></tr></tfoot>`:""}`;
   $("h-note").textContent=`這台電腦共存有 ${store.days().length} 天的報表。`;
 }
 $("hist").addEventListener("click",e=>{
@@ -1667,9 +1784,9 @@ $("h-month").addEventListener("change",renderHistory);
 $("h-csv").addEventListener("click",()=>{
   const m=$("h-month").value;const list=store.days().filter(x=>x.startsWith(m)).map(loadDay);
   if(!list.length){toast("這個月沒有資料");return}
-  const H=["日期","星期","場次","人次","總流水","發放獎金","營收補入","賽事剩餘現金","支出合計","應得金額","入會費","貼咖盈虧","補充零用金","掛帳未收","收回掛帳","本日實得","實際點收現金","錯帳金額","大祕寶費用","早班大眾","早班中階","早班高額","早班豪客","晚班大眾","晚班中階","晚班高額","晚班豪客","早班行政費","晚班行政費","早班優惠折抵","晚班優惠折抵","早班活動票券","晚班活動票券","早班點餐公關","晚班點餐公關","早班值班","晚班值班","錯帳原因","備註"];
+  const H=["日期","星期","場次","人次","總流水","發放獎金","營收補入","賽事剩餘現金","支出合計","應得金額","入會費","貼咖盈虧","補充零用金","掛帳未收","收回掛帳","本日實得","實際點收現金","錯帳金額","大祕寶費用","早班大眾","早班中階","早班高額","早班豪客","晚班大眾","晚班中階","晚班高額","晚班豪客","早班行政費","晚班行政費","早班優惠折抵","晚班優惠折抵","早班活動票券","晚班活動票券","早班點餐公關","晚班點餐公關","早班值班","晚班值班","錯帳原因","備註","跨班大眾","跨班中階","跨班高額","跨班豪客","跨班行政費","跨班優惠折抵","跨班活動票券","跨班點餐公關","人力支援","其他收入／回帳"];
   const q=v=>{v=String(v??"");return /[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v};
-  const rows=list.map(d=>{const R=compute(d);return [d.date,wdOf(d.date),R.T.sess,R.T.heads,R.T.gross,R.T.prize,R.T.sup,R.T.rem,R.E.total,R.due,num(d.join),R.pl,R.E.petty,R.crNew,R.crBack,R.should,R.hasCount?R.counted:"",R.hasCount?R.err:"",R.jpFee,...R.A.早.t,...R.A.晚.t,R.A.早.fee,R.A.晚.fee,R.A.早.disc,R.A.晚.disc,R.A.早.tk,R.A.晚.tk,R.A.早.meal,R.A.晚.meal,d.staff.em,d.staff.lm,d.errNote,d.note].map(q).join(",")});
+  const rows=list.map(d=>{const R=compute(d);return [d.date,wdOf(d.date),R.T.sess,R.T.heads,R.T.gross,R.T.prize,R.T.sup,R.T.rem,R.E.total,R.due,num(d.join),R.pl,R.E.petty,R.crNew,R.crBack,R.should,R.hasCount?R.counted:"",R.hasCount?R.err:"",R.jpFee,...R.A.早.t,...R.A.晚.t,R.A.早.fee,R.A.晚.fee,R.A.早.disc,R.A.晚.disc,R.A.早.tk,R.A.晚.tk,R.A.早.meal,R.A.晚.meal,d.staff.em,d.staff.lm,d.errNote,d.note,...R.A.跨.t,R.A.跨.fee,R.A.跨.disc,R.A.跨.tk,R.A.跨.meal,R.E.support,R.E.oth].map(q).join(",")});
   download(`竹科日報_${m}.csv`,"﻿"+[H.join(","),...rows].join("\r\n"),"text/csv");
 });
 
@@ -1706,7 +1823,7 @@ setv.addEventListener("click",e=>{
 $("ref-reset").addEventListener("click",()=>{cfg.tlt=clone(DEF_TLT);cfg.mttList=clone(DEF_MTT);cfg.names=DEF_NAMES.slice();saveCfg();renderSettings();toast("對照表已還原預設")});
 $("bk-export").addEventListener("click",()=>{
   flush();const days={};store.days().forEach(x=>days[x]=store.get("day:"+x));
-  download(`營運管理系統備份_${todayISO().replace(/-/g,"")}.json`,JSON.stringify({app:"ctp-hsinchu-daily",ver:4,exportedAt:new Date().toISOString(),cfg,days,vault,credit,fin:{tx:TXm,ev:EVm,ovr:OVR,evmeta:EVMETA,xfer:XF,recv:RCV,close:CLOSE,open:OPEN,hist:HIST}}),"application/json");
+  download(`營運管理系統備份_${todayISO().replace(/-/g,"")}.json`,JSON.stringify({app:"ctp-hsinchu-daily",ver:4,exportedAt:new Date().toISOString(),cfg,days,vault,credit,proj:PJ,sched:Object.fromEntries(localKeys().filter(k=>k.startsWith("sched:")).map(k=>[k.slice(6),store.get(k)])),fin:{tx:TXm,ev:EVm,ovr:OVR,evmeta:EVMETA,xfer:XF,recv:RCV,close:CLOSE,open:OPEN,hist:HIST}}),"application/json");
   toast("備份已下載");
 });
 $("bk-file").addEventListener("change",e=>{
@@ -1716,6 +1833,8 @@ $("bk-file").addEventListener("change",e=>{
       if(j.cfg){cfg=Object.assign(cfg,j.cfg);if(!Array.isArray(cfg.people))cfg.people=(cfg.staff||[]).map(name=>({name,role:"",active:true}));saveCfg()}
       if(Array.isArray(j.vault)){vault=j.vault;saveVault()}
       if(Array.isArray(j.credit)){credit=j.credit;saveCredit()}
+      if(Array.isArray(j.proj)){PJ=j.proj;savePJ()}
+      if(j.sched)Object.entries(j.sched).forEach(([m,v])=>{if(v&&v.people)store.set("sched:"+m,v)});
       if(j.fin){TXm=j.fin.tx||[];EVm=j.fin.ev||[];OVR=j.fin.ovr||{};EVMETA=j.fin.evmeta||{};XF=j.fin.xfer||[];RCV=j.fin.recv||[];CLOSE=j.fin.close||{};OPEN=j.fin.open||null;HIST=j.fin.hist||{months:{}};saveTXm();saveEVm();saveOVR();saveEVMETA();saveXF();saveRCV();saveCLOSE();saveOPEN();saveHIST()}
       D=loadDay(D.date);renderSettings();toast(`已還原 ${n} 天報表`)}
     catch(err){toast("還原失敗：這不是本系統下載的備份檔")}};
@@ -1786,7 +1905,7 @@ function renderMonth(){
   $("mo-cats").innerHTML=M.catRows.length?`<tr><th>類別</th><th>金額</th><th>占比</th></tr>`+M.catRows.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="v">${fmt(v)}</td><td class="v">${(v/S.vOut*100).toFixed(1)}%</td></tr>`).join("")+`<tr><td><b>合計</b></td><td class="v"><b>${fmt(S.vOut)}</b></td><td></td></tr>`:`<tr><td style="color:var(--muted)">本月沒有金庫請款</td></tr>`;
   $("mo-sum").innerHTML=`
     <tr><td>賽事營收（剩餘現金）</td><td class="v">${fmt(S.rem)}</td></tr>
-    <tr><td>　− 日報支出（日常、餐點、舊帶新）</td><td class="v">${fmt(S.exp)}</td></tr>
+    <tr><td>　− 日報支出（日常、人力支援、餐點、舊帶新）</td><td class="v">${fmt(S.exp)}</td></tr>
     <tr><td>　− 金庫支出（請款）</td><td class="v">${fmt(S.vOut)}</td></tr>
     <tr><td><b>估算淨額</b></td><td class="v"><b>${fmt(M.net)}</b></td></tr>
     <tr><td colspan="2" style="height:6px;border:0"></td></tr>
@@ -1982,7 +2101,7 @@ $("cr-table").addEventListener("click",e=>{
 
 
 /* ================= 支援人員 ================= */
-const supRoster=()=>Array.isArray(cfg.supRoster)?cfg.supRoster:(cfg.supRoster=[]);
+const supRoster=()=>cfg.people;   // 支援人員名冊已併入人員名單（舊的 cfg.supRoster 保留不動，只在第一次載入時合併）
 const supHas=r=>String(r.hours??"").trim()!==""||String(r.rate??"").trim()!==""||String(r.travel??"").trim()!=="";
 const supFind=name=>{const n=String(name||"").trim().toLowerCase();return n?supRoster().find(p=>p.name.trim().toLowerCase()===n):null};
 function supSync(){
@@ -2014,8 +2133,8 @@ function renderSup(){
     <div class="kpi"><div class="k">車資合計</div><div class="v">${fmt(travel)}</div></div>`;
   const by={};rows.forEach(r=>{const o=by[r.who]=by[r.who]||{n:0,days:new Set(),hours:0,hn:0,travel:0,amt:0,last:""};o.n++;o.days.add(r.date);if(r.hours!=null){o.hours+=r.hours;o.hn++}o.travel+=r.travel;o.amt+=r.amt;if(r.date>o.last)o.last=r.date});
   const L=Object.entries(by).sort((a,b)=>b[1].amt-a[1].amt);
-  $("sp-by").innerHTML=`<thead><tr><th style="text-align:left">姓名</th><th>名冊</th><th>出勤天數</th><th>人次</th><th>總時數</th><th>薪資（不含車資）</th><th>車資</th><th>總額</th><th>最近一次</th></tr></thead><tbody>`+
-    (L.map(([k,o])=>{const inR=!!supFind(k);return `<tr><td style="text-align:left;font-family:var(--f-body)"><a href="#" data-spwho="${esc(k)}"><b>${esc(k)}</b></a></td><td>${inR?`<span class="tag t-in">名冊</span>`:(k==="（未填姓名）"?"":`<button class="btn sm" type="button" data-spaddname="${esc(k)}">加入名冊</button>`)}</td>
+  $("sp-by").innerHTML=`<thead><tr><th style="text-align:left">姓名</th><th>人員名單</th><th>出勤天數</th><th>人次</th><th>總時數</th><th>薪資（不含車資）</th><th>車資</th><th>總額</th><th>最近一次</th></tr></thead><tbody>`+
+    (L.map(([k,o])=>{const inR=!!supFind(k);return `<tr><td style="text-align:left;font-family:var(--f-body)"><a href="#" data-spwho="${esc(k)}"><b>${esc(k)}</b></a></td><td>${inR?`<span class="tag t-in">人員名單</span>`:(k==="（未填姓名）"?"":`<button class="btn sm" type="button" data-spaddname="${esc(k)}">加入人員名單</button>`)}</td>
       <td>${o.days.size}</td><td>${o.n}</td><td>${o.hn?(+o.hours.toFixed(1)).toLocaleString("en-US"):"—"}${o.hn&&o.hn<o.n?`<div style="font-size:11px;color:var(--muted)">${o.n-o.hn} 次未填時數</div>`:""}</td><td>${fmt(o.amt-o.travel)}</td><td>${fmt(o.travel)}</td><td><b>${fmt(o.amt)}</b></td><td>${o.last.slice(5).replace("-","/")}</td></tr>`}).join("")
     ||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px;font-family:var(--f-body)">這段期間沒有支援紀錄</td></tr>`)+
     (L.length?`</tbody><tfoot><tr><td style="text-align:left">合計</td><td></td><td>${new Set(rows.map(r=>r.date)).size}</td><td>${rows.length}</td><td>${hours?(+hours.toFixed(1)).toLocaleString("en-US"):"—"}</td><td>${fmt(amt-travel)}</td><td>${fmt(travel)}</td><td><b>${fmt(amt)}</b></td><td></td></tr></tfoot>`:"</tbody>");
@@ -2023,32 +2142,16 @@ function renderSup(){
     (rows.map(r=>`<tr><td>${r.date.slice(5).replace("-","/")} ${wdOf(r.date)}${spScope==="all"?`<div style="font-size:11px;color:var(--muted)">${r.date.slice(0,4)}</div>`:""}</td><td style="text-align:left;font-family:var(--f-body)">${esc(r.who)}</td><td>${esc(r.shift)}</td>
       <td>${r.hours==null?"—":r.hours}</td><td>${r.rate==null?"—":fmt(r.rate)}</td><td>${r.travel?fmt(r.travel):""}</td><td><b>${fmt(r.amt)}</b></td><td class="act"><button class="btn sm" type="button" data-spopen="${r.date}">開啟日報</button></td></tr>`).join("")
     ||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">沒有紀錄</td></tr>`)+`</tbody>`;
-  const all=supRows();
-  $("sp-roster").innerHTML=`<thead><tr><th style="text-align:left">姓名</th><th>預設時薪</th><th>預設車資</th><th style="text-align:left">聯絡方式</th><th style="text-align:left">備註</th><th>累計支援</th><th>啟用</th><th></th></tr></thead><tbody>`+
-    (supRoster().map((p,i)=>{const n=all.filter(r=>r.who.trim().toLowerCase()===p.name.trim().toLowerCase()).length;return `<tr class="${p.active===false?"off":""}">
-      <td style="text-align:left"><input class="in" data-spr="${i}.name" value="${esc(p.name)}"></td>
-      <td><input class="in n" data-spr="${i}.rate" value="${esc(show(p.rate))}" inputmode="numeric" style="width:90px"></td>
-      <td><input class="in n" data-spr="${i}.travel" value="${esc(show(p.travel))}" inputmode="numeric" style="width:90px"></td>
-      <td><input class="in" data-spr="${i}.contact" value="${esc(p.contact||"")}"></td><td><input class="in" data-spr="${i}.note" value="${esc(p.note||"")}"></td>
-      <td>${n} 次</td><td><input type="checkbox" data-spr="${i}.active"${p.active===false?"":" checked"}></td>
-      <td class="act"><button type="button" class="icon-x" data-sprdel="${i}" aria-label="刪除">×</button></td></tr>`}).join("")
-    ||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;font-family:var(--f-body)">名冊還沒有人員，可用下方表單新增，或在上方統整表按「加入名冊」</td></tr>`)+`</tbody>`;
 }
-function supAdd(o){const name=String(o.name||"").trim();if(!name)return false;if(supFind(name)){toast(`「${name}」已在名冊中`);return false}
-  supRoster().push({id:uid(),name,rate:o.rate===""||o.rate==null?"":num(o.rate),travel:o.travel===""||o.travel==null?"":num(o.travel),contact:o.contact||"",note:o.note||"",active:true});saveCfg();return true}
+function supAdd(o){const name=String(o.name||"").trim();if(!name)return false;if(supFind(name)){toast(`「${name}」已在人員名單中`);return false}
+  cfg.people.push(normPerson({id:uid(),name,role:"",kind:"外部支援",rate:o.rate===""||o.rate==null?"":num(o.rate),travel:o.travel===""||o.travel==null?"":num(o.travel),contact:o.contact||"",note:o.note||"",active:true}));saveCfg();return true}
 $("sp-scope").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;spScope=b.dataset.v;renderSup()});
 $("sp-month").addEventListener("change",renderSup);$("sp-q").addEventListener("input",renderSup);
-$("sp-add").addEventListener("submit",e=>{e.preventDefault();if(supAdd({name:$("spa-name").value,rate:$("spa-rate").value,travel:$("spa-travel").value,contact:$("spa-contact").value.trim(),note:$("spa-note").value.trim()})){toast("已加入名冊");$("sp-add").reset();renderSup()}});
 $("view-sup").addEventListener("click",e=>{
   const o=e.target.closest("[data-spopen]");if(o){goDate(o.dataset.spopen);showView("day");return}
   const w=e.target.closest("[data-spwho]");if(w){e.preventDefault();$("sp-q").value=w.dataset.spwho;renderSup();return}
-  const a=e.target.closest("[data-spaddname]");if(a){if(supAdd({name:a.dataset.spaddname})){toast(`已把「${a.dataset.spaddname}」加入名冊，可在下方補上預設時薪`);renderSup()}return}
-  const d=e.target.closest("[data-sprdel]");if(d){if(!d.dataset.armed){d.dataset.armed="1";d.classList.add("armed");setTimeout(()=>{if(d.isConnected){delete d.dataset.armed;d.classList.remove("armed")}},3000);return}
-    const i=+d.dataset.sprdel;const rm=supRoster().splice(i,1)[0];saveCfg();renderSup();toast(`已從名冊移除「${rm.name}」（日報紀錄不受影響）`,()=>{supRoster().splice(i,0,rm);saveCfg();renderSup()})}
+  const a=e.target.closest("[data-spaddname]");if(a){if(supAdd({name:a.dataset.spaddname})){toast(`已把「${a.dataset.spaddname}」加入人員名單（外部支援），可到「人員」頁補上時薪與館別`);renderSup()}return}
 });
-$("view-sup").addEventListener("change",e=>{const k=e.target.dataset.spr;if(!k)return;const [i,f]=k.split(".");const p=supRoster()[+i];if(!p)return;
-  if(f==="active")p.active=e.target.checked;else if(f==="rate"||f==="travel")p[f]=e.target.value.trim()===""?"":num(e.target.value);
-  else if(f==="name"){const v=e.target.value.trim();if(!v){e.target.value=p.name;return}p.name=v}else p[f]=e.target.value.trim();saveCfg();if(f==="active"||f==="name")renderSup()});
 $("view-sup").addEventListener("focusout",e=>{const el=e.target;if(el.classList.contains("n")&&/\d/.test(el.value))el.value=fmt(num(el.value))});
 $("sp-csv").addEventListener("click",()=>{const L=supRows();if(!L.length){toast("沒有支援紀錄");return}
   download(`支援人員_${todayISO().replace(/-/g,"")}.csv`,"﻿"+[["日期","星期","姓名","班別","時數","時薪","車資","總額"],...L.slice().reverse().map(r=>[r.date,wdOf(r.date),r.who,r.shift,r.hours??"",r.rate??"",r.travel||"",r.amt])].map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
@@ -2139,11 +2242,17 @@ $("er-csv").addEventListener("click",()=>{const m=$("er-month").value||todayISO(
   download(`錯帳統計_${erScope==="year"?y:m}.csv`,"﻿"+L.map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
 
 /* ================= 人員 ================= */
-function staffNames(){return cfg.people.filter(p=>p.active!==false).map(p=>p.name)}
-function addPerson(name,role){
+const KINDS=["正職","PT","外部支援"];
+const SHS=["早","跨","晚"];
+// 人員欄位（只新增、不改名）：name, role, active ＋ id, kind（身分）, branch（館別）, rate（時薪）, travel（車資）, shifts（常態班別，已改由班表推測、畫面不再使用）, hours（上班時間，同上）, contact, note
+// 以姓名產生 id：多台電腦各自升級時 id 一致，雲端合併才不會重複
+function normPerson(p){if(!p.id)p.id=String(p.name||"").trim()?"p:"+String(p.name).trim():uid();if(!KINDS.includes(p.kind))p.kind="正職";if(!p.branch)p.branch=cfg.homeBranch||(cfg.branches||[])[0]||"竹科旗艦館";
+  if(!Array.isArray(p.shifts))p.shifts=[];["role","contact","note","hours"].forEach(k=>{if(p[k]==null)p[k]=""});if(p.rate==null)p.rate="";if(p.travel==null)p.travel="";if(p.active==null)p.active=true;return p}
+function staffNames(){return cfg.people.filter(p=>p.active!==false&&p.kind!=="外部支援").map(p=>p.name)}   // 店內人員選單不含外部支援
+function addPerson(name,role,extra){
   name=String(name||"").trim();if(!name)return false;
   const ex=cfg.people.find(p=>p.name===name);
-  if(ex){ex.active=true}else cfg.people.push({name,role:role||"",active:true});
+  if(ex){ex.active=true}else cfg.people.push(normPerson(Object.assign({name,role:role||"",active:true},extra||{})));
   saveCfg();return true;
 }
 function personSel(path,val,ph,attr="data-k"){
@@ -2152,23 +2261,308 @@ function personSel(path,val,ph,attr="data-k"){
   return `<select class="in" ${attr}="${path}" data-person="1"><option value="">${ph||"選擇人員"}</option>${opts.map(n=>`<option${n===v?" selected":""}>${esc(n)}</option>`).join("")}<option value="__new">＋ 新增人員…</option></select>`;
 }
 function askNewPerson(){const nm=window.prompt("新增人員姓名");if(nm&&addPerson(nm)){toast(`已新增人員「${nm.trim()}」`);return nm.trim()}return null}
+const branchOpts=(sel,all)=>(all?`<option value="">${all}</option>`:"")+cfg.branches.map(b=>`<option${b===sel?" selected":""}>${esc(b)}</option>`).join("");
+const shortBr=b=>String(b||"").replace(/旗艦館$|館$/,"");
 function renderPeople(){
-  $("p-list").innerHTML=cfg.people.length?cfg.people.map((p,i)=>`<div class="p-row ${p.active===false?"off":""}">
-      <input class="in" data-pi="${i}" data-pf="name" value="${esc(p.name)}">
-      <input class="in" data-pi="${i}" data-pf="role" value="${esc(p.role||"")}" placeholder="職稱">
-      <label class="jpchk"><input type="checkbox" data-pi="${i}" data-pf="active"${p.active!==false?" checked":""}> 在職</label>
-      <button type="button" class="icon-x" data-pdel="${i}" aria-label="刪除">×</button></div>`).join("")
-    :`<div class="empty"><p>還沒有人員，從上面新增第一位。</p></div>`;
+  cfg.people.forEach(normPerson);
+  const fb=$("p-fbranch").value,fk=$("p-fkind").value,q=($("p-q").value||"").trim().toLowerCase(),off=$("p-off").checked;
+  $("p-fbranch").innerHTML=branchOpts(fb,"全部館別");$("p-fkind").innerHTML=`<option value="">全部身分</option>`+KINDS.map(k=>`<option${k===fk?" selected":""}>${k}</option>`).join("");
+  const pk0=$("p-kind").value;$("p-kind").innerHTML=KINDS.map(k=>`<option${k===pk0?" selected":""}>${k}</option>`).join("");
+  const pb=$("p-branch").value;$("p-branch").innerHTML=branchOpts(pb||cfg.homeBranch);
+  const L=cfg.people.map((p,i)=>({p,i})).filter(({p})=>(off||p.active!==false)&&(!fb||p.branch===fb)&&(!fk||p.kind===fk)&&(!q||p.name.toLowerCase().includes(q)));
+  const ord=p=>(cfg.branches.indexOf(p.branch)+1)*10+KINDS.indexOf(p.kind);
+  L.sort((a,b)=>(a.p.active===false)-(b.p.active===false)||ord(a.p)-ord(b.p)||a.i-b.i);
+  $("p-count").textContent=`顯示 ${L.length} 位／共 ${cfg.people.length} 位`;
+  const sel=(i,f,list,v)=>`<select class="in" data-pi="${i}" data-pf="${f}" style="width:auto">${list.map(x=>`<option${x===v?" selected":""}>${esc(x)}</option>`).join("")}${v&&!list.includes(v)?`<option selected>${esc(v)}</option>`:""}</select>`;
+  $("p-table").innerHTML=`<thead><tr><th>姓名</th><th>職稱</th><th>身分</th><th>館別</th><th>時薪</th><th>車資</th><th>平常時段（依班表推測）</th><th>聯絡方式</th><th>備註</th><th>在職</th><th></th></tr></thead><tbody>`+
+    (L.map(({p,i})=>`<tr class="${p.active===false?"off":""}">
+      <td><input class="in" data-pi="${i}" data-pf="name" value="${esc(p.name)}" style="width:96px"></td>
+      <td><input class="in" data-pi="${i}" data-pf="role" value="${esc(p.role)}" placeholder="職稱" style="width:80px"></td>
+      <td>${sel(i,"kind",KINDS,p.kind)}</td><td>${sel(i,"branch",cfg.branches,p.branch)}</td>
+      <td><input class="in n" data-pi="${i}" data-pf="rate" value="${esc(show(p.rate))}" inputmode="numeric"></td>
+      <td><input class="in n" data-pi="${i}" data-pf="travel" value="${esc(show(p.travel))}" inputmode="numeric"></td>
+      <td style="font-size:12.5px;color:var(--ink-2);white-space:nowrap">${(()=>{const f=inferShift(p.name,todayISO())||inferShift(p.name,nextYM(todayISO().slice(0,7))+"-01");return f?esc(f.label):"<span style='color:var(--muted)'>—</span>"})()}</td>
+      <td><input class="in" data-pi="${i}" data-pf="contact" value="${esc(p.contact)}" placeholder="電話／LINE" style="width:104px"></td>
+      <td><input class="in" data-pi="${i}" data-pf="note" value="${esc(p.note)}" style="width:104px"></td>
+      <td><input type="checkbox" data-pi="${i}" data-pf="active"${p.active!==false?" checked":""} aria-label="在職"></td>
+      <td><button type="button" class="icon-x" data-pdel="${i}" aria-label="刪除">×</button></td></tr>`).join("")
+     ||`<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px">${cfg.people.length?"沒有符合條件的人員":"還沒有人員，從上面新增第一位。"}</td></tr>`)+`</tbody>`;
 }
 $("p-form").addEventListener("submit",e=>{e.preventDefault();
   const n=$("p-name").value.trim();if(!n)return;
   if(cfg.people.some(p=>p.name===n&&p.active!==false)){toast(`「${n}」已在名單中`);return}
-  addPerson(n,$("p-role").value.trim());$("p-name").value="";$("p-role").value="";renderPeople();$("p-name").focus();toast(`已新增「${n}」`)});
-$("p-list").addEventListener("change",e=>{const i=e.target.dataset.pi;if(i==null)return;const f=e.target.dataset.pf;
-  if(f==="active")cfg.people[i].active=e.target.checked;else{const v=e.target.value.trim();if(f==="name"&&!v){renderPeople();return}cfg.people[i][f]=v}
-  saveCfg();renderPeople()});
-$("p-list").addEventListener("click",e=>{const b=e.target.closest("[data-pdel]");if(!b)return;const i=+b.dataset.pdel;const rm=cfg.people.splice(i,1)[0];saveCfg();renderPeople();
+  const r=$("p-rate").value.trim();
+  addPerson(n,$("p-role").value.trim(),{kind:$("p-kind").value,branch:$("p-branch").value,rate:r===""?"":num(r)});
+  $("p-name").value="";$("p-role").value="";$("p-rate").value="";renderPeople();$("p-name").focus();toast(`已新增「${n}」`)});
+["p-fbranch","p-fkind","p-off"].forEach(id=>$(id).addEventListener("change",renderPeople));$("p-q").addEventListener("input",renderPeople);
+$("p-table").addEventListener("change",e=>{const i=e.target.dataset.pi;if(i==null)return;const p=cfg.people[+i];if(!p)return;const f=e.target.dataset.pf;
+  if(f==="active")p.active=e.target.checked;
+  else if(f==="rate"||f==="travel")p[f]=e.target.value.trim()===""?"":num(e.target.value);
+  else{const v=e.target.value.trim();
+    if(f==="name"){if(!v||cfg.people.some((x,j)=>j!==+i&&x.name===v)){toast(v?`「${v}」已在名單中`:"姓名不能空白");e.target.value=p.name;return}
+      if(p.name!==v)toast("已改名。班表與日報依姓名對應，舊紀錄仍是原本的名字")}
+    p[f]=v}
+  saveCfg();if(["active","kind","branch"].includes(f))renderPeople()});
+$("p-table").addEventListener("focusout",e=>{const el=e.target;if(el.classList.contains("n")&&/\d/.test(el.value))el.value=fmt(num(el.value))});
+$("p-table").addEventListener("click",e=>{
+  const b=e.target.closest("[data-pdel]");if(!b)return;const i=+b.dataset.pdel;const rm=cfg.people.splice(i,1)[0];saveCfg();renderPeople();
   toast(`已刪除「${rm.name}」`,()=>{cfg.people.splice(i,0,rm);saveCfg();renderPeople()})});
+
+/* ================= 班表／找支援 =================
+   資料：sched:YYYY-MM = {month, people:{姓名:{"1":"早","2":"休",…}}, updatedAt, src}
+   代碼：早／晚／跨（全天）／休（例、特休、病假…）／時間區間（14:00-23:00）；看不懂的代碼一律當作有上班 */
+const schedGet=m=>{const s=store.get("sched:"+m);return s&&s.people?s:{month:m,people:{}}};
+const schedSplit=()=>num(cfg.schedSplit)||18;
+const schedKey=(S,name)=>{const n=String(name||"").trim().toLowerCase();return Object.keys(S.people).find(k=>k.trim().toLowerCase()===n)};
+const OFFW=/^(休|例|例假|休假|off|特|特休|病|病假|事|事假|喪假|婚假|公休|補休|年假|請假|假|x|-|－|—|\/|／)$/i;
+const TMRE=/(\d{1,2})(?:[:：](\d{2}))?\s*[-~～–—至到]\s*(\d{1,2})(?:[:：](\d{2}))?/;
+function schedKind(c,slots){c=String(c??"").trim();if(!c)return {t:"none",c:""};
+  if(/病|事假|喪|婚|產|公假|公傷|生理|出差/.test(c)||/^x$/i.test(c))return {t:"off",c,leave:true};   // 請假、出差、X（不可排班）：不列入可支援
+  if(/^\d{3,4}$/.test(c)){const code=c.padStart(4,"0"),g=slots&&slots[code],h=+code.slice(0,2)+(+code.slice(2))/60;   // 排班系統：上班開始時間代碼
+    const sh=g==="早班"?["早"]:g==="晚班"?["晚"]:g==="中班"?["早","晚"]:[h<schedSplit()?"早":"晚"];return {t:"work",c,sh,k:sh.length>1?"跨":sh[0],tm:code}}
+  if(OFFW.test(c)||/休|假/.test(c))return {t:"off",c};
+  const tm=TMRE.exec(c);
+  if(tm){const s=+tm[1]+(+tm[2]||0)/60;let e=+tm[3]+(+tm[4]||0)/60;if(e<=s)e+=24;const sp=schedSplit();const sh=[];if(s<sp)sh.push("早");if(e>sp)sh.push("晚");if(!sh.length)sh.push("早");return {t:"work",c,sh,k:sh.length>1?"跨":sh[0],tm:`${+tm[1]}-${+tm[3]}`}}
+  if(/跨|全|通/.test(c))return {t:"work",c,sh:["早","晚"],k:"跨"};
+  const e=/早|白/.test(c),l=/晚|夜/.test(c);
+  if(e&&l)return {t:"work",c,sh:["早","晚"],k:"跨"};if(e)return {t:"work",c,sh:["早"],k:"早"};if(l)return {t:"work",c,sh:["晚"],k:"晚"};
+  return {t:"work",c,sh:["早","晚"],unk:true};
+}
+const schedCls=K=>K.t==="off"?"k-off":K.t==="work"?(K.unk?"k-x":"k-"+K.k):"";
+const schedDisp=(c,K)=>K.tm||(c.length>2?c.slice(0,2)+"…":c);
+
+/* ---------- 讀檔：CSV（UTF-8／Big5）與 .xlsx（瀏覽器內建解壓縮，不用外部套件） ---------- */
+function parseCSV(t){const rows=[];let row=[],cur="",q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];
+    if(q){if(ch==='"'){if(t[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}
+    else if(ch==='"')q=true;else if(ch===","||ch==="\t"){row.push(cur);cur=""}
+    else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;row.push(cur);rows.push(row);row=[];cur=""}else cur+=ch}
+  if(cur||row.length){row.push(cur);rows.push(row)}
+  return rows.map(r=>r.map(v=>/^\d+$/.test(v.trim())?+v.trim():v))}
+async function unzip(buf){
+  const dv=new DataView(buf);let eo=-1;for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-65557);i--){if(dv.getUint32(i,true)===0x06054b50){eo=i;break}}
+  if(eo<0)throw new Error("檔案不是有效的 .xlsx");
+  const n=dv.getUint16(eo+10,true);let p=dv.getUint32(eo+16,true);const files={};
+  for(let k=0;k<n;k++){if(dv.getUint32(p,true)!==0x02014b50)break;
+    const method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),el=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true);
+    files[new TextDecoder().decode(new Uint8Array(buf,p+46,nl))]={method,csize,off};p+=46+nl+el+cl}
+  return async name=>{const f=files[name];if(!f)return null;const lnl=dv.getUint16(f.off+26,true),lel=dv.getUint16(f.off+28,true);const data=new Uint8Array(buf,f.off+30+lnl+lel,f.csize);
+    if(f.method===0)return new TextDecoder().decode(data);
+    if(typeof DecompressionStream==="undefined")throw new Error("這個瀏覽器不支援讀取 .xlsx，請改用 Chrome／Edge，或先另存成 .csv");
+    return await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text()}}
+async function readXlsx(buf){
+  const get=await unzip(buf);const DP=new DOMParser();const xml=s=>DP.parseFromString(s||"<x/>","application/xml");
+  const ss=[];const sst=await get("xl/sharedStrings.xml");if(sst)[...xml(sst).getElementsByTagName("si")].forEach(si=>ss.push([...si.getElementsByTagName("t")].map(t=>t.textContent).join("")));
+  const wb=xml(await get("xl/workbook.xml")),rels=xml(await get("xl/_rels/workbook.xml.rels"));
+  const rmap={};[...rels.getElementsByTagName("Relationship")].forEach(r=>rmap[r.getAttribute("Id")]=r.getAttribute("Target"));
+  const out=[];
+  for(const s of [...wb.getElementsByTagName("sheet")]){
+    const rid=s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");
+    const tg=String(rmap[rid]||"");const path=tg.startsWith("/")?tg.slice(1):"xl/"+tg.replace(/^\.\//,"");const txt=await get(path);if(!txt)continue;
+    const rows=[];[...xml(txt).getElementsByTagName("c")].forEach(c=>{const m=/^([A-Z]+)(\d+)$/.exec(c.getAttribute("r")||"");if(!m)return;
+      let col=0;for(const ch of m[1])col=col*26+ch.charCodeAt(0)-64;col--;const row=+m[2]-1;
+      const tp=c.getAttribute("t"),v=c.getElementsByTagName("v")[0];let val="";
+      if(tp==="s")val=v?ss[+v.textContent]??"":"";else if(tp==="inlineStr")val=[...c.getElementsByTagName("t")].map(x=>x.textContent).join("");
+      else if(v)val=(tp==="str"||tp==="b"||tp==="e")?v.textContent:(v.textContent!==""&&isFinite(+v.textContent)?+v.textContent:v.textContent);
+      (rows[row]=rows[row]||[])[col]=val});
+    out.push({name:s.getAttribute("name")||"工作表",rows:Array.from(rows,r=>Array.from(r||[],x=>x??""))})}
+  if(!out.length)throw new Error("讀不到工作表內容");return out}
+async function readTable(f){const buf=await f.arrayBuffer();const u=new Uint8Array(buf);
+  if(u[0]===0x50&&u[1]===0x4b)return await readXlsx(buf);
+  if(/\.xls$/i.test(f.name)||(u[0]===0xd0&&u[1]===0xcf))throw new Error("舊版 .xls 請先另存成 .xlsx 或 .csv");
+  let t=new TextDecoder("utf-8").decode(buf);if(t.includes("�")){try{t=new TextDecoder("big5").decode(buf)}catch(e){}}
+  return [{name:f.name,rows:parseCSV(t.replace(/^﻿/,""))}]}
+
+/* ---------- 解析班表 ---------- */
+function cellDate(v){
+  if(typeof v==="number"){if(Number.isInteger(v)&&v>=1&&v<=31)return {m:null,d:v};
+    if(v>30000&&v<70000){const dt=new Date(Date.UTC(1899,11,30)+Math.round(v)*864e5);return {m:dt.toISOString().slice(0,7),d:dt.getUTCDate()}}return null}
+  const s=String(v??"").trim();if(!s)return null;let x;
+  if((x=/^(\d{4})[\/\-.年](\d{1,2})[\/\-.月](\d{1,2})日?/.exec(s)))return {m:`${x[1]}-${x[2].padStart(2,"0")}`,d:+x[3]};
+  if((x=/^(\d{1,2})[\/\-.月](\d{1,2})日?(\s*[(（].*)?$/.exec(s))&&+x[1]>=1&&+x[1]<=12&&+x[2]<=31)return {m:"MM"+x[1].padStart(2,"0"),d:+x[2]};
+  if((x=/^(\d{1,2})日?(\s*[(（].*)?$/.exec(s))&&+x[1]>=1&&+x[1]<=31)return {m:null,d:+x[1]};
+  return null}
+const fixM=(m,month)=>!m?month:m.startsWith("MM")?month.slice(0,4)+"-"+m.slice(2):m;
+function codeStr(v){if(typeof v==="number"){if(v>0&&v<1){const mm=Math.round(v*1440);return String(Math.floor(mm/60)).padStart(2,"0")+":"+String(mm%60).padStart(2,"0")}return String(v)}return String(v??"").replace(/\s+/g," ").trim()}
+function parseSched(rows,month){
+  rows=(rows||[]).map(r=>(r||[]).map(v=>typeof v==="string"?v.trim():v));
+  const NAMEH=/姓名|員工|人員|名字|名稱|同仁|^name$/i;
+  const pack=(out,cover,mode)=>{const months=Object.keys(out).sort();if(!months.length)throw new Error("沒有讀到任何人員的班別");
+    const main=months.slice().sort((a,b)=>(cover[b]?cover[b].size:Object.keys(out[b]).length)-(cover[a]?cover[a].size:Object.keys(out[a]).length))[0];
+    const names=[...new Set(months.flatMap(m=>Object.keys(out[m])))];const unk=new Set();months.forEach(m=>Object.values(out[m]).forEach(r=>Object.values(r).forEach(c=>{const K=schedKind(c);if(K.unk)unk.add(c)})));
+    return {months:out,cover,mode,main,names,unk:[...unk]}};
+  // 清單格式：日期、姓名、班別 三欄
+  for(let h=0;h<Math.min(rows.length,10);h++){const r=rows[h];
+    const ci=r.findIndex(v=>/^(日期|date)$/i.test(String(v))),ni=r.findIndex(v=>NAMEH.test(String(v))),si=r.findIndex(v=>/班別|班次|時段|^班$/.test(String(v)));
+    if(ci>=0&&ni>=0&&si>=0){const out={};rows.slice(h+1).forEach(x=>{const dd=cellDate(x[ci]),nm=String(x[ni]??"").trim();if(!dd||!nm)return;const mm=fixM(dd.m,month);
+      const c=codeStr(x[si]);if(c)((out[mm]=out[mm]||{})[nm]=out[mm][nm]||{})[dd.d]=c});return pack(out,{},"清單")}}
+  // 月曆格式：一列是日期，左邊一欄是姓名
+  let best=null;for(let h=0;h<Math.min(rows.length,15);h++){const cols=[];(rows[h]||[]).forEach((v,c)=>{const dd=cellDate(v);if(dd)cols.push({c,dd})});
+    if(cols.length>=7&&(!best||cols.length>best.cols.length))best={h,cols}}
+  if(!best)throw new Error("找不到日期列：請確認有一列寫著 1、2、3…或日期");
+  const first=best.cols[0].c,body=rows.slice(best.h+1);let nc=-1;
+  [rows[best.h],rows[best.h-1]||[]].forEach(hr=>{if(nc<0)for(let c=0;c<first;c++)if(NAMEH.test(String(hr[c]??""))){nc=c;break}});
+  if(nc<0){let bn=0;for(let c=0;c<first;c++){const n=body.filter(r=>{const v=r[c];return typeof v==="string"&&v&&!/^\d+$/.test(v)}).length;if(n>bn){bn=n;nc=c}}}
+  if(nc<0)throw new Error("找不到姓名欄：日期左邊要有一欄人名");
+  const SKIP=/合計|小計|人數|總計|統計|備註|說明|^星期|^週$|^日期$|姓名|^[早中晚跨]班$|^外地支援$|^[早晚]值$|^▍/;
+  const out={},cover={};best.cols.forEach(({dd})=>{const mm=fixM(dd.m,month);(cover[mm]=cover[mm]||new Set()).add(dd.d)});
+  let stop=false;
+  body.forEach(r=>{const nm=String(r[nc]??"").trim();if(stop||/^時段人力$/.test(nm)){stop=true;return}if(!nm||SKIP.test(nm)||/^\d+(\.\d+)?$/.test(nm))return;
+    best.cols.forEach(({c,dd})=>{const mm=fixM(dd.m,month);const row=((out[mm]=out[mm]||{})[nm]=out[mm][nm]||{});const v=codeStr(r[c]);if(v)row[dd.d]=v})});
+  return pack(out,cover,"月曆")}
+
+/* ---------- 排班系統匯出的 Excel：「員工」分頁（不讀 PIN）、「設定」分頁的時段班別 ---------- */
+function bookEmployees(sheets){
+  for(const sh of sheets){const rows=sh.rows||[];
+    for(let h=0;h<Math.min(rows.length,5);h++){const r=(rows[h]||[]).map(v=>String(v??"").trim());const ni=r.indexOf("姓名"),ti=r.indexOf("身分");if(ni<0||ti<0)continue;
+      const gi=r.indexOf("班別"),ai=r.indexOf("在職");   // 只取姓名、身分、班別、在職；其他欄位（含 PIN 碼）一律不讀
+      const out=rows.slice(h+1).map(x=>({name:String(x[ni]??"").trim(),type:String(x[ti]??"").trim(),group:gi>=0?String(x[gi]??"").trim():"",
+        active:ai<0||[1,"1",true,"TRUE","true","是","V","v"].includes(x[ai])})).filter(e=>e.name&&!/^▍/.test(e.name));
+      if(out.length)return out}}
+  return []}
+function bookSlots(sheets){const out={};
+  sheets.forEach(sh=>(sh.rows||[]).forEach(r=>{const g=String((r||[])[0]??"").trim(),c=(r||[])[1];
+    if(/^[早中晚]班$/.test(g)&&String(c??"").trim()!==""&&/^\d{3,4}$/.test(String(c).trim()))out[String(c).trim().padStart(4,"0")]=g}));
+  return out}
+const kindOf=t=>t==="PT"?"PT":t==="支援"?"外部支援":"正職";
+function syncBookEmployees(list,branch){let add=0,ch=0;
+  list.forEach(e=>{if(!e.active)return;const ex=cfg.people.find(p=>p.name.trim().toLowerCase()===e.name.toLowerCase());const role=kindOf(e.type)==="正職"&&e.type&&e.type!=="正職"?e.type:"";
+    if(!ex){cfg.people.push(normPerson({name:e.name,role,kind:kindOf(e.type),branch,active:true}));add++;return}
+    normPerson(ex);if(!ex.role&&role){ex.role=role;ch++}});   // 已有的人只補空白欄位，不覆蓋營運系統填的時薪、館別等
+  if(add||ch)saveCfg();return add}
+
+/* ---------- 依班表推測平常的上班時段（取當月，不足 8 天再加上個月） ---------- */
+function inferShift(name,date){const m=date.slice(0,7);const cnt={早:0,晚:0,跨:0},codes={};let n=0;
+  for(const mm of [m,prevYM(m)]){const S=schedGet(mm),k=schedKey(S,name);if(k)Object.values(S.people[k]).forEach(c=>{const K=schedKind(c,S.slots);if(K.t!=="work"||K.unk)return;n++;
+      cnt[K.k||(K.sh.length>1?"跨":K.sh[0])]++;const key=K.tm||K.c;codes[key]=(codes[key]||0)+1});if(n>=8)break}
+  if(!n)return null;const top=Object.entries(codes).sort((a,b)=>b[1]-a[1])[0][0];
+  const sh=cnt.早/n>=.6?["早"]:cnt.晚/n>=.6?["晚"]:cnt.跨/n>=.6?["跨"]:["早","晚"];
+  const label=sh.length>1?`早晚都有（早 ${cnt.早}・晚 ${cnt.晚}${cnt.跨?"・中 "+cnt.跨:""}）`:`${sh[0]==="跨"?"中班／全天":sh[0]+"班"}・常上 ${top}`;
+  return {sh,top,n,label}}
+
+/* ---------- 找支援 ---------- */
+let scShift=new Date().getHours()<schedSplit()-2?"早":"晚";
+function renderFind(){
+  const date=$("sc-date").value||todayISO(),sh=scShift,B=$("sc-branch").value,other=$("sc-other").checked,ext=$("sc-ext").checked;
+  document.querySelectorAll("#sc-shift button").forEach(b=>b.className=b.dataset.v===sh?"on "+({早:"e",跨:"x",晚:"l"})[sh]:"");
+  const S=schedGet(date.slice(0,7)),dd=String(+date.slice(8)),hasS=Object.keys(S.people).length>0;
+  const raw=store.get("day:"+date),inDay=new Set();
+  if(raw){Object.values(raw.staff||{}).forEach(n=>n&&inDay.add(String(n).trim().toLowerCase()));(raw.support||[]).forEach(r=>(r.who||"").trim()&&inDay.add(r.who.trim().toLowerCase()))}
+  const need=sh==="跨"?["早","晚"]:[sh];
+  const recent={},from=isoAdd(date,-30);supRows().forEach(r=>{if(r.date>=from&&r.date<=date){const k=r.who.toLowerCase();recent[k]=(recent[k]||0)+1}});
+  const G={a:[],b:[],c:[]},skip=[];
+  cfg.people.forEach(p=>{normPerson(p);if(p.active===false)return;const isExt=p.kind==="外部支援";
+    if(isExt&&!ext)return;if(!other&&p.branch!==B)return;
+    const key=p.name.trim().toLowerCase(),k=schedKey(S,p.name),K=k?schedKind(S.people[k][dd],S.slots):{t:"nosched"};
+    const inf=inferShift(p.name,date),fit=inf?need.every(s=>inf.sh.includes(s)||inf.sh.includes("跨")):null;
+    const row={p,K,fit,inf,n:recent[key]||0};
+    if(inDay.has(key)){skip.push(`${p.name}（已在日報）`);return}
+    if(K.t==="work"){if(need.some(s=>K.sh.includes(s))){skip.push(`${p.name}（${K.c}）`);return}row.why=`當天上 ${K.c}`;G.c.push(row);return}
+    if(K.t==="off"){if(K.leave){skip.push(`${p.name}（${K.c}）`);return}row.why=`班表：${K.c}`;G.a.push(row);return}
+    row.why=K.t==="none"?"班表空白":isExt?"外部支援":"本月沒有這個人的班表";G.b.push(row)});
+  const rk=x=>x.fit===true?0:x.fit===null?1:2,rt=x=>x.p.rate===""?1e9:num(x.p.rate);
+  const sortF=(x,y)=>(x.p.branch!==B)-(y.p.branch!==B)||rk(x)-rk(y)||rt(x)-rt(y)||x.p.name.localeCompare(y.p.name);
+  const tr=r=>`<tr><td><b>${esc(r.p.name)}</b>${r.p.role?` <span class="sc-why">${esc(r.p.role)}</span>`:""}</td><td>${esc(r.p.branch)}${r.p.branch!==B?` <span class="tag t-count">跨館</span>`:""}</td><td>${esc(r.p.kind)}</td>
+    <td class="sc-why">${esc(r.why)}</td><td>${r.inf?esc(r.inf.label):"<span class='sc-why'>沒有班表可推測</span>"}${r.fit===false?`<div class="sc-why" style="color:var(--warn)">平常不上${sh}班</div>`:""}</td>
+    <td class="r">${r.p.rate===""?"—":fmt(num(r.p.rate))}</td><td class="r">${num(r.p.travel)?fmt(num(r.p.travel)):""}</td><td class="r">${r.n||""}</td><td>${esc(r.p.contact)}</td>
+    <td style="white-space:nowrap"><button class="btn sm primary" type="button" data-scadd="${esc(r.p.id)}">加入日報支援</button></td></tr>`;
+  const grp=(t,sub,L)=>L.length?`<tr class="gh"><td colspan="10">${t}（${L.length}）<small>${sub}</small></td></tr>`+L.sort(sortF).map(tr).join(""):"";
+  const n=G.a.length+G.b.length+G.c.length;
+  $("sc-result").innerHTML=`<div class="tbl-wrap"><table class="sc-res" style="min-width:920px"><tr><th>姓名</th><th>館別</th><th>身分</th><th>當天狀況</th><th>平常時段（依班表推測）</th><th style="text-align:right">時薪</th><th style="text-align:right">車資</th><th style="text-align:right">近 30 天支援</th><th>聯絡方式</th><th></th></tr>
+    ${grp("① 當天休假","班表排休，優先詢問",G.a)}${grp("② 沒有排班","班表空白、沒有班表或外部支援人員",G.b)}${grp("③ 當天上另一班","可詢問是否延長或加班",G.c)}
+    ${n?"":`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">找不到可支援的人；可以勾選「含其他館人員」或「含外部支援」擴大範圍</td></tr>`}</table></div>
+    <p class="note">${date.slice(5).replace("-","/")} ${wdOf(date)} ${sh}班 · ${esc(B)}缺人 · 排序：同館優先 → 平常就上這個班 → 時薪低到高${skip.length?`<br>已在班、請假或已在日報，不列入：${skip.map(esc).join("、")}`:""}${hasS?"":`<br><span style="color:var(--warn)">${+date.slice(5,7)} 月還沒有班表，結果只依人員資料判斷</span>`}</p>`;
+}
+function scAddSupport(pid){const p=cfg.people.find(x=>x.id===pid);if(!p)return;const date=$("sc-date").value||todayISO();flush();
+  const d=date===D.date?D:loadDay(date);if(!Array.isArray(d.support))d.support=[];
+  if(d.support.some(r=>(r.who||"").trim().toLowerCase()===p.name.trim().toLowerCase())){toast(`${p.name} 已在 ${date.slice(5).replace("-","/")} 的日報支援裡`);return}
+  const row={who:p.name,shift:scShift,hours:"",rate:p.rate===""?"":num(p.rate),travel:p.travel===""?"":num(p.travel),amt:"",autoFrom:p.name};
+  const i=d.support.findIndex(r=>!(r.who||"").trim()&&!num(r.amt)&&!supHas(r));if(i>=0)d.support[i]=row;else d.support.push(row);
+  d.updatedAt=Date.now();store.set("day:"+date,d);SUPN=null;renderFind();
+  toast(`已把 ${p.name} 加入 ${date.slice(5).replace("-","/")} 日報的人力支援（${scShift}班），上完班再到日報填時數`)}
+
+/* ---------- 月班表 ---------- */
+const SCYC=["","早","晚","跨","休"];
+function gridNames(S,gb){const names=[],seen=new Set();
+  cfg.people.forEach(p=>{normPerson(p);const k=schedKey(S,p.name);if((p.active===false||p.kind==="外部支援")&&!k)return;if(gb&&p.branch!==gb)return;names.push({name:p.name,key:k||p.name,p});seen.add(p.name.trim().toLowerCase())});
+  Object.keys(S.people).forEach(k=>{const n=k.trim().toLowerCase();if(!seen.has(n)&&!cfg.people.some(p=>p.name.trim().toLowerCase()===n))names.push({name:k,key:k,p:null})});
+  const has=r=>S.people[r.key]?0:1;return names.map((r,i)=>({r,i})).sort((a,b)=>has(a.r)-has(b.r)||a.i-b.i).map(x=>x.r)}   // 有班表的人排前面
+function gridHTML(S,m,names,click){
+  const [y,mo]=m.split("-").map(Number),last=new Date(y,mo,0).getDate(),days=Array.from({length:last},(_,i)=>i+1),today=todayISO();
+  const cnt={早:Array(last).fill(0),晚:Array(last).fill(0),off:Array(last).fill(0)};
+  const head=`<thead><tr><th style="text-align:left;position:sticky;left:0;background:var(--head);z-index:2">姓名</th>${days.map(d=>{const iso=`${m}-${String(d).padStart(2,"0")}`,w=new Date(y,mo-1,d).getDay();
+    return `<th class="dh${w===0||w===6?" we":""}${iso===today?" td":""}"${click?` data-scd="${iso}" title="帶到上方找支援"`:""}>${d}<small>${"日一二三四五六"[w]}</small></th>`}).join("")}</tr></thead>`;
+  const body=names.map(r=>{const row=S.people[r.key]||{};
+    return `<tr class="${r.p?"":"unk"}"><td class="nm">${esc(r.name)}${r.p?`<small>${esc(shortBr(r.p.branch))}${r.p.kind!=="正職"?"・"+esc(r.p.kind):""}</small>`:`<small>不在人員名單</small>`}</td>${days.map(d=>{const c=row[String(d)]||"",K=schedKind(c,S.slots);
+      if(K.t==="work")K.sh.forEach(s=>cnt[s][d-1]++);else if(K.t==="off")cnt.off[d-1]++;
+      return `<td class="c ${schedCls(K)}${/^\d{4}$/.test(schedDisp(c,K))?" k4":""}"${click?` data-scc="${esc(r.key)}|${d}"`:""} title="${esc(r.name)} ${mo}/${d}${c?"："+esc(c):""}">${esc(schedDisp(c,K))}</td>`}).join("")}</tr>`}).join("");
+  const crow=(t,a)=>`<tr class="cnt"><td class="nm">${t}</td>${a.map(x=>`<td>${x||""}</td>`).join("")}</tr>`;
+  return head+`<tbody>${body||`<tr><td colspan="${last+1}" style="text-align:center;color:var(--muted);padding:24px">沒有人員；可到「人員」頁新增，或直接上傳班表</td></tr>`}${names.length?crow("早班人數",cnt.早)+crow("晚班人數",cnt.晚)+crow("休假人數",cnt.off):""}</tbody>`}
+function renderGrid(){const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m);$("sc-grid").innerHTML=gridHTML(S,m,gridNames(S,$("sc-gbranch").value),true)}
+$("sc-grid").addEventListener("click",e=>{
+  const h=e.target.closest("[data-scd]");if(h){$("sc-date").value=h.dataset.scd;renderFind();$("sc-find").scrollIntoView({behavior:"smooth",block:"start"});return}
+  const c=e.target.closest("[data-scc]");if(!c)return;const v=c.dataset.scc,cut=v.lastIndexOf("|"),name=v.slice(0,cut),d=v.slice(cut+1);
+  const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m);const row=S.people[name]||(S.people[name]={});
+  const nx=SCYC[(SCYC.indexOf(row[d]||"")+1)%SCYC.length];if(nx)row[d]=nx;else delete row[d];
+  S.month=m;S.updatedAt=Date.now();store.set("sched:"+m,S);renderGrid();if(($("sc-date").value||"").startsWith(m))renderFind()});
+
+/* ---------- 上傳班表：先預覽，確認後才寫入 ---------- */
+let SCPV=null;
+$("sc-file").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const sheets=await readTable(f);let si=sheets.findIndex(x=>x.name==="班表");if(si<0)si=sheets.findIndex(x=>/班表/.test(x.name));
+    SCPV={file:f.name,sheets,si:Math.max(0,si),emps:bookEmployees(sheets),slots:bookSlots(sheets)};scPreview()}catch(err){SCPV=null;scPreview();toast("讀取失敗："+(err&&err.message||err))}});
+function scPreview(){
+  const el=$("sc-preview");if(!SCPV){el.innerHTML="";return}
+  const m=$("sc-month").value||todayISO().slice(0,7);let R=null,err="";
+  try{R=parseSched(SCPV.sheets[SCPV.si].rows,m)}catch(e){err=e.message||String(e)}SCPV.R=R;
+  const shSel=SCPV.sheets.length>1?`<label class="f" style="width:auto"><span>工作表</span><select class="in" id="scp-sheet">${SCPV.sheets.map((s,i)=>`<option value="${i}"${i===SCPV.si?" selected":""}>${esc(s.name)}</option>`).join("")}</select></label>`:"";
+  if(!R){el.innerHTML=`<div class="sc-pv"><b>${esc(SCPV.file)}</b>${shSel}<p class="note" style="color:var(--bad)">${esc(err)}</p><button class="btn sm" type="button" id="scp-cancel">取消</button></div>`;return}
+  const known=n=>cfg.people.some(p=>p.name.trim().toLowerCase()===n.trim().toLowerCase())||(SCPV.emps||[]).some(e=>e.active&&e.name.toLowerCase()===n.trim().toLowerCase());
+  const unmatched=R.names.filter(n=>!known(n));SCPV.unmatched=unmatched;
+  const newE=(SCPV.emps||[]).filter(e=>e.active&&!cfg.people.some(p=>p.name.trim().toLowerCase()===e.name.toLowerCase()));
+  const ms=Object.keys(R.months).sort().map(mm=>`${ymLabel(mm)}（${R.cover[mm]?R.cover[mm].size+" 天":"清單"}，${Object.keys(R.months[mm]).length} 人）`).join("、");
+  const pvS={people:R.months[R.main]||{},slots:SCPV.slots},pvN=Object.keys(pvS.people).map(k=>({name:k,key:k,p:cfg.people.find(p=>p.name.trim().toLowerCase()===k.trim().toLowerCase())||null}));
+  el.innerHTML=`<div class="sc-pv"><div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap"><div><b>預覽：${esc(SCPV.file)}</b><div class="note" style="margin:2px 0 0">${R.mode}格式 · ${ms}</div></div>${shSel}</div>
+    ${(SCPV.emps||[]).length?`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><label class="jpchk"><input type="checkbox" id="scp-emp" checked> 同步「員工」分頁名單</label><span class="note" style="margin:0">${newE.length?`新增 ${newE.length} 位在職人員：${newE.map(e=>esc(e.name)).join("、")}`:"人員名單已是最新"}・館別</span><select class="in" id="scp-ebr" style="width:auto">${branchOpts($("sc-gbranch").value||cfg.homeBranch)}</select><span class="note" style="margin:0">（不讀取 PIN 碼）</span></div>`:""}
+    ${Object.keys(SCPV.slots||{}).length?`<p class="note">時段班別：${Object.entries(SCPV.slots).map(([c,g])=>c+" "+g).join("、")}</p>`:""}
+    ${unmatched.length?`<p class="note" style="color:var(--warn)">${unmatched.length} 位不在人員名單：${unmatched.map(esc).join("、")}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><label class="jpchk"><input type="checkbox" id="scp-add" checked> 一併加入人員名單</label><select class="in" id="scp-kind" style="width:auto">${KINDS.map(k=>`<option${k==="PT"?" selected":""}>${k}</option>`).join("")}</select><select class="in" id="scp-br" style="width:auto">${branchOpts($("sc-gbranch").value||cfg.homeBranch)}</select></div>`:""}
+    ${R.unk.length?`<p class="note" style="color:var(--warn)">看不懂的代碼（會當作有上班）：${R.unk.slice(0,12).map(esc).join("、")}${R.unk.length>12?"…":""}</p>`:""}
+    <div class="tbl-wrap" style="margin-top:8px;max-height:340px;overflow:auto"><table class="hist sc-grid">${gridHTML(pvS,R.main,pvN,false)}</table></div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" id="scp-ok">確認匯入</button><button class="btn" type="button" id="scp-cancel">取消</button>
+    <span class="note" style="margin:0">${R.mode==="月曆"?"檔案涵蓋的日期會以檔案為準（空白格會清掉原本的班別），其他日期和檔案裡沒有的人不受影響。":"只寫入清單裡有的日期與人員。"}</span></div></div>`;
+}
+$("sc-preview").addEventListener("change",e=>{if(e.target.id==="scp-sheet"){SCPV.si=+e.target.value;scPreview()}});
+$("sc-preview").addEventListener("click",e=>{
+  if(e.target.id==="scp-cancel"){SCPV=null;scPreview();return}
+  if(e.target.id!=="scp-ok"||!SCPV||!SCPV.R)return;const R=SCPV.R;
+  const addE=SCPV.emps&&SCPV.emps.length&&$("scp-emp")&&$("scp-emp").checked?syncBookEmployees(SCPV.emps,$("scp-ebr").value):0;
+  if(SCPV.unmatched.length&&$("scp-add")&&$("scp-add").checked){const kind=$("scp-kind").value,branch=$("scp-br").value;
+    SCPV.unmatched.forEach(nm=>{if(!cfg.people.some(p=>p.name.trim().toLowerCase()===nm.trim().toLowerCase()))cfg.people.push(normPerson({name:nm.trim(),role:"",kind,branch,active:true}))});saveCfg()}
+  let n=0;Object.entries(R.months).forEach(([mm,P])=>{const S=schedGet(mm),cov=R.cover[mm];
+    Object.entries(P).forEach(([nm,row])=>{const pp=cfg.people.find(p=>p.name.trim().toLowerCase()===nm.trim().toLowerCase());const name=pp?pp.name:nm;
+      const key=schedKey(S,name)||name,tgt=S.people[key]||(S.people[key]={});
+      if(cov)cov.forEach(d=>{if(row[d])tgt[d]=row[d];else delete tgt[d]});else Object.assign(tgt,row);n++});
+    if(Object.keys(SCPV.slots||{}).length)S.slots=SCPV.slots;S.month=mm;S.updatedAt=Date.now();S.src=SCPV.file;store.set("sched:"+mm,S)});
+  $("sc-month").value=R.main;SCPV=null;scPreview();renderGrid();renderFind();
+  toast(`已匯入 ${n} 位人員的班表（${Object.keys(R.months).sort().map(x=>+x.slice(5)+" 月").join("、")}）${addE?`，新增 ${addE} 位人員`:""}`)});
+$("sc-tpl").addEventListener("click",()=>{const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m),[y,mo]=m.split("-").map(Number),last=new Date(y,mo,0).getDate();
+  const days=Array.from({length:last},(_,i)=>i+1);const names=gridNames(S,$("sc-gbranch").value);
+  const L=[["姓名",...days],["星期",...days.map(d=>"日一二三四五六"[new Date(y,mo-1,d).getDay()])],...names.map(r=>[r.name,...days.map(d=>(S.people[r.key]||{})[String(d)]||"")])];
+  download(`班表_${m}${$("sc-gbranch").value?"_"+$("sc-gbranch").value:""}.csv`,"﻿"+L.map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
+$("sc-clear").addEventListener("click",e=>{const b=e.target,m=$("sc-month").value||todayISO().slice(0,7);const S=store.get("sched:"+m);
+  if(!S){toast("這個月沒有班表");return}
+  if(!b.dataset.armed){b.dataset.armed="1";b.textContent="再按一次確認清除";setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent="清除本月班表"}},3000);return}
+  delete b.dataset.armed;b.textContent="清除本月班表";store.del("sched:"+m);renderGrid();renderFind();toast(`已清除 ${ymLabel(m)} 班表`,()=>{store.set("sched:"+m,S);renderGrid();renderFind()})});
+$("sc-shift").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;scShift=b.dataset.v;renderFind()});
+["sc-date","sc-branch","sc-other","sc-ext"].forEach(id=>$(id).addEventListener("change",renderFind));
+["sc-month","sc-gbranch"].forEach(id=>$(id).addEventListener("change",()=>{renderGrid();scPreview()}));
+$("sc-split").addEventListener("change",e=>{const v=num(e.target.value);if(v<1||v>30){e.target.value=schedSplit();return}cfg.schedSplit=v;saveCfg();renderGrid();renderFind();scPreview()});
+$("sc-result").addEventListener("click",e=>{const b=e.target.closest("[data-scadd]");if(b)scAddSupport(b.dataset.scadd)});
+function renderSched(){
+  if(!$("sc-date").value)$("sc-date").value=todayISO();if(!$("sc-month").value)$("sc-month").value=($("sc-date").value||todayISO()).slice(0,7);
+  const b=$("sc-branch").value;$("sc-branch").innerHTML=branchOpts(b||cfg.homeBranch);const g=$("sc-gbranch").value;$("sc-gbranch").innerHTML=branchOpts(g,"全部館別");
+  $("sc-split").value=schedSplit();renderFind();renderGrid();scPreview()}
 
 /* ================= 大祕寶 ================= */
 let jpSel=null;
@@ -2242,6 +2636,289 @@ $("jp-body").addEventListener("click",e=>{
     if(!b.dataset.armed){b.dataset.armed="1";b.textContent="再按一次確認";setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent="刪除此檔期"}},3000);return}
     cfg.jpPeriods=cfg.jpPeriods.filter(x=>x.id!==jpSel);saveCfg();jpSel=null;renderJP();toast("已刪除檔期（報表資料不受影響）")}
 });
+
+/* ================= 活動專案 =================
+   資料：store「proj」＝[{id,name,venue:"竹科"|"竹北"|"共同",start,end,owner,note,budget:{竹科:{活動票券:…}},items:[{id,date,branch,cat,desc,qty,unit,amt,note}],createdAt,updatedAt}]
+   只用來追蹤，不計入損益（日報票券與零用金庫活動支出已各自入帳） */
+let PJ=store.get("proj")||[];
+const savePJ=()=>store.set("proj",PJ);
+const PJ_CATS=["活動票券","公關支出","獎品","其他"];
+const pjBr=()=>cfg.branches.map(shortBr);
+let pjSel=null,pjSt="all";
+const pjStatus=p=>{const t=todayISO();if(p.start&&t<p.start)return "soon";if(p.end&&t>p.end)return "done";return "now"};
+const PJ_ST={now:["進行中","t-in"],soon:["即將開始","t-count"],done:["已結束",""]};
+const pjDays=p=>p.start&&p.end?daysBetween(p.start,p.end)+1:null;
+const pjRange=p=>p.start?`${p.start.replace(/-/g,"/")}${p.end&&p.end!==p.start?" – "+(p.end.slice(0,4)===p.start.slice(0,4)?p.end.slice(5):p.end).replace(/-/g,"/"):""}`:"未設定";
+function pjBrs(p){const B=pjBr(),s=new Set(p.venue==="共同"?B:[p.venue]);(p.items||[]).forEach(it=>it.branch&&s.add(it.branch));return B.filter(b=>s.has(b)).concat([...s].filter(b=>!B.includes(b)))}
+function pjSum(p){const brs=pjBrs(p),S={};brs.forEach(b=>{S[b]={};PJ_CATS.forEach(c=>S[b][c]=0)});
+  (p.items||[]).forEach(it=>{const b=S[it.branch]?it.branch:brs[0];const c=PJ_CATS.includes(it.cat)?it.cat:"其他";if(S[b])S[b][c]+=num(it.amt)});
+  const cat=c=>brs.reduce((a,b)=>a+S[b][c],0),br=b=>PJ_CATS.reduce((a,c)=>a+S[b][c],0),total=PJ_CATS.reduce((a,c)=>a+cat(c),0);
+  const bud=p.budget||{},bv=(b,c)=>num((bud[b]||{})[c]),budB=b=>PJ_CATS.reduce((a,c)=>a+bv(b,c),0),budT=brs.reduce((a,b)=>a+budB(b),0);
+  const actB=b=>PJ_CATS.reduce((a,c)=>a+(bv(b,c)?S[b][c]:0),0),actT=brs.reduce((a,b)=>a+actB(b),0);   // 使用率只比對有填預算的項目
+  return {brs,S,cat,br,total,bv,budB,budT,actB,actT}}
+const pjPct=(a,b)=>b?Math.round(a/b*100)+"%":"—";
+function pjNew(){const v=pjBr().includes(shortBr(cfg.homeBranch))?shortBr(cfg.homeBranch):pjBr()[0];
+  const p={id:uid(),name:"新活動",venue:v,start:todayISO(),end:isoAdd(todayISO(),6),owner:"",note:"",budget:{},items:[],createdAt:Date.now(),updatedAt:Date.now()};
+  PJ.push(p);savePJ();pjSel=p.id;pjSt="all";renderProj();const el=document.querySelector('#pj-detail [data-pjf="name"]');if(el){el.focus();el.select()}
+  $("pj-detail").scrollIntoView({behavior:"smooth",block:"start"})}
+function renderProj(){
+  document.querySelectorAll("#pj-st button").forEach(b=>b.className=b.dataset.v===pjSt?"on o":"");
+  const vf=$("pj-venue").value;$("pj-venue").innerHTML=`<option value="">全部場館</option>`+[...pjBr(),"共同"].map(v=>`<option${v===vf?" selected":""}>${esc(v)}</option>`).join("");
+  const q=($("pj-q").value||"").trim().toLowerCase(),yr=todayISO().slice(0,4);
+  // KPI：今年開始的活動
+  const yl=PJ.filter(p=>(p.start||"").startsWith(yr)),yb={};pjBr().forEach(b=>yb[b]=0);let yt=0,ybud=0,yact=0;
+  yl.forEach(p=>{const Z=pjSum(p);Z.brs.forEach(b=>{yb[b]=(yb[b]||0)+Z.br(b)});yt+=Z.total;ybud+=Z.budT;yact+=Z.actT});
+  $("pj-kpis").innerHTML=`<div class="kpi hl"><div class="k">進行中活動</div><div class="v">${PJ.filter(p=>pjStatus(p)==="now").length}</div></div>
+    <div class="kpi"><div class="k">即將開始</div><div class="v">${PJ.filter(p=>pjStatus(p)==="soon").length}</div></div>
+    ${Object.entries(yb).map(([b,v])=>`<div class="kpi"><div class="k">${yr} 年${esc(b)}支出</div><div class="v">${fmt(v)}</div></div>`).join("")}
+    <div class="kpi"><div class="k">${yr} 年合計</div><div class="v">${fmt(yt)}</div><div class="ks">${ybud?`預算 ${fmt(ybud)}・使用 ${pjPct(yact,ybud)}`:""}</div></div>`;
+  const L=PJ.filter(p=>(pjSt==="all"||pjStatus(p)===pjSt)&&(!vf||p.venue===vf)&&(!q||(p.name||"").toLowerCase().includes(q)));
+  const ord={now:0,soon:1,done:2};L.sort((a,b)=>ord[pjStatus(a)]-ord[pjStatus(b)]||(pjStatus(a)==="done"?(b.end||"").localeCompare(a.end||""):(a.start||"").localeCompare(b.start||"")));
+  const hasO=L.some(p=>pjSum(p).cat("其他"));
+  $("pj-table").innerHTML=`<thead><tr><th style="text-align:left">活動名稱</th><th>場館</th><th>期間</th><th>天數</th><th>狀態</th><th>活動票券</th><th>公關支出</th><th>獎品</th>${hasO?"<th>其他</th>":""}<th>合計</th><th>預算</th><th>使用率</th><th></th></tr></thead><tbody>`+
+    (L.map(p=>{const Z=pjSum(p),st=PJ_ST[pjStatus(p)];return `<tr class="${p.id===pjSel?"cur":""}"><td style="text-align:left;font-family:var(--f-body)"><a href="#" data-pjopen="${p.id}"><b>${esc(p.name||"（未命名）")}</b></a>${p.owner?`<div style="font-size:11px;color:var(--muted)">負責人 ${esc(p.owner)}</div>`:""}</td>
+      <td style="font-family:var(--f-body)">${esc(p.venue)}</td><td>${pjRange(p)}</td><td>${pjDays(p)??"—"}</td><td><span class="tag ${st[1]}">${st[0]}</span></td>
+      <td>${Z.cat("活動票券")?fmt(Z.cat("活動票券")):""}</td><td>${Z.cat("公關支出")?fmt(Z.cat("公關支出")):""}</td><td>${Z.cat("獎品")?fmt(Z.cat("獎品")):""}</td>${hasO?`<td>${Z.cat("其他")?fmt(Z.cat("其他")):""}</td>`:""}
+      <td><b>${fmt(Z.total)}</b></td><td>${Z.budT?fmt(Z.budT):""}</td><td class="${Z.budT&&Z.actT>Z.budT?"bad":""}">${Z.budT?pjPct(Z.actT,Z.budT):""}</td>
+      <td class="act"><button class="btn sm" type="button" data-pjopen="${p.id}">查看</button></td></tr>`}).join("")
+     ||`<tr><td colspan="13" style="text-align:center;color:var(--muted);padding:24px;font-family:var(--f-body)">${PJ.length?"沒有符合條件的活動":"還沒有活動，按右上「＋ 新增活動」開始"}</td></tr>`)+`</tbody>`;
+  renderPjDetail();
+}
+function pjDailyRef(p){   // 活動期間竹科日報的票券登記（參考用：日報屬於「日報所屬館別」）
+  if(!p.start||!p.end||daysBetween(p.start,p.end)>400)return null;const r={act:0,pr:0,jp:0,days:0};
+  store.days().forEach(x=>{if(x<p.start||x>p.end)return;const d=store.get("day:"+x);if(!d||!Array.isArray(d.sessions))return;let any=false;
+    d.sessions.forEach(s=>{if(num(s.n)<=0)return;r.act+=num(s.act);r.pr+=num(s.pr);r.jp+=num(s.jp);any=true});if(any)r.days++});return r}
+function renderPjDetail(){
+  const el=$("pj-detail"),p=PJ.find(x=>x.id===pjSel);if(!p){el.innerHTML="";return}
+  const B=pjBr(),Z=pjSum(p),st=PJ_ST[pjStatus(p)],single=p.venue!=="共同",home=shortBr(cfg.homeBranch);
+  const items=(p.items||[]).slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")||0);
+  const brSel=(id,v,attr)=>single&&B.includes(p.venue)&&(!v||v===p.venue)?`<span class="tag t-count">${esc(p.venue)}</span>`:`<select class="in" ${attr} style="width:auto">${Z.brs.concat(B.filter(b=>!Z.brs.includes(b))).map(b=>`<option${b===v?" selected":""}>${esc(b)}</option>`).join("")}</select>`;
+  const catSel=(v,attr)=>`<select class="in" ${attr} style="width:auto">${PJ_CATS.map(c=>`<option${c===v?" selected":""}>${c}</option>`).join("")}</select>`;
+  const sumRows=PJ_CATS.filter(c=>c!=="其他"||Z.cat("其他")||Z.brs.some(b=>Z.bv(b,"其他"))).map(c=>`<tr><td>${c}</td>${Z.brs.map(b=>{const a=Z.S[b][c],bd=Z.bv(b,c);return `<td><input class="in n" data-pjb="${esc(b)}|${c}" value="${bd?fmt(bd):""}" placeholder="預算" style="width:96px;margin-left:auto"></td><td><b>${fmt(a)}</b></td><td class="${bd&&a>bd?"bad":""}">${bd?(a-bd>0?"+":a-bd<0?"−":"")+fmt(Math.abs(a-bd)):""}</td>`}).join("")}${Z.brs.length>1?`<td><b>${fmt(Z.cat(c))}</b></td>`:""}</tr>`).join("");
+  const totRow=`<tr><td><b>合計</b></td>${Z.brs.map(b=>`<td>${Z.budB(b)?fmt(Z.budB(b)):""}</td><td><b>${fmt(Z.br(b))}</b></td><td class="${Z.budB(b)&&Z.actB(b)>Z.budB(b)?"bad":""}">${Z.budB(b)?pjPct(Z.actB(b),Z.budB(b)):""}</td>`).join("")}${Z.brs.length>1?`<td><b>${fmt(Z.total)}</b>${Z.budT?`<div style="font-size:11px;color:var(--muted)">預算 ${fmt(Z.budT)}・使用 ${pjPct(Z.actT,Z.budT)}</div>`:""}</td>`:""}</tr>`;
+  const ref=(p.venue==="共同"||p.venue===home)?pjDailyRef(p):null;
+  el.innerHTML=`<div class="card" style="margin-top:12px">
+    <div class="card-h"><h2>${esc(p.name||"（未命名）")} <span class="tag ${st[1]}">${st[0]}</span> <span class="sub">${pjRange(p)}${pjDays(p)?`・共 ${pjDays(p)} 天`:""}</span></h2><span class="spacer"></span>
+      <button class="btn sm" type="button" id="pj-csv1">匯出此活動 CSV</button><button class="btn sm danger" type="button" id="pj-del">刪除活動</button><button class="icon-x" type="button" id="pj-close" aria-label="關閉">×</button></div>
+    <div class="v-form">
+      <label class="f grow"><span>專案名稱</span><input class="in" data-pjf="name" value="${esc(p.name)}"></label>
+      <div class="f" style="width:auto"><span>執行場館</span><div class="seg seg3" id="pj-venue-seg">${[...B,"共同"].map(v=>`<button type="button" data-pjvenue="${esc(v)}" class="${p.venue===v?"on o":""}">${esc(v)}</button>`).join("")}</div></div>
+      <label class="f"><span>開始日期</span><input class="in" type="date" data-pjf="start" value="${p.start||""}"></label>
+      <label class="f"><span>結束日期</span><input class="in" type="date" data-pjf="end" value="${p.end||""}"></label>
+      <label class="f"><span>負責人</span>${personSel("owner",p.owner,"選擇負責人","data-pjf")}</label>
+    </div>
+    <label class="f" style="margin-top:8px"><span>目標／說明</span><textarea class="in" data-pjf="note" rows="2" style="min-height:52px" placeholder="例如：雙 11 活動，目標新增 50 位會員、MTT 人次 +20%">${esc(p.note||"")}</textarea></label>
+  </div>
+  <div class="card">
+    <div class="card-h"><h2>預算與實際 <span class="sub">預算可留白；差異＝實際 − 預算，超出預算標紅；使用率只計算有填預算的項目</span></h2></div>
+    <div class="tbl-wrap"><table class="hist" style="min-width:${300+Z.brs.length*300}px"><thead><tr><th rowspan="2" style="text-align:left">類別</th>${Z.brs.map(b=>`<th colspan="3" style="text-align:center">${esc(b)}</th>`).join("")}${Z.brs.length>1?`<th rowspan="2">合計</th>`:""}</tr><tr>${Z.brs.map(()=>`<th style="text-align:right">預算</th><th style="text-align:right">實際</th><th style="text-align:right">差異</th>`).join("")}</tr></thead><tbody>${sumRows}</tbody><tfoot>${totRow}</tfoot></table></div>
+    ${ref&&(ref.act||ref.pr||ref.jp)?`<p class="note">參考：活動期間 ${esc(home)} 日報共 ${ref.days} 天登記「活動／抽獎」${fmt(ref.act)}、「公關票券／優惠券」${fmt(ref.pr)}${ref.jp?`、「HHJP 票券」${fmt(ref.jp)}`:""}（所有場次合計，不一定都屬於這個活動，已在日報入帳，這裡不重複計算）。</p>`:""}
+  </div>
+  <div class="card">
+    <div class="card-h"><h2>支出明細 <span class="sub">活動票券、公關支出、獎品內容與價值；金額＝數量 × 單價／價值</span></h2></div>
+    <form class="v-form" id="pj-add" autocomplete="off">
+      <label class="f" style="width:140px"><span>日期</span><input class="in" type="date" id="pja-date" value="${p.start&&todayISO()<p.start?p.start:p.end&&todayISO()>p.end?p.end:todayISO()}"></label>
+      <div class="f" style="width:auto"><span>場館</span>${brSel("pja-br",single?p.venue:"",'id="pja-br"')}</div>
+      <div class="f" style="width:auto"><span>類別</span>${catSel("活動票券",'id="pja-cat"')}</div>
+      <label class="f grow"><span>內容</span><input class="in" id="pja-desc" placeholder="例如：1,200 參賽券、合作店家餐券、AirPods 獎品"></label>
+      <label class="f" style="width:80px"><span>數量</span><input class="in n" id="pja-qty" value="1" inputmode="numeric"></label>
+      <label class="f" style="width:110px"><span>單價／價值</span><input class="in n" id="pja-unit" inputmode="numeric"></label>
+      <label class="f" style="width:150px"><span>備註</span><input class="in" id="pja-note"></label>
+      <button class="btn primary" type="submit">新增一筆</button>
+    </form>
+    <div class="tbl-wrap" style="margin-top:12px"><table class="hist p-table" style="min-width:980px"><thead><tr><th>日期</th><th>場館</th><th>類別</th><th>內容</th><th>數量</th><th>單價／價值</th><th>金額</th><th>備註</th><th></th></tr></thead><tbody>
+      ${items.map(it=>`<tr><td><input class="in" type="date" data-pji="${it.id}|date" value="${it.date||""}" style="width:140px"></td>
+        <td>${brSel("",it.branch,`data-pji="${it.id}|branch"`)}</td><td>${catSel(it.cat,`data-pji="${it.id}|cat"`)}</td>
+        <td><input class="in" data-pji="${it.id}|desc" value="${esc(it.desc||"")}" style="width:220px"></td>
+        <td><input class="in n" data-pji="${it.id}|qty" value="${esc(show(it.qty))}" style="width:64px"></td>
+        <td><input class="in n" data-pji="${it.id}|unit" value="${esc(show(it.unit))}" style="width:96px"></td>
+        <td style="text-align:right;font-family:var(--f-num)"><b>${fmt(num(it.amt))}</b></td>
+        <td><input class="in" data-pji="${it.id}|note" value="${esc(it.note||"")}" style="width:140px"></td>
+        <td><button type="button" class="icon-x" data-pjidel="${it.id}" aria-label="刪除">×</button></td></tr>`).join("")
+       ||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">還沒有支出，從上面新增第一筆</td></tr>`}</tbody></table></div>
+  </div>`;
+}
+const pjCur=()=>PJ.find(x=>x.id===pjSel);
+const pjTouch=p=>{p.updatedAt=Date.now();savePJ()};
+$("pj-st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;pjSt=b.dataset.v;renderProj()});
+$("pj-venue").addEventListener("change",renderProj);$("pj-q").addEventListener("input",renderProj);
+$("pj-new").addEventListener("click",pjNew);
+$("pj-table").addEventListener("click",e=>{const o=e.target.closest("[data-pjopen]");if(!o)return;e.preventDefault();pjSel=o.dataset.pjopen;renderProj();$("pj-detail").scrollIntoView({behavior:"smooth",block:"start"})});
+const pjD=$("pj-detail");
+pjD.addEventListener("change",e=>{const p=pjCur();if(!p)return;const t=e.target;
+  if(t.dataset.pjf){if(t.value==="__new"){const nm=askNewPerson();if(nm)p.owner=nm;pjTouch(p);renderProj();return}
+    const f=t.dataset.pjf;p[f]=f==="name"||f==="note"?t.value.trim():t.value;
+    if(f==="start"||f==="end"){if(!p[f]){toast("日期不能空白");t.value=f==="start"?p.end:p.start;p[f]=t.value}if(p.start&&p.end&&p.start>p.end){const x=p.start;p.start=p.end;p.end=x}}
+    pjTouch(p);if(f!=="note")renderProj();return}
+  if(t.dataset.pjb){const [b,c]=t.dataset.pjb.split("|");p.budget=p.budget||{};p.budget[b]=p.budget[b]||{};const v=t.value.trim();if(v==="")delete p.budget[b][c];else p.budget[b][c]=num(v);pjTouch(p);renderProj();return}
+  if(t.dataset.pji){const [id,f]=t.dataset.pji.split("|");const it=(p.items||[]).find(x=>x.id===id);if(!it)return;
+    if(f==="qty"||f==="unit"){it[f]=t.value.trim()===""?"":num(t.value);it.amt=Math.round(num(it.qty===""?1:it.qty)*num(it.unit))}else it[f]=t.value.trim();
+    pjTouch(p);renderProj()}});
+pjD.addEventListener("focusin",e=>{const el=e.target;if(el.classList.contains("n")){el.value=el.value.replace(/,/g,"");el.select&&el.select()}});
+pjD.addEventListener("focusout",e=>{const el=e.target;if(el.classList.contains("n")&&/\d/.test(el.value)&&!el.dataset.pji&&!el.dataset.pjb)el.value=fmt(num(el.value))});
+pjD.addEventListener("click",e=>{const p=pjCur();if(!p)return;const t=e.target;
+  const v=t.closest("[data-pjvenue]");if(v){p.venue=v.dataset.pjvenue;pjTouch(p);renderProj();return}
+  if(t.id==="pj-close"){pjSel=null;renderProj();return}
+  if(t.id==="pj-csv1"){pjCSV([p]);return}
+  if(t.id==="pj-del"){if(!t.dataset.armed){t.dataset.armed="1";t.textContent="再按一次確認刪除";setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent="刪除活動"}},3000);return}
+    const i=PJ.indexOf(p);PJ.splice(i,1);savePJ();pjSel=null;renderProj();toast(`已刪除活動「${p.name}」`,()=>{PJ.splice(i,0,p);savePJ();pjSel=p.id;renderProj()});return}
+  const d=t.closest("[data-pjidel]");if(d){const i=p.items.findIndex(x=>x.id===d.dataset.pjidel);if(i<0)return;const rm=p.items.splice(i,1)[0];pjTouch(p);renderProj();
+    toast(`已刪除「${rm.desc||rm.cat}」${fmt(num(rm.amt))}`,()=>{p.items.splice(i,0,rm);pjTouch(p);renderProj()})}});
+pjD.addEventListener("submit",e=>{if(e.target.id!=="pj-add")return;e.preventDefault();const p=pjCur();if(!p)return;
+  const q=$("pja-qty").value.trim(),u=$("pja-unit").value.trim(),desc=$("pja-desc").value.trim();
+  if(!num(u)){toast("請輸入單價或價值");$("pja-unit").focus();return}
+  const qty=q===""?1:num(q),br=$("pja-br")?$("pja-br").value:p.venue;
+  (p.items=p.items||[]).push({id:uid(),date:$("pja-date").value||todayISO(),branch:br,cat:$("pja-cat").value,desc,qty,unit:num(u),amt:Math.round(qty*num(u)),note:$("pja-note").value.trim()});
+  pjTouch(p);const keep={cat:$("pja-cat").value,date:$("pja-date").value,br};renderProj();
+  $("pja-cat").value=keep.cat;$("pja-date").value=keep.date;if($("pja-br")&&$("pja-br").tagName==="SELECT")$("pja-br").value=keep.br;$("pja-desc").focus();toast(`已新增 ${fmt(Math.round(qty*num(u)))}`)});
+const SH_PJ_H=["活動名稱","執行場館","開始日期","結束日期","天數","負責人","項目日期","項目場館","類別","內容","數量","單價／價值","金額","備註"];
+const pjRows=list=>list.flatMap(p=>{const base=[p.name||"",p.venue||"",p.start||"",p.end||"",pjDays(p)??"",p.owner||""];
+  return (p.items||[]).length?p.items.slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")).map(it=>[...base,it.date||"",it.branch||"",it.cat||"",it.desc||"",it.qty===""?"":num(it.qty),num(it.unit),num(it.amt),it.note||""]):[[...base,"","","","","","","",""]]});
+function pjCSV(list){if(!list.length){toast("沒有活動");return}
+  download(`活動專案_${list.length===1?list[0].name:todayISO()}.csv`,"﻿"+[SH_PJ_H,...pjRows(list)].map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")}
+$("pj-csv").addEventListener("click",()=>pjCSV(PJ.slice().sort((a,b)=>(a.start||"").localeCompare(b.start||""))));
+
+/* ================= 營運分析 =================
+   來源：每日報表（場次、支出、支援）＋財務交易（支出編列）。每月彙整依資料版本 DATAV 快取。
+   賽事盈餘＝理論服務費 − 優惠折讓（賽事優惠、活動票券、公關票券）− HHJP − 保底／保證補足 − MTT 進位 −（限時）餐點；人力支援與固定費用不分攤到賽事 */
+let OPSC={v:-1,m:{}},opScope="1";
+const opMk=()=>({sess:0,heads:0,ne:0,np:0,gross:0,fee:0,disc:0,act:0,pr:0,hhjp:0,sup:0,round:0,prize:0,guarN:0,supN:0,meal:0,gtd:0});
+const opAdd=(t,s)=>{for(const k in s){const v=s[k];if(typeof v==="number")t[k]=(t[k]||0)+v;else if(v&&typeof v==="object"){t[k]=t[k]||{};opAdd(t[k],v)}}return t};
+const opProfit=G=>G.fee-G.disc-G.act-G.pr-G.hhjp-G.sup-G.round-(G.meal||0);
+const opNetFee=G=>G.fee-G.disc-G.act-G.pr;
+function opsMonth(m){if(OPSC.v!==DATAV)OPSC={v:DATAV,m:{}};if(OPSC.m[m])return OPSC.m[m];
+  const A={days:0,T:opMk(),M:opMk(),wk:{},wkDays:{},lvT:{},evM:{},supAmt:0,supHours:0,supN:0,join:0};
+  store.days().forEach(x=>{if(!x.startsWith(m))return;const d=loadDay(x),R=compute(d);
+    A.supAmt+=R.E.support;(d.support||[]).forEach(r=>{if(num(r.amt)||String(r.who||"").trim()){A.supN++;A.supHours+=num(r.hours)}});A.join+=num(d.join);A.T.meal+=R.E.meal;
+    if(!R.T.sess)return;A.days++;const wd=new Date(x+"T00:00:00").getDay();A.wkDays[wd]=(A.wkDays[wd]||0)+1;
+    d.sessions.forEach((s,i)=>{if(num(s.n)<=0)return;const c=R.rows[i],mtt=isMTT(s.type),G=mtt?A.M:A.T,n=num(s.n);
+      const one={sess:1,heads:n,ne:c.ne,np:c.np,gross:c.g,fee:c.fee,disc:num(s.disc),act:num(s.act),pr:num(s.pr),hhjp:mtt?0:num(s.jp),sup:c.sup,round:c.round,prize:c.prize,guarN:hasGuar(s.type)?1:0,supN:hasGuar(s.type)&&c.sup>0?1:0,gtd:hasGuar(s.type)?num(s.gtd):0};
+      opAdd(G,one);const sh=SHS.includes(s.shift)?s.shift:"早";opAdd(((A.wk[wd]=A.wk[wd]||{})[sh]=A.wk[wd][sh]||{}),{heads:n,sess:1});
+      if(mtt){const k=(s.name||"").trim()||`MTT ${num(s.buy).toLocaleString("en-US")}`;opAdd((A.evM[k]=A.evM[k]||{}),one)}
+      else opAdd((A.lvT[num(s.buy)]=A.lvT[num(s.buy)]||{}),one)})});
+  return OPSC.m[m]=A}
+function opsRange(ms){const A={days:0,T:opMk(),M:opMk(),wk:{},wkDays:{},lvT:{},evM:{},supAmt:0,supHours:0,supN:0,join:0};ms.forEach(m=>opAdd(A,opsMonth(m)));return A}
+function opMonths(end,k){const out=[];let q=end;const n=k==="y"?+end.slice(5):+k;for(let i=0;i<n;i++){out.unshift(q);q=prevYM(q)}return out}
+const opPerSess=G=>G.sess?G.heads/G.sess:null;
+const f1=v=>v==null||!isFinite(v)?"—":(Math.round(v*10)/10).toLocaleString("en-US");
+const opPct=(a,b)=>b?(a/b*100).toFixed(1)+"%":"—";
+
+/* ---------- 圖表（單一 y 軸；限時＝s1 藍、MTT＝s2 橘；hover 顯示十字線與數值） ---------- */
+const OPCH={};
+function opChart(id,labels,series,type,fy){const W=540,H=210,pl=54,pr=type==="line"?50:14;OPCH[id]={labels,series,fy,pl,pr};
+  const pt=14,pb=26,n=labels.length,bw=(W-pl-pr)/n;
+  const vals=series.flatMap(s=>s.vals.filter(v=>v!=null&&isFinite(v)));let mn=Math.min(0,...vals),mx=Math.max(1,...vals);
+  const st=niceStep((mx-mn)/4||1);mn=Math.floor(mn/st)*st;mx=Math.ceil(mx/st)*st;
+  const x=i=>pl+bw*(i+.5),y=v=>pt+(H-pt-pb)*(1-(v-mn)/(mx-mn||1));
+  let g="";for(let v=mn;v<=mx+1e-9;v+=st)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${Math.abs(v)<1e-9?"#4a5262":"#232934"}"/><text x="${pl-8}" y="${y(v)+4}" fill="#8a91a0" font-size="11" text-anchor="end">${fy(v)}</text>`;
+  labels.forEach((l,i)=>g+=`<text x="${x(i)}" y="${H-8}" fill="#a5adbb" font-size="11" text-anchor="middle">${esc(l)}</text>`);
+  let marks="";
+  if(type==="line")series.forEach(s=>{let d="",on=false,last=-1;s.vals.forEach((v,i)=>{if(v==null||!isFinite(v)){on=false;return}d+=`${on?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`;on=true;last=i});
+      marks+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`+s.vals.map((v,i)=>v==null||!isFinite(v)?"":`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${s.color}" stroke="var(--panel)" stroke-width="2"/>`).join("");
+      if(last>=0)marks+=`<text x="${x(last)+9}" y="${y(s.vals[last])+4}" fill="#a5adbb" font-size="11">${esc(s.short||s.name)}</text>`});
+  else{const k=series.length,gw=bw*.68,w=gw/k-2,y0=y(0);
+    series.forEach((s,j)=>s.vals.forEach((v,i)=>{if(v==null||!v)return;const bx=x(i)-gw/2+j*(w+2),by=y(v),r=Math.min(4,w/2,Math.abs(y0-by));
+      marks+=v>0?`<path d="M${bx},${y0}V${by+r}Q${bx},${by} ${bx+r},${by}H${bx+w-r}Q${bx+w},${by} ${bx+w},${by+r}V${y0}Z" fill="${s.color}"/>`
+        :`<path d="M${bx},${y0}V${by-r}Q${bx},${by} ${bx+r},${by}H${bx+w-r}Q${bx+w},${by} ${bx+w},${by-r}V${y0}Z" fill="${s.color}"/>`}))}
+  return `<div class="legend">${series.length>1?series.map(s=>`<span><i style="background:${s.color}${type==="bar"?";height:8px;width:8px":""}"></i>${esc(s.name)}</span>`).join(""):""}</div>
+    <div class="chart" data-opch="${id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(series.map(s=>s.name).join("、"))}">${g}${marks}<line class="op-x" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="#a5adbb" stroke-dasharray="3 3" opacity="0"/><rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent" class="op-hit"/></svg><div class="tip" hidden></div></div>`}
+function opHover(e){const c=e.target.closest("[data-opch]");if(!c)return;const C=OPCH[c.dataset.opch],svg=c.querySelector("svg"),tip=c.querySelector(".tip"),ln=c.querySelector(".op-x");
+  const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,sx=(e.clientX-r.left)/r.width*vb.width,pl=C.pl,bw=(vb.width-pl-C.pr)/C.labels.length;
+  const i=Math.max(0,Math.min(C.labels.length-1,Math.floor((sx-pl)/bw))),xx=pl+bw*(i+.5);
+  ln.setAttribute("x1",xx);ln.setAttribute("x2",xx);ln.setAttribute("opacity","1");tip.hidden=false;tip.style.left=(xx/vb.width*r.width)+"px";tip.style.top="18px";
+  tip.innerHTML=`<div style="color:var(--tx2);margin-bottom:3px">${esc(C.labels[i])}</div>`+C.series.map(s=>`<div><span class="sw" style="background:${s.color}"></span>${esc(s.name)} <b>${s.vals[i]==null||!isFinite(s.vals[i])?"—":C.fy(s.vals[i],true)}</b></div>`).join("")}
+
+/* ---------- 繪製 ---------- */
+function renderOps(){
+  const m=$("op-month").value||todayISO().slice(0,7);$("op-month").value=m;
+  document.querySelectorAll("#op-scope button").forEach(b=>b.classList.toggle("on",b.dataset.v===opScope));
+  const ms=opMonths(m,opScope),pms=opMonths(prevYM(ms[0]),String(ms.length)),A=opsRange(ms),P=opsRange(pms);
+  const lbl=opScope==="1"?ymLabel(m):`${ymLabel(ms[0])}–${+m.slice(5)} 月`;
+  $("op-title").innerHTML=`營運分析 <small>${lbl} · 比較 ${pms.length===1?ymLabel(pms[0]):ymLabel(pms[0])+"–"+(+pms[pms.length-1].slice(5))+" 月"}</small>`;
+  if(!A.days&&!A.supAmt){$("op-body").innerHTML=`<div class="empty-state"><p>${lbl}沒有日報資料。可以用上方 ◀ ▶ 切換月份。</p></div>`;return}
+  const pv=P.days?P:null,prof=G=>opProfit(G),netF=X=>opNetFee(X.T)+opNetFee(X.M);
+  const kpi=(k,v,mm,cls="")=>`<div class="kpi ${cls}"><div class="k">${k}</div><div class="v">${v}</div><div class="m">${mm}</div></div>`;
+  const heads=X=>X.T.heads+X.M.heads,sess=X=>X.T.sess+X.M.sess,supR=X=>netF(X)?X.supAmt/netF(X)*100:null;
+  const kpis=`<div class="kpis">${kpi("賽事盈餘（限時＋MTT）",fmt(prof(A.T)+prof(A.M)),mom(prof(A.T)+prof(A.M),pv&&prof(P.T)+prof(P.M)),"hero")}
+    ${kpi("實收服務費",fmt(netF(A)),mom(netF(A),pv&&netF(P)))}
+    ${kpi("場次／人次",`${sess(A)} / ${fmt(heads(A))}`,mom(heads(A),pv&&heads(P)))}
+    ${kpi("平均每場人次",f1(sess(A)?heads(A)/sess(A):null),pv&&sess(P)?mom(heads(A)/sess(A),heads(P)/sess(P)):`<span class="flat">上期無資料</span>`)}
+    ${kpi("營業天數",A.days,`<span>平均每天 ${f1(A.days?heads(A)/A.days:null)} 人次</span>`)}
+    ${kpi("人力支援成本",fmt(A.supAmt),mom(A.supAmt,pv&&P.supAmt,false))}
+    ${kpi("支援占實收服務費",supR(A)==null?"—":supR(A).toFixed(1)+"%",(()=>{const c=supR(A),o=pv?supR(P):null;if(c==null||o==null)return `<span class="flat">上期無資料</span>`;const d=c-o;return `<span class="${d<=0?"up":"down"}">${d>0?"▲":d<0?"▼":""} ${Math.abs(d).toFixed(1)} 個百分點</span>`})(),supR(A)>15?"warnflag":"")}
+    ${kpi("支援人次／時數",`${A.supN} / ${f1(A.supHours)}`,`<span>${A.supHours?`平均時薪 ${fmt(A.supAmt/A.supHours)}（含車資）`:"未填時數"}</span>`)}</div>`;
+  // 限時／MTT 營運狀況
+  const wf=(G,isT,P2)=>{const rows=[["理論服務費（行政費）",G.fee,P2.fee,"calc"],["− 賽事優惠",-G.disc,-P2.disc],["− 活動票券",-G.act,-P2.act],["− 公關票券／優惠券",-G.pr,-P2.pr],["實收服務費",opNetFee(G),opNetFee(P2),"calc"]];
+    if(isT)rows.push(["− HHJP 活動票券",-G.hhjp,-P2.hhjp]);
+    rows.push([isT?"− 保底補足（營收補入）":"− 保證獎金補足（營收補入）",-G.sup,-P2.sup]);if(!isT)rows.push(["− 獎金進位到百位",-G.round,-P2.round]);if(isT)rows.push(["− 限時餐點",-G.meal,-P2.meal]);
+    rows.push([isT?"限時賽事盈餘":"MTT 賽事盈餘",opProfit(G),opProfit(P2),"calc final"]);
+    return `<table class="pl" style="min-width:0"><thead><tr><th>項目</th><th>本期</th><th>占服務費</th><th>上期</th><th>增減</th></tr></thead><tbody>${rows.map(([t,v,o,c])=>`<tr class="${c||"item"}"><td>${t}</td><td class="${v<0?"neg":""}">${fmt(v)}</td><td class="pct">${opPct(Math.abs(v),G.fee)}</td><td>${pv?fmt(o):"—"}</td><td class="${pv&&v-o<0?"neg":""}">${pv?(v-o>=0?"+":"−")+fmt(Math.abs(v-o)):"—"}</td></tr>`).join("")}</tbody></table>`};
+  const mini=(G,isT)=>`<div class="mgrid2" style="margin-bottom:12px">${[["場次",G.sess],["人次",fmt(G.heads)+(G.np?`<em> 含免費 ${G.np}</em>`:"")],["平均每場人次",f1(opPerSess(G))],["流水",fmt(G.gross)],["發放獎金",fmt(G.prize)],
+      [isT?"保底場次未過保":"保證賽未達保證",G.guarN?`${G.supN} / ${G.guarN}`:"—"],["每場盈餘",G.sess?fmt(opProfit(G)/G.sess):"—"],["每人次盈餘",G.heads?fmt(opProfit(G)/G.heads):"—"],["優惠折讓率",opPct(G.disc+G.act+G.pr,G.fee)]].map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join("")}</div>`;
+  const lvRows=Object.entries(A.lvT).sort((a,b)=>+a[0]-+b[0]),lvTot=opProfit(A.T)+A.T.meal;
+  const lvT=`<table class="lst"><tr><th>級別（買入）</th><th class="r">場次</th><th class="r">人次</th><th class="r">平均每場</th><th class="r">實收服務費</th><th class="r">保底補足</th><th class="r">盈餘</th><th class="r">每場盈餘</th><th class="r">盈餘占比</th></tr>${lvRows.map(([k,G])=>{const p=opProfit(Object.assign({},G,{meal:0}));return `<tr><td>${(+k).toLocaleString("en-US")}</td><td class="r">${G.sess}</td><td class="r">${fmt(G.heads)}</td><td class="r">${f1(opPerSess(G))}</td><td class="r">${fmt(opNetFee(G))}</td><td class="r">${G.sup?fmt(G.sup):""}</td><td class="r ${p<0?"down":""}"><b>${fmt(p)}</b></td><td class="r">${fmt(p/G.sess)}</td><td class="r">${opPct(p,lvTot)}</td></tr>`}).join("")||`<tr><td colspan="9" style="color:var(--mut)">沒有限時場次</td></tr>`}</table><p class="note">級別盈餘未扣限時餐點（餐點不分級別記錄），合計 ${fmt(A.T.meal)} 在上方一併扣除。</p>`;
+  const evRows=Object.entries(A.evM).sort((a,b)=>opProfit(b[1])-opProfit(a[1]));
+  const evT=`<table class="lst"><tr><th>賽事</th><th class="r">場次</th><th class="r">人次</th><th class="r">平均每場</th><th class="r">平均保證</th><th class="r">發放獎金</th><th class="r">營收補入</th><th class="r">盈餘</th><th class="r">每場盈餘</th></tr>${evRows.map(([k,G])=>{const p=opProfit(G);return `<tr><td>${esc(k)}</td><td class="r">${G.sess}</td><td class="r">${fmt(G.heads)}${G.np?`<div style="font-size:11px;color:var(--mut)">免費 ${G.np}</div>`:""}</td><td class="r">${f1(opPerSess(G))}</td><td class="r">${G.guarN?fmt(G.gtd/G.guarN):"—"}</td><td class="r">${fmt(G.prize)}</td><td class="r ${G.sup?"down":""}">${G.sup?fmt(G.sup):""}</td><td class="r ${p<0?"down":""}"><b>${fmt(p)}</b></td><td class="r">${fmt(p/G.sess)}</td></tr>`}).join("")||`<tr><td colspan="9" style="color:var(--mut)">沒有 MTT 場次</td></tr>`}</table>`;
+  const tPanel=`<div class="panel"><div class="ph"><h2><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--s1);margin-right:6px"></i>限時賽 營運狀況與盈餘</h2></div>${mini(A.T,true)}${wf(A.T,true,P.T)}<div class="ph" style="margin:14px 0 6px"><h2 style="font-size:13px">依級別</h2></div><div class="tbl-wrap">${lvT}</div></div>`;
+  const mPanel=`<div class="panel"><div class="ph"><h2><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--s2);margin-right:6px"></i>MTT 營運狀況與盈餘</h2></div>${mini(A.M,false)}${wf(A.M,false,P.M)}<div class="ph" style="margin:14px 0 6px"><h2 style="font-size:13px">依賽事</h2></div><div class="tbl-wrap">${evT}</div></div>`;
+  // 星期 × 班別
+  const order=[1,2,3,4,5,6,0],usedSh=SHS.filter(s=>order.some(w=>A.wk[w]&&A.wk[w][s]));let hmMax=0;
+  order.forEach(w=>usedSh.forEach(s=>{const c=A.wk[w]&&A.wk[w][s];if(c&&A.wkDays[w])hmMax=Math.max(hmMax,c.heads/A.wkDays[w])}));
+  const cell=(c,days)=>{if(!c||!days)return `<td class="r" style="color:var(--mut)">—</td>`;const v=c.heads/days,a=(0.12+0.7*v/(hmMax||1)).toFixed(2);
+    return `<td class="r" style="background:rgba(57,135,229,${a})" title="平均每天 ${f1(v)} 人次・${f1(c.sess/days)} 場（${days} 天，共 ${fmt(c.heads)} 人次）"><b>${f1(v)}</b><div style="font-size:10.5px;color:var(--tx2)">${f1(c.sess/days)} 場</div></td>`};
+  const hm=`<table class="lst" style="font-size:13px"><tr><th>星期</th><th class="r">營業天數</th>${usedSh.map(s=>`<th class="r">${s}班</th>`).join("")}<th class="r">全天</th><th class="r">平均每場</th></tr>${order.map(w=>{const W=A.wk[w]||{},days=A.wkDays[w]||0,h=usedSh.reduce((a,s)=>a+((W[s]||{}).heads||0),0),ss=usedSh.reduce((a,s)=>a+((W[s]||{}).sess||0),0);
+    return `<tr><td>週${"日一二三四五六"[w]}</td><td class="r">${days||""}</td>${usedSh.map(s=>cell(W[s],days)).join("")}<td class="r"><b>${days?f1(h/days):"—"}</b></td><td class="r">${ss?f1(h/ss):"—"}</td></tr>`}).join("")}</table>
+    <p class="note">每格＝該星期平均每天的人次（底色越深人越多），下方小字為平均場次；滑過格子可看總數。</p>`;
+  // 12 個月趨勢
+  const tm=opMonths(m,"12"),TA=tm.map(opsMonth),lab=tm.map(x=>+x.slice(5)+" 月"),nz=v=>v||null,C1="var(--s1)",C2="var(--s2)";
+  const ch1=opChart("heads",lab,[{name:"限時人次",short:"限時",color:C1,vals:TA.map(a=>a.days?a.T.heads:null)},{name:"MTT 人次",short:"MTT",color:C2,vals:TA.map(a=>a.days?a.M.heads:null)}],"line",(v)=>fmtK(v));
+  const ch2=opChart("profit",lab,[{name:"限時盈餘",color:C1,vals:TA.map(a=>a.days?opProfit(a.T):null)},{name:"MTT 盈餘",color:C2,vals:TA.map(a=>a.days?opProfit(a.M):null)}],"bar",(v,full)=>full?fmt(v):fmtK(v));
+  const ch3=opChart("avg",lab,[{name:"限時每場人次",short:"限時",color:C1,vals:TA.map(a=>opPerSess(a.T))},{name:"MTT 每場人次",short:"MTT",color:C2,vals:TA.map(a=>opPerSess(a.M))}],"line",(v)=>f1(v));
+  const ch4=opChart("sup",lab,[{name:"支援占實收服務費",short:"支援",color:"var(--gold)",vals:TA.map(a=>netF(a)?a.supAmt/netF(a)*100:null)}],"line",(v)=>f1(v)+"%");
+  const mt=`<table class="lst" style="min-width:760px"><tr><th>月份</th><th class="r">營業天數</th><th class="r">限時場次</th><th class="r">限時人次</th><th class="r">限時每場</th><th class="r">限時盈餘</th><th class="r">MTT 場次</th><th class="r">MTT 人次</th><th class="r">MTT 每場</th><th class="r">MTT 盈餘</th><th class="r">人力支援</th><th class="r">支援占比</th></tr>${tm.map((x,i)=>{const a=TA[i];return a.days||a.supAmt?`<tr><td>${ymLabel(x)}</td><td class="r">${a.days}</td><td class="r">${a.T.sess}</td><td class="r">${fmt(a.T.heads)}</td><td class="r">${f1(opPerSess(a.T))}</td><td class="r ${opProfit(a.T)<0?"down":""}">${fmt(opProfit(a.T))}</td><td class="r">${a.M.sess}</td><td class="r">${fmt(a.M.heads)}</td><td class="r">${f1(opPerSess(a.M))}</td><td class="r ${opProfit(a.M)<0?"down":""}">${fmt(opProfit(a.M))}</td><td class="r">${fmt(a.supAmt)}</td><td class="r">${opPct(a.supAmt,netF(a))}</td></tr>`:""}).join("")}</table>`;
+  // 各級別趨勢（限時人次）
+  const lvAll=[...new Set(TA.flatMap(a=>Object.keys(a.lvT)))].map(Number).sort((a,b)=>a-b);let lvMax=0;TA.forEach(a=>lvAll.forEach(l=>lvMax=Math.max(lvMax,(a.lvT[l]||{}).heads||0)));
+  const lvTrend=`<table class="lst" style="font-size:12.5px"><tr><th>級別</th>${lab.map(l=>`<th class="r">${l}</th>`).join("")}<th class="r">合計</th><th class="r">平均每場</th></tr>${lvAll.map(l=>{const tot=TA.reduce((a,x)=>a+((x.lvT[l]||{}).heads||0),0),ss=TA.reduce((a,x)=>a+((x.lvT[l]||{}).sess||0),0);
+      return `<tr><td>${l.toLocaleString("en-US")}</td>${TA.map(x=>{const c=x.lvT[l];if(!c)return `<td class="r" style="color:var(--mut)">—</td>`;return `<td class="r" style="background:rgba(57,135,229,${(0.08+0.6*c.heads/(lvMax||1)).toFixed(2)})" title="${l.toLocaleString("en-US")}：${c.sess} 場 ${fmt(c.heads)} 人次，平均 ${f1(c.heads/c.sess)}">${fmt(c.heads)}</td>`}).join("")}<td class="r"><b>${fmt(tot)}</b></td><td class="r">${f1(ss?tot/ss:null)}</td></tr>`}).join("")}
+    <tr><td>MTT 合計</td>${TA.map(x=>`<td class="r">${x.M.heads?fmt(x.M.heads):"—"}</td>`).join("")}<td class="r"><b>${fmt(TA.reduce((a,x)=>a+x.M.heads,0))}</b></td><td class="r">${f1(TA.reduce((a,x)=>a+x.M.sess,0)?TA.reduce((a,x)=>a+x.M.heads,0)/TA.reduce((a,x)=>a+x.M.sess,0):null)}</td></tr></table>`;
+  // 各項支出編列
+  const {TX}=allData(),get=plMemo(TX),cur=sumPL(ms.map(x=>get(x,""))),prv=sumPL(pms.map(x=>get(x,""))),bud=cfg.expBudget||{},showAll=!!cfg.expShowAll,nM=ms.length;
+  let eRows="",gB=0,gA=0,gP=0,gAb=0;   // 差異與使用率只比對有填預算的科目（xAb）
+  ["直接營運成本","固定營業費用","其他營運費用"].forEach(sec=>{let sA=0,sP=0,sB=0,sAb=0,body="";
+    secKeys(sec,[cur,prv]).forEach(it=>{const a=cur.L[sec][it]||0,o=prv.L[sec][it]||0,k=sec+"|"+it,mb=num(bud[k]),b=mb*nM;sA+=a;sP+=o;sB+=b;if(b)sAb+=a;
+      if(!showAll&&!a&&!o&&!mb)return;
+      body+=`<tr class="item${a?"":" zero"}"><td><span class="code">${CODE[k]||""}</span>${esc(it)}</td><td>${fmt(a)}</td><td class="pct">${fpct(pctOf(a,cur.net))}</td><td>${pms.length&&prv.n?fmt(o):"—"}</td>
+        <td><input class="in n" data-expb="${esc(k)}" value="${mb?fmt(mb):""}" placeholder="每月預算" style="height:28px;width:100px;margin-left:auto;font-size:13px"></td><td>${b?fmt(b):""}</td><td class="${b&&a>b?"neg":""}">${b?(a-b>=0?"+":"−")+fmt(Math.abs(a-b)):""}</td><td class="pct ${b&&a>b?"neg":""}">${b?Math.round(a/b*100)+"%":""}</td></tr>`});
+    gA+=sA;gP+=sP;gB+=sB;gAb+=sAb;
+    eRows+=`<tr class="sec"><td><span class="code">${SEC[sec].code}</span>${sec}</td><td>${fmt(sA)}</td><td class="pct">${fpct(pctOf(sA,cur.net))}</td><td>${prv.n?fmt(sP):"—"}</td><td></td><td>${sB?fmt(sB):""}</td><td class="${sB&&sAb>sB?"neg":""}">${sB?(sAb-sB>=0?"+":"−")+fmt(Math.abs(sAb-sB)):""}</td><td class="pct ${sB&&sAb>sB?"neg":""}">${sB?Math.round(sAb/sB*100)+"%":""}</td></tr>`+body});
+  eRows+=`<tr class="calc final"><td>支出合計</td><td>${fmt(gA)}</td><td class="pct">${fpct(pctOf(gA,cur.net))}</td><td>${prv.n?fmt(gP):"—"}</td><td></td><td>${gB?fmt(gB):""}</td><td>${gB?(gAb-gB>=0?"+":"−")+fmt(Math.abs(gAb-gB)):""}</td><td class="pct">${gB?Math.round(gAb/gB*100)+"%":""}</td></tr>`;
+  const exp=`<div class="panel"><div class="ph"><h2>各項支出編列</h2><span class="sub">營業成本＋營業費用（依歸屬月份）· 占比以營業收入淨額 ${fmt(cur.net)} 為分母 · 每月預算 × ${nM} 個月＝期間預算</span><span class="sp"></span><label class="chk"><input type="checkbox" id="op-allexp"${showAll?" checked":""}> 顯示所有科目</label></div>
+    <div class="tbl-wrap"><table class="pl"><thead><tr><th>會計科目</th><th>本期實際</th><th>占營收</th><th>上期</th><th>每月預算</th><th>期間預算</th><th>差異</th><th>使用率</th></tr></thead><tbody>${eRows}</tbody></table></div>
+    <p class="note">每月預算填一次即可，之後每個月都用同一個金額比較；超出預算標紅。小計與合計的差異、使用率只計算有填預算的科目。支出明細可在「月度損益表」點科目查看。</p></div>`;
+  $("op-body").innerHTML=kpis+`<div class="g2 even" style="margin-top:14px"><div>${tPanel}</div><div>${mPanel}</div></div>
+    <div class="g2 even"><div class="panel"><div class="ph"><h2>星期 × 班別人次</h2><span class="sub">${lbl}</span></div><div class="tbl-wrap">${hm}</div></div>
+      <div class="panel"><div class="ph"><h2>人次趨勢</h2><span class="sub">近 12 個月</span></div>${ch1}</div></div>
+    <div class="g2 even"><div class="panel"><div class="ph"><h2>賽事盈餘</h2><span class="sub">近 12 個月</span></div>${ch2}</div>
+      <div class="panel"><div class="ph"><h2>平均每場人次</h2><span class="sub">近 12 個月</span></div>${ch3}</div></div>
+    <div class="g2 even"><div class="panel"><div class="ph"><h2>人力支援占實收服務費</h2><span class="sub">近 12 個月 · 人力支援 ÷（限時＋MTT 實收服務費）</span></div>${ch4}</div>
+      <div class="panel"><div class="ph"><h2>每月明細</h2><span class="sub">上方圖表的數字</span></div><div class="tbl-wrap">${mt}</div></div></div>
+    <div class="panel"><div class="ph"><h2>各級別人次趨勢</h2><span class="sub">限時賽依買入級別，近 12 個月；底色越深人次越多</span></div><div class="tbl-wrap">${lvTrend}</div></div>
+    ${exp}
+    <p class="note">賽事盈餘＝理論服務費 − 優惠折讓 − HHJP − 保底／保證補足 − MTT 進位 −（限時）餐點。人力支援、固定費用與其他支出不分攤到單一賽事，請看「各項支出編列」與損益表。大祕寶為代收代付，不計入。</p>`;
+}
+$("op-scope").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;opScope=b.dataset.v;renderOps()});
+$("op-month").addEventListener("change",renderOps);
+document.querySelectorAll("[data-opstep]").forEach(b=>b.addEventListener("click",()=>{const m=$("op-month").value||todayISO().slice(0,7);$("op-month").value=+b.dataset.opstep<0?prevYM(m):nextYM(m);renderOps()}));
+$("op-body").addEventListener("mousemove",opHover);
+$("op-body").addEventListener("mouseout",e=>{const c=e.target.closest("[data-opch]");if(c&&!c.contains(e.relatedTarget)){c.querySelector(".tip").hidden=true;c.querySelector(".op-x").setAttribute("opacity","0")}});
+$("op-body").addEventListener("change",e=>{const t=e.target;
+  if(t.id==="op-allexp"){cfg.expShowAll=t.checked;saveCfg();renderOps();return}
+  if(t.dataset.expb){cfg.expBudget=cfg.expBudget||{};const v=t.value.trim();if(v==="")delete cfg.expBudget[t.dataset.expb];else cfg.expBudget[t.dataset.expb]=num(v);saveCfg();renderOps()}});
+$("op-body").addEventListener("focusin",e=>{const el=e.target;if(el.dataset.expb){el.value=el.value.replace(/,/g,"");el.select()}});
+$("op-csv").addEventListener("click",()=>{const m=$("op-month").value||todayISO().slice(0,7),tm=opMonths(m,"12");
+  const H=["月份","營業天數","限時場次","限時人次","限時每場人次","限時理論服務費","限時優惠折讓","限時實收服務費","HHJP","保底補足","限時餐點","限時盈餘","MTT 場次","MTT 人次","MTT 免費人次","MTT 每場人次","MTT 理論服務費","MTT 優惠折讓","MTT 實收服務費","保證補足","MTT 進位","MTT 盈餘","人力支援","支援人次","支援時數","支援占實收服務費"];
+  const rows=tm.map(x=>{const a=opsMonth(x),T=a.T,M=a.M,nf=opNetFee(T)+opNetFee(M);return [x,a.days,T.sess,T.heads,f1(opPerSess(T)),T.fee,T.disc+T.act+T.pr,opNetFee(T),T.hhjp,T.sup,T.meal,opProfit(T),M.sess,M.heads,M.np,f1(opPerSess(M)),M.fee,M.disc+M.act+M.pr,opNetFee(M),M.sup,M.round,opProfit(M),a.supAmt,a.supN,a.supHours,nf?(a.supAmt/nf*100).toFixed(1)+"%":""]});
+  download(`營運分析_${tm[0]}_${m}.csv`,"﻿"+[H,...rows].map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
 
 /* ================= 零用金庫 ================= */
 let vault=store.get("vault")||[];
@@ -2437,9 +3114,10 @@ function derive(){
   return {tx,ev,extra,htx};
 }
 function allData(){
+  if(CACHE&&CACHE.v===DATAV)return CACHE;   // 資料沒變就沿用上次的彙整結果
   const D2=derive();
   const TX=TXm.map(t=>Object.assign({src:t.source==="demo"?"demo":"manual"},t)).concat(D2.tx,D2.htx);
-  CACHE={TX,EV:EVm.concat(D2.ev),extra:D2.extra};return CACHE;
+  CACHE={TX,EV:EVm.concat(D2.ev),extra:D2.extra,v:DATAV};return CACHE;
 }
 
 /* ---------- 損益表 ---------- */
@@ -2791,7 +3469,7 @@ document.addEventListener("click",e=>{
     const v=window.prompt(`收回金額（未收 ${fmt(left)}）`,String(left));if(v==null)return;const a=num(v);if(a<=0)return;(r.pays=r.pays||[]).push({date:todayISO(),amt:Math.min(a,left)});saveRCV();renderFunds();toast(`已收回 ${fmt(Math.min(a,left))}`);return}
   const rd=t.closest("[data-rcdel]");if(rd){const i=+rd.dataset.rcdel;const rm=RCV.splice(i,1)[0];saveRCV();renderFunds();toast("已刪除應收款",()=>{RCV.splice(i,0,rm);saveRCV();renderFunds()});return}
   if(t.id==="cl-lock"){const c=CLOSE[FM]||{};document.querySelectorAll("[data-cl]").forEach(el=>c[el.dataset.cl]=el.value.trim()===""?"":num(el.value));c.locked=true;c.at=todayISO();CLOSE[FM]=c;saveCLOSE();renderFunds();toast(`${ymLabel(FM)} 已完成月結`);return}
-  if(t.id==="cl-unlock"){if(!t.dataset.armed){t.dataset.armed="1";t.textContent="再按一次確認";return}CLOSE[FM].locked=false;saveCLOSE();renderFunds();toast("已解除月結");return}
+  if(t.id==="cl-unlock"){if(!t.dataset.armed){t.dataset.armed="1";t.textContent="再按一次確認";setTimeout(()=>{if(t.isConnected){delete t.dataset.armed;t.textContent="解除月結"}},3000);return}CLOSE[FM].locked=false;saveCLOSE();renderFunds();toast("已解除月結");return}
 });
 document.addEventListener("change",e=>{const t=e.target;if(!t.closest||!t.closest("#view-funds"))return;
   if(t.id==="cl-month"||t.id==="fd-month"){FM=t.value||FM;renderFunds();return}
@@ -2903,7 +3581,7 @@ function renderFinSettings(){
 }
 $("br-form").addEventListener("submit",e=>{e.preventDefault();const n=$("br-name").value.trim();if(!n||cfg.branches.includes(n))return;cfg.branches.push(n);saveCfg();$("br-name").value="";renderFinSettings();toast(`已新增館別「${n}」`)});
 $("br-list").addEventListener("click",e=>{const b=e.target.closest("[data-brdel]");if(!b)return;const n=cfg.branches[+b.dataset.brdel];
-  if(n===cfg.homeBranch||TXm.some(t=>t.branch===n)||EVm.some(t=>t.branch===n)){toast("這個館別還有資料或是日報所屬館別，無法刪除");return}cfg.branches.splice(+b.dataset.brdel,1);saveCfg();renderFinSettings()});
+  if(n===cfg.homeBranch||TXm.some(t=>t.branch===n)||EVm.some(t=>t.branch===n)||cfg.people.some(p=>p.branch===n)){toast("這個館別還有資料、人員，或是日報所屬館別，無法刪除");return}cfg.branches.splice(+b.dataset.brdel,1);saveCfg();renderFinSettings()});
 $("br-home").addEventListener("change",e=>{cfg.homeBranch=e.target.value;saveCfg();renderFinSettings();toast(`日報資料改記在「${cfg.homeBranch}」`)});
 document.querySelectorAll("[data-th]").forEach(el=>el.addEventListener("change",()=>{cfg.th[el.dataset.th]=num(el.value);saveCfg();toast("門檻已更新")}));
 $("hist-file").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
@@ -2986,7 +3664,7 @@ function toast(msg,undo){
 function showView(v){
   flush();
   document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.view===v));
-  ["day","history","month","credit","err","mem","sup","jp","vault","people","settings","fin","mpl","tx","events","year","bs","cfs","funds","play"].forEach(x=>$("view-"+x).hidden=x!==v);
+  ["day","history","month","credit","err","mem","sup","sched","jp","vault","people","settings","fin","ops","mpl","tx","events","proj","year","bs","cfs","funds","play"].forEach(x=>$("view-"+x).hidden=x!==v);
   if(v==="fin")renderFin();
   if(v==="mpl")renderMPL();
   if(v==="play"){if(!$("pl-month").value)$("pl-month").value=D.date.slice(0,7);renderPlay()}
@@ -2995,10 +3673,13 @@ function showView(v){
   if(v==="cfs")renderCFS();
   if(v==="funds")renderFunds();
   if(v==="tx"){initTx();if(!editId)resetTxForm();if(!$("tx-month").value)$("tx-month").value=FR.y?ymOf(FR.y,FR.m):D.date.slice(0,7);renderTx()}
+  if(v==="proj")renderProj();
+  if(v==="ops"){if(!$("op-month").value)$("op-month").value=D.date.slice(0,7);renderOps()}
   if(v==="events"){if(!$("ev-month").value)$("ev-month").value=FR.y?ymOf(FR.y,FR.m):D.date.slice(0,7);renderEvents()}
   if(v==="jp")renderJP();
   if(v==="vault"){if(!$("v-month").value)$("v-month").value=todayISO().slice(0,7);renderVaultForm();renderVault()}
   if(v==="people")renderPeople();
+  if(v==="sched")renderSched();
   if(v==="credit"){crCollect=null;renderCredit()}
   if(v==="sup"){if(!$("sp-month").value)$("sp-month").value=D.date.slice(0,7);renderSup()}
   if(v==="mem"){if(!$("mm-month").value)$("mm-month").value=D.date.slice(0,7);renderMem()}
@@ -3246,9 +3927,9 @@ function applyRemote(list){
   if(ch.length)changed(ch);
 }
 function changed(keys){
-  CACHE=null;let day=false;
+  CACHE=null;DATAV++;SUPN=null;let day=false;
   keys.forEach(k=>{
-    if(k==="cfg"){const c=store.get("cfg");if(c)Object.assign(cfg,c)}
+    if(k==="cfg"){const c=store.get("cfg");if(c)Object.assign(cfg,c);(cfg.people||[]).forEach(normPerson)}
     else if(k==="vault")vault=store.get("vault")||[];
     else if(k==="credit")credit=store.get("credit")||[];
     else if(k==="fin:tx")TXm=store.get(k)||[];
@@ -3260,6 +3941,7 @@ function changed(keys){
     else if(k==="fin:close")CLOSE=store.get(k)||{};
     else if(k==="fin:open")OPEN=store.get(k)||null;
     else if(k==="fin:hist"){HIST=store.get(k)||{months:{}};fixHist()}
+    else if(k==="proj")PJ=store.get("proj")||[];
     else if(k==="day:"+D.date)day=true;
   });
   if(day&&!saveTimer)D=loadDay(D.date);
@@ -3414,6 +4096,7 @@ function shOps(k,v){
     return [{op:"rewrite",sheet:"零用金庫",header:SH_VAULT_H,rows:list.map(e=>[e.date,e.time||"",e.auto?"取出（日報）":(VK[e.kind]||e.kind),e.cat||"",e.desc||"",e.kind==="out"?-num(e.amt):num(e.amt),e.req||"",e.hand||"",e.after,e.diff??""])}]}
   if(k==="credit"){
     return [{op:"rewrite",sheet:"掛帳",header:SH_CR_H,rows:credit.filter(c=>c.player||num(c.amt)).slice().sort((a,b)=>a.date<b.date?-1:1).map(c=>[c.date,c.player||"",c.sess||"",num(c.amt),crPaidAmt(c),crLeft(c),c.hand||"",crOpen(c)?(crPaidAmt(c)?"部分回帳":"未收"):"已收清",crPays(c).map(p=>`${p.date} ${num(p.amt)} ${p.recv||""}${p.note?" "+p.note:""}`).join("；")])}]}
+  if(k==="proj")return [{op:"rewrite",sheet:"活動專案",header:SH_PJ_H,rows:pjRows((v||[]).slice().sort((a,b)=>(a.start||"").localeCompare(b.start||"")))}];
   if(k==="fin:tx"){
     return [{op:"rewrite",sheet:"手動交易",header:SH_TX_H,rows:(v||[]).slice().sort((a,b)=>a.date<b.date?-1:1).map(t=>[t.date,t.branch||"",t.dir==="in"?"收入":"支出",t.l1,t.l2,t.item||"",num(t.amt),t.pay||"",t.paydate||"",t.period||"",t.est?"是":"",t.note||""])}]}
   return [];
@@ -3468,6 +4151,16 @@ document.addEventListener("click",async e=>{
 setTimeout(()=>{if(shOn()&&SHEET.pend.size)sheetFlush()},6000);
 window.addEventListener("online",()=>{if(shOn())sheetFlush()});
 
+/* ---------- 人員資料升級（可重複執行）：補新欄位、加入竹北館、把舊的支援人員名冊併入人員名單（只做一次） ---------- */
+(function migratePeople(){let ch=false;
+  if(!cfg.branches.some(b=>/竹北/.test(b))){cfg.branches.push("竹北館");ch=true}
+  cfg.people.forEach(p=>{const had=!!p.id;normPerson(p);if(!had)ch=true});
+  if(!cfg.supMerged){(Array.isArray(cfg.supRoster)?cfg.supRoster:[]).forEach(r=>{const nm=String(r.name||"").trim();if(!nm)return;
+      const ex=cfg.people.find(p=>p.name.trim().toLowerCase()===nm.toLowerCase());
+      if(ex)["rate","travel","contact","note"].forEach(k=>{if((ex[k]===""||ex[k]==null)&&r[k]!==""&&r[k]!=null)ex[k]=r[k]});
+      else cfg.people.push(normPerson({id:r.id||uid(),name:nm,role:"",kind:"外部支援",rate:r.rate??"",travel:r.travel??"",contact:r.contact||"",note:r.note||"",active:r.active!==false}))});
+    cfg.supMerged=true;ch=true}
+  if(ch)saveCfg()})();
 fillLists();renderDay();cloudInit();
 })();
 </script>
