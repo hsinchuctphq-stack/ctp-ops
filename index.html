@@ -120,6 +120,7 @@ select.in{padding-right:4px}
 .v-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
 .v-form .f{width:150px}.v-form .f.grow{flex:1;min-width:200px}
 .v-form .btn{height:34px}
+#view-supay [data-spyonly][hidden]{display:none!important}
 .tag{display:inline-block;font:500 12px var(--f-body);border-radius:4px;padding:1px 7px}
 .tag.t-out{background:var(--bad-bg);color:var(--bad)}.tag.t-in{background:var(--good-bg);color:var(--good)}.tag.t-count{background:var(--head);color:var(--ink-2)}
 .jp-edit{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
@@ -211,44 +212,45 @@ table.ref{width:100%;border-collapse:collapse;font-size:13px}
 #toast[hidden]{display:none}
 #toast button{background:none;border:0;color:#8fd3ff;font-weight:700}
 
-/* ======== 深色主題（整個系統）＋側邊導覽 ======== */
+/* ======== 白色主題（整個系統）＋側邊導覽 ======== */
 :root{
-  color-scheme:dark;
-  --ink:#e9ecf2; --ink-2:#a5adbb; --muted:#6d7584;
-  --bg:#0d0f13; --card:#151920; --line:#262c37; --line-2:#353d4b;
-  --head:#1f2530;
-  --early:#3b9fd8; --early-bg:#122230;
-  --late:#d6489a;  --late-bg:#25162a;
-  --amber:#4d3f17; --bad:#f07272; --bad-bg:#2a1717; --good:#4cc38a; --good-bg:#132519;
-  --panel:#151920; --panel2:#1b2029; --tx:#e9ecf2; --tx2:#a5adbb; --mut:#6d7584; --line2:#353d4b;
-  --gold:#c8a96a; --s1:#3987e5; --s2:#d95926;
-  --warn:#fab219; --crit:#d03b3b; --up:#4cc38a; --down:#f07272;
+  color-scheme:light;
+  --ink:#1c2230; --ink-2:#4a5263; --muted:#737b8c;
+  --bg:#f4f5f8; --card:#ffffff; --line:#e3e6ec; --line-2:#cdd2db;
+  --head:#eef1f6;
+  --early:#1a7fc0; --early-bg:#e9f4fb;
+  --late:#c2287f;  --late-bg:#fbeef6;
+  --amber:#fbe7a6; --bad:#c62828; --bad-bg:#fdecec; --good:#1f7a3a; --good-bg:#e9f5ea;
+  --panel:#ffffff; --panel2:#f6f7fa; --tx:#1c2230; --tx2:#4a5263; --mut:#737b8c; --line2:#cdd2db;
+  --gold:#8f6d22; --s1:#3987e5; --s2:#d95926;
+  --warn:#9a6700; --crit:#c62828; --up:#1f7a3a; --down:#c62828;
 }
 body{background:var(--bg);color:var(--ink)}
-.btn,.in,.seg button,.kpi,.daybar .datepick,.jpchk{background:var(--panel2)}
+.btn,.in,.seg button,.kpi,.daybar .datepick,.jpchk{background:var(--card)}
+.wrap .card{box-shadow:0 1px 2px rgba(20,24,32,.04)}
 .btn{color:var(--ink)}
 .btn:hover{background:var(--head);border-color:var(--ink-2)}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#16130c;font-weight:700}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700}
 .btn.primary:hover{background:var(--gold);filter:brightness(1.08)}
-.btn.danger{border-color:#5a2c2c}
+.btn.danger{border-color:#efc2c2}
 .in:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,169,106,.15)}
 .kpi{border-color:var(--line)}
-.kpi.hl{background:linear-gradient(180deg,#1d1a12,var(--card));border-color:#4a3f27;color:var(--ink)}
+.kpi.hl{background:linear-gradient(180deg,#fdf7e8,var(--card));border-color:#e7d4a5;color:var(--ink)}
 .kpi.hl .k{color:var(--gold)}
-.kpi.bad{border-color:#5c2626}.kpi.good{border-color:#1f4a35}
-.seg button.on.o{background:var(--ink);color:#0d0f13}
-.s-tog:hover{background:rgba(255,255,255,.06)}
-.settle tr.sum td,.hist tfoot td{background:#1a1f27}
-.settle tr.key td,.hist tr.cur td{background:#221e14}
+.kpi.bad{border-color:#f0c4c4}.kpi.good{border-color:#bfe0cb}
+.seg button.on.o{background:var(--ink);color:#fff}
+.s-tog:hover{background:rgba(0,0,0,.04)}
+.settle tr.sum td,.hist tfoot td{background:#eef1f6}
+.settle tr.key td,.hist tr.cur td{background:#fbf3df}
 .hist tfoot td{border-top-color:var(--line-2)}
-.hist tr.mo-empty td{background:#12151a}
+.hist tr.mo-empty td{background:#fafbfc}
 .s-out .rep{background:var(--amber)}
-#toast{background:var(--ink);color:#0d0f13}
-#toast button{color:#1c5cab}
+#toast{background:var(--ink);color:#fff}
+#toast button{color:#9fd2ff}
 .sess{border-color:var(--line)}
 .p-row{background:var(--panel2)}
 
-.appbar{position:sticky;top:0;z-index:30;background:rgba(13,15,19,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.appbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .appbar-in{display:flex;align-items:center;gap:16px;padding:0 16px;min-height:52px}
 .appbar .brand{display:flex;flex-direction:column;line-height:1.2;white-space:nowrap}
 .appbar .brand b{font-size:14.5px;letter-spacing:.08em}
@@ -299,16 +301,16 @@ body{background:var(--bg);color:var(--ink)}
 .fin .kpi .k{font-size:12px;color:var(--tx2)}
 .fin .kpi .v{font:600 26px/1.15 var(--f-num);font-variant-numeric:tabular-nums;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fin .kpi .m{font:500 12px var(--f-num);margin-top:4px;color:var(--mut);display:flex;gap:8px;flex-wrap:wrap}
-.fin .kpi.hero{border-color:#4a3f27;background:linear-gradient(180deg,#1b1912,var(--panel))}
+.fin .kpi.hero{border-color:#e7d4a5;background:linear-gradient(180deg,#fdf7e8,var(--panel))}
 .fin .kpi.flag{border-color:var(--crit)}
 .fin .kpi.flag::after,.fin .kpi.warnflag::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--crit)}
-.fin .kpi.warnflag{border-color:#6b5420}.fin .kpi.warnflag::after{background:var(--warn)}
+.fin .kpi.warnflag{border-color:#ecd29a}.fin .kpi.warnflag::after{background:var(--warn)}
 .fin .up{color:var(--up)}.fin .down{color:var(--down)}.fin .flat{color:var(--mut)}
 .fin .alerts{display:flex;flex-direction:column;gap:6px}
 .fin .alert{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:start;padding:9px 12px;border-radius:8px;background:var(--panel2);border:1px solid var(--line)}
 .fin .alert i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#0d0f13}
-.fin .alert.crit{border-color:#5c2626}.fin .alert.crit i{background:var(--crit);color:#fff}
-.fin .alert.warn{border-color:#5a4719}.fin .alert.warn i{background:var(--warn)}
+.fin .alert.crit{border-color:#f0c4c4}.fin .alert.crit i{background:var(--crit);color:#fff}
+.fin .alert.warn{border-color:#ecd29a}.fin .alert.warn i{background:#f2c14e}
 .fin .alert.info i{background:var(--line2);color:var(--tx)}
 .fin .alert .d{font-size:12.5px;color:var(--tx2)}
 .fin .alert .lv{font-size:11px;color:var(--mut);white-space:nowrap}
@@ -323,8 +325,8 @@ body{background:var(--bg);color:var(--ink)}
 .fin .pl tr.sec td{font-weight:700;padding-top:12px;border-bottom-color:var(--line2)}
 .fin .pl tr.item td:first-child{padding-left:24px;color:var(--tx2)}
 .fin .pl tr.item.zero td{color:var(--mut)}
-.fin .pl tr.calc td{background:#1a1f27;font-weight:700;font-size:14.5px;border-top:1px solid var(--line2)}
-.fin .pl tr.calc.final td{background:#221e14;color:var(--gold);border-top:1px solid #4a3f27}
+.fin .pl tr.calc td{background:#eef1f6;font-weight:700;font-size:14.5px;border-top:1px solid var(--line2)}
+.fin .pl tr.calc.final td{background:#fbf3df;color:var(--gold);border-top:1px solid #e7d4a5}
 .fin .pl tr.flag td:first-child{box-shadow:inset 3px 0 0 var(--crit)}
 .fin .pl tr.wflag td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
 .fin .pl .pct{color:var(--mut);font-size:12px}
@@ -334,7 +336,7 @@ body{background:var(--bg);color:var(--ink)}
 .fin .legend{display:flex;gap:16px;font-size:12px;color:var(--tx2);margin-bottom:6px;flex-wrap:wrap}
 .fin .legend span{display:inline-flex;align-items:center;gap:6px}
 .fin .legend i{width:14px;height:2px;border-radius:2px;display:inline-block}
-.fin .tip{position:absolute;pointer-events:none;background:#0b0d10;border:1px solid var(--line2);border-radius:7px;padding:7px 10px;font-size:12px;white-space:nowrap;transform:translate(-50%,-110%);z-index:5}
+.fin .tip{position:absolute;pointer-events:none;background:#fff;box-shadow:0 4px 14px rgba(20,24,32,.12);border:1px solid var(--line2);border-radius:7px;padding:7px 10px;font-size:12px;white-space:nowrap;transform:translate(-50%,-110%);z-index:5}
 .fin .tip b{font-family:var(--f-num);font-weight:600}
 .fin .tip .sw{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
 .fin .bars{display:flex;flex-direction:column;gap:7px}
@@ -361,13 +363,13 @@ body{background:var(--bg);color:var(--ink)}
 @media (max-width:980px){.fin .txform{grid-template-columns:repeat(2,1fr)}.fin .txform .s3{grid-column:span 2}}
 .fin .hint{font-size:12px;color:var(--warn);min-height:18px}
 .fin .chip{display:inline-block;font-size:11px;border-radius:4px;padding:1px 7px;background:var(--panel2);color:var(--tx2);border:1px solid var(--line2)}
-.fin .chip.c-in{color:var(--up);border-color:#1f4a35}.fin .chip.c-out{color:var(--down);border-color:#4f2828}
-.fin .chip.auto{color:var(--gold);border-color:#4a3f27}
+.fin .chip.c-in{color:var(--up);border-color:#bfe0cb}.fin .chip.c-out{color:var(--down);border-color:#f0c4c4}
+.fin .chip.auto{color:var(--gold);border-color:#e7d4a5}
 .fin table.tx{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1050px}
 .fin .tx th{font-size:11px;color:var(--mut);font-weight:500;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line2);white-space:nowrap}
 .fin .tx td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .fin .tx td.r,.fin .tx th.r{text-align:right;font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
-.fin .tx tr:hover td{background:#171c23}
+.fin .tx tr:hover td{background:#f5f7fa}
 .fin .cross{color:var(--warn);font-size:11px}
 .fin .note{font-size:12px;color:var(--mut);margin:10px 0 0;line-height:1.6}
 .fin .empty-state{border:1px dashed var(--line2);border-radius:10px;padding:28px 20px;text-align:center;color:var(--tx2)}
@@ -381,7 +383,7 @@ body{background:var(--bg);color:var(--ink)}
 .fin table.pl.yr{font-size:12.5px;min-width:1180px}
 .fin .pl.yr td,.fin .pl.yr th{padding:5px 6px}
 .fin .pl.yr td:first-child{white-space:nowrap;position:sticky;left:0;background:var(--panel);z-index:1}
-.fin .pl.yr tr.calc td:first-child{background:#1a1f27}.fin .pl.yr tr.calc.final td:first-child{background:#221e14}
+.fin .pl.yr tr.calc td:first-child{background:#eef1f6}.fin .pl.yr tr.calc.final td:first-child{background:#fbf3df}
 .fin .pl td.tot{font-weight:700;border-left:1px solid var(--line2)}
 .fin .pl tr.ratio td{color:var(--tx2);font-size:12px}
 .fin #fd-kpis{margin-top:0}
@@ -482,10 +484,10 @@ body{background:var(--bg);color:var(--ink)}
 /* 雲端同步狀態 */
 .cloud-badge{display:inline-flex;align-items:center;gap:6px;margin-top:6px;align-self:flex-start;background:transparent;border:1px solid var(--line);border-radius:99px;padding:2px 9px 2px 7px;font-size:11px;letter-spacing:0;color:var(--muted);white-space:nowrap}
 .cloud-badge i{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
-.cloud-badge.online i{background:#3fb950}.cloud-badge.online{color:#3fb950}
-.cloud-badge.busy i{background:#d29922;animation:clp 1s ease-in-out infinite}.cloud-badge.busy{color:#d29922}
-.cloud-badge.offline i,.cloud-badge.signedout i,.cloud-badge.loading i{background:#d29922}
-.cloud-badge.error i,.cloud-badge.denied i,.cloud-badge.nows i{background:#f85149}.cloud-badge.error,.cloud-badge.denied{color:#f85149}
+.cloud-badge.online i{background:#1f8a3b}.cloud-badge.online{color:#1f7a3a}
+.cloud-badge.busy i{background:#c98a00;animation:clp 1s ease-in-out infinite}.cloud-badge.busy{color:#9a6700}
+.cloud-badge.offline i,.cloud-badge.signedout i,.cloud-badge.loading i{background:#c98a00}
+.cloud-badge.error i,.cloud-badge.denied i,.cloud-badge.nows i{background:#c62828}.cloud-badge.error,.cloud-badge.denied{color:#c62828}
 @keyframes clp{50%{opacity:.35}}
 .cloud-card{margin-bottom:14px}
 @media print{.cloud-badge{display:none}}
@@ -494,7 +496,7 @@ body{background:var(--bg);color:var(--ink)}
 .fin .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--tx2);height:36px;cursor:pointer}
 .fin .chk[hidden]{display:none}
 .fin .pl tr[data-dd]{cursor:pointer}
-.fin .pl tr[data-dd]:hover td,.fin .pl tr[data-dd]:focus-visible td{background:#1b212b}
+.fin .pl tr[data-dd]:hover td,.fin .pl tr[data-dd]:focus-visible td{background:#f3f5f9}
 .fin .pl .ddi{color:var(--mut);margin-left:8px;font-size:11px;font-weight:400;opacity:0;transition:opacity .15s}
 .fin .pl tr[data-dd]:hover .ddi,.fin .pl tr[data-dd]:focus-visible .ddi{opacity:1}
 .fin .pl th[data-gom]{cursor:pointer;color:var(--tx2)}
@@ -502,7 +504,7 @@ body{background:var(--bg);color:var(--ink)}
 .fin .pl .warnmk{color:var(--warn)}
 .fin .pl td.avg{color:var(--tx2)}
 .fin .pl tr.ratio td{color:var(--tx2);font-size:12.5px}
-.fin .chkp{border-color:#6b5420}
+.fin .chkp{border-color:#ecd29a}
 .fin .chkp .adj{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
 .fin .chkp .adj div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 .fin .chkp .adj span{display:block;font-size:12px;color:var(--tx2)}
@@ -517,13 +519,13 @@ body{background:var(--bg);color:var(--ink)}
 .fin .lst.rt td.ds{color:var(--mut);font-size:11.5px}
 .ddm{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:16px}
 .ddm[hidden]{display:none}
-.ddm-bg{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.ddm-bg{position:absolute;inset:0;background:rgba(20,24,32,.45)}
 .ddm-box{position:relative;width:min(900px,100%);max-height:86vh;overflow:auto;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:16px}
 .ddm-box h2 small{font-weight:400;color:var(--mut);font-size:12.5px;margin-left:6px}
 @media (max-width:700px){.fin .chkp .adj{grid-template-columns:1fr}}
 @media print{.ddm,.fin .ddi{display:none}}
 
-.estc{display:inline-block;font-size:10.5px;line-height:1.5;padding:0 5px;border-radius:4px;background:#3a2f12;color:#e3b341;border:1px solid #6b5420;font-weight:500;vertical-align:1px}
+.estc{display:inline-block;font-size:10.5px;line-height:1.5;padding:0 5px;border-radius:4px;background:#fdf3dc;color:#8a5d00;border:1px solid #ecd29a;font-weight:500;vertical-align:1px}
 .fin .chip.estc{font-size:11px}
 .fin .chkf .chk{height:auto;min-height:36px}
 .jp-pay{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
@@ -551,13 +553,44 @@ body{background:var(--bg);color:var(--ink)}
 #view-err .grid3>.card{margin-top:12px}
 #cr-table td.cr-sess{text-align:left;white-space:normal}#cr-table td.cr-sess div{max-width:220px;font-size:12px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #cr-table .cr-pays{white-space:normal}
-.cr-pays{display:flex;flex-direction:column;gap:4px;padding:4px 0 6px}
+.cr-pays{display:flex;flex-direction:column;gap:4px;padding:8px 0 0;margin-top:8px;border-top:1px dashed var(--line-2)}
+.cr-list{display:flex;flex-direction:column;gap:8px}
+.cr-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:12px;align-items:start;margin-top:12px}
+.cr-layout>.card{margin-top:0}
+@media (max-width:1199px){.cr-layout{grid-template-columns:1fr}}
+.cr-sec{font-size:12.5px;color:var(--ink-2);margin:6px 0 0}.cr-sec b{font-family:var(--f-num);color:var(--bad)}
+.cr-item{border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:9px;padding:10px 12px;background:var(--card)}
+.cr-item.part{border-left-color:#c98a00}
+.cr-item.done{border-left-color:var(--good);background:#fbfcfd}
+.cr-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cr-top .nm{font-size:15px;font-weight:700}
+.cr-top .left{margin-left:auto;display:flex;align-items:baseline;gap:6px}
+.cr-top .left small{font-size:12px;color:var(--muted)}
+.cr-top .left b{font:600 20px var(--f-num);color:var(--bad)}.cr-top .left b.ok{color:var(--good)}
+.cr-meta{font-size:12.5px;color:var(--ink-2);margin-top:4px;display:flex;flex-wrap:wrap;gap:3px 14px}
+.cr-meta b{font-family:var(--f-num);color:var(--ink)}
+.cr-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cr-collect{margin-top:10px;padding:10px;background:var(--panel2);border-radius:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.cr-collect .f{width:150px}.cr-collect .f.grow{flex:1 1 160px;width:auto}
 .cr-pays div{display:flex;gap:14px;align-items:center;font-size:12.5px}
 .cr-pays b{min-width:80px;text-align:right}
 .icon-x.armed{color:var(--bad);border-color:var(--bad)}
 
 /* 跨班、右側阿米巴 */
 .sess.cross{border-left-color:#c9952b;background:linear-gradient(90deg,var(--early-bg),var(--late-bg))}
+/* 場次依級別上色：大眾 藍、中階 青、高額 古銅、豪客 洋紅、MTT 琥珀（顏色之外另有文字標籤） */
+.sess.lv0{border-left-color:#2a78d6;background:#eef5fd}
+.sess.lv1{border-left-color:#1baf7a;background:#e9f8f2}
+.sess.lv2{border-left-color:#8a5a00;background:#f3ede5}
+.sess.lv3{border-left-color:#e87ba4;background:#fdf0f5}
+.sess.lvm{border-left-color:#eda100;background:#fff6d4}
+.sess.lvn{border-left-color:var(--line-2);background:#fafbfc}
+.s-lv{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:99px;padding:1px 8px 1px 6px;white-space:nowrap;align-self:center}
+.s-lv i,.lv-key i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.s-head{display:flex;flex-direction:column;align-items:center;gap:3px;align-self:center;min-width:44px}
+.s-head .s-lv{font-size:11px;padding:0 6px 0 5px}
+.lv-key{display:inline-flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--ink-2);font-weight:400;margin-left:8px}
+.lv-key span{display:inline-flex;align-items:center;gap:5px}
 .seg button.on.x{background:#c9952b;color:#fff}
 .amoeba th.x{color:#c9952b}
 .pr .st tr.x td.sh{color:#a8781a;font-weight:700}.pr .st tr.x td{background:#fbf5e6}
@@ -588,8 +621,21 @@ body{background:var(--bg);color:var(--ink)}
 .mem-sum{font-size:12.5px;color:var(--ink-2)}.mem-sum b{font-family:var(--f-num);color:var(--ink)}.mem-sum .bad{color:var(--bad)}
 
 /* 支援人員 */
-.sup-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 30px;gap:6px;align-items:end;padding:8px 0;border-bottom:1px dashed var(--line-2)}
-.sup-line .sup-who{grid-column:1/3}.sup-line .sup-sh{grid-column:3/5;display:flex;justify-content:flex-end}.sup-line>.icon-x{grid-column:5;grid-row:1}
+.sup-line{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.8fr) minmax(0,1fr) 30px;gap:6px;align-items:end;padding:8px 0;border-bottom:1px dashed var(--line-2)}
+.sup-line .sup-who{grid-column:1}.sup-line .sup-sh{grid-column:1/4;flex-direction:row!important;align-items:center;gap:8px!important}.sup-line>.icon-x{grid-column:4;grid-row:1}
+.spy-t td:first-child,.spy-t th:first-child{text-align:left}
+.spy-t td:nth-child(2),.spy-t th:nth-child(2),.spy-t td:nth-child(7),.spy-t th:nth-child(7){text-align:left;font-family:var(--f-body)}
+.spy-t tr.done td{color:var(--ink-2)}
+.spy-tg{border:0;background:none;padding:2px 0;color:var(--ink);font-size:13.5px;cursor:pointer}
+.spy-d>td{background:var(--panel2)!important;padding:6px 10px 10px!important}
+.spy-dt{width:100%;border-collapse:collapse;font-size:12.5px}
+.spy-dt th{font-size:11px;color:var(--muted);font-weight:500;text-align:left;padding:4px 6px;border-bottom:1px solid var(--line-2)}
+.spy-dt td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:left}
+.spy-dt .r{text-align:right;font-family:var(--f-num)}
+.spy-dt tr.ok td{color:var(--good)}
+.sup-line .sup-hint{grid-column:1/-1;font-size:11.5px;color:var(--ink-2);line-height:1.5}
+.sup-line .sup-hint b{font-family:var(--f-num)}
+.sup-line .sup-hint button{border:0;background:none;color:var(--early);padding:0 2px;font-size:11.5px;text-decoration:underline;cursor:pointer}
 .sup-line .sf{display:flex;flex-direction:column;gap:2px;min-width:0}.sup-line .sf span{font-size:11px;color:var(--muted)}
 .sup-line .sf.tot .in{font-weight:700}
 .sup-line .in.auto{background:transparent;border-style:dashed;cursor:default}
@@ -622,10 +668,10 @@ body{background:var(--bg);color:var(--ink)}
 .sc-grid td.c:hover{outline:1px solid var(--ink-2);outline-offset:-1px}
 .sc-grid td.k-早{background:var(--early-bg);color:var(--early)}
 .sc-grid td.k-晚{background:var(--late-bg);color:var(--late)}
-.sc-grid td.k-跨{background:#2a2312;color:#e0b452}
+.sc-grid td.k-跨{background:#fbf1da;color:#8a5d00}
 .sc-grid td.k-off{color:var(--muted)}
-.sc-grid td.k-x{background:#22252d;color:var(--ink);font-weight:500;font-size:11px}
-.sc-grid tr.cnt td{color:var(--ink-2);font-family:var(--f-num);font-weight:400;background:#1a1f27}
+.sc-grid td.k-x{background:#eef0f4;color:var(--ink);font-weight:500;font-size:11px}
+.sc-grid tr.cnt td{color:var(--ink-2);font-family:var(--f-num);font-weight:400;background:#f5f6f9}
 .sc-grid tr.unk td.nm{color:var(--warn)}
 .sc-res{width:100%;border-collapse:collapse;font-size:13px}
 .sc-res th{font-size:11.5px;font-weight:500;color:var(--muted);text-align:left;padding:5px 8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
@@ -635,7 +681,7 @@ body{background:var(--bg);color:var(--ink)}
 .sc-res tr.gh td small{font-weight:400;color:var(--muted);margin-left:6px}
 .sc-why{font-size:12px;color:var(--ink-2)}
 .sc-why b{color:var(--good);font-weight:500}
-.sc-pv{border:1px solid #6b5420;background:#1d1a12;border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.sc-pv{border:1px solid #ecd29a;background:#fdf8ec;border-radius:10px;padding:12px 14px;margin-bottom:12px}
 .sc-pv .sc-grid td.c{cursor:default}
 #op-body .g2>.panel,#op-body .g2>div>.panel{margin-top:0}
 #op-body .g2+.g2,#op-body .g2+.panel,#op-body .panel+.g2{margin-top:14px}
@@ -650,14 +696,15 @@ body{background:var(--bg);color:var(--ink)}
     <nav class="tabs" role="tablist">
       <span class="tab-group">櫃台作業</span>
       <button class="tab" role="tab" data-view="day" aria-selected="true">今日報表</button>
-      <button class="tab" role="tab" data-view="history" aria-selected="false">歷史紀錄</button>
-      <button class="tab" role="tab" data-view="credit" aria-selected="false">掛帳</button>
-      <button class="tab" role="tab" data-view="err" aria-selected="false">錯帳統計</button>
-      <button class="tab" role="tab" data-view="mem" aria-selected="false">新會員</button>
-      <button class="tab" role="tab" data-view="sup" aria-selected="false">支援人員</button>
-      <button class="tab" role="tab" data-view="sched" aria-selected="false">班表／找支援</button>
-      <button class="tab" role="tab" data-view="play" aria-selected="false">貼咖統整</button>
       <button class="tab" role="tab" data-view="vault" aria-selected="false">零用金庫</button>
+      <button class="tab" role="tab" data-view="people" aria-selected="false">員工名冊</button>
+      <button class="tab" role="tab" data-view="supay" aria-selected="false">支援明細</button>
+      <button class="tab" role="tab" data-view="play" aria-selected="false">貼咖統整</button>
+      <button class="tab" role="tab" data-view="credit" aria-selected="false">掛帳</button>
+      <button class="tab" role="tab" data-view="err" aria-selected="false">錯帳分析</button>
+      <button class="tab" role="tab" data-view="history" aria-selected="false">歷史紀錄</button>
+      <button class="tab" role="tab" data-view="mem" aria-selected="false">新會員</button>
+      <button class="tab" role="tab" data-view="sched" aria-selected="false">班表／找支援</button>
       <button class="tab" role="tab" data-view="jp" aria-selected="false">大祕寶</button>
       <span class="tab-group">財務管理</span>
       <button class="tab" role="tab" data-view="fin" aria-selected="false">財務總覽</button>
@@ -671,7 +718,6 @@ body{background:var(--bg);color:var(--ink)}
       <button class="tab" role="tab" data-view="proj" aria-selected="false">活動專案</button>
       <button class="tab" role="tab" data-view="month" aria-selected="false">月營收統計</button>
       <span class="tab-group">系統</span>
-      <button class="tab" role="tab" data-view="people" aria-selected="false">人員</button>
       <button class="tab" role="tab" data-view="settings" aria-selected="false">設定</button>
     </nav>
   </div>
@@ -744,7 +790,7 @@ body{background:var(--bg);color:var(--ink)}
     </div>
 
     <div class="card">
-      <div class="card-h"><h2>賽事場次 <span class="sub">填買入與人次，現金、獎池、剩餘自動計算</span></h2></div>
+      <div class="card-h"><h2>賽事場次 <span class="sub">填買入與人次，現金、獎池、剩餘自動計算</span></h2><span class="lv-key" id="lv-key" aria-label="級別顏色"></span></div>
       <div class="sess-list" id="sess-list"></div>
       <div class="add-row">
         <button class="btn add" type="button" data-addsess="bd">＋ 保底限時</button>
@@ -849,7 +895,7 @@ body{background:var(--bg);color:var(--ink)}
   <!-- ========== 掛帳 ========== -->
   <section id="view-credit" hidden>
     <div class="kpis" id="cr-kpis"></div>
-    <div class="card">
+    <div class="cr-layout"><div class="card">
       <div class="card-h">
         <h2>掛帳玩家紀錄</h2>
         <div class="seg seg3" id="cr-filter">
@@ -860,14 +906,15 @@ body{background:var(--bg);color:var(--ink)}
         <input class="in" id="cr-q" placeholder="搜尋玩家" style="width:160px">
         <span class="spacer"></span>
       </div>
-      <div class="tbl-wrap"><table class="hist" id="cr-table"></table></div>
+      <div class="cr-list" id="cr-table"></div>
       <p class="note">新增掛帳請在「今日報表」的「掛帳玩家」區塊填寫。收款後，金額會自動計入收款當天日報的本日實得。</p>
     </div>
-    <div class="card"><div class="card-h"><h2>未收款：依玩家</h2></div><table class="amoeba" id="cr-byp"></table></div>
+    <div class="card"><div class="card-h"><h2>未收款：依玩家</h2></div><table class="amoeba" id="cr-byp"></table></div></div>
   </section>
 
   <!-- ========== 支援人員 ========== -->
   <section id="view-sup" hidden>
+    <div class="card" style="margin-top:0"><div class="card-h"><h2>支援統計 <span class="sub">依人統整、每日明細；核對與列印請到「支援明細」</span></h2><span class="spacer"></span><button class="btn sm" type="button" data-go="supay">‹ 回支援明細</button></div></div>
     <div class="kpis" id="sp-kpis"></div>
     <div class="card">
       <div class="card-h"><h2>支援統整 <span class="sub">由每日報表的「人力支援」自動彙整</span></h2>
@@ -884,10 +931,31 @@ body{background:var(--bg);color:var(--ink)}
       <div class="tbl-wrap"><table class="hist" id="sp-days" style="min-width:820px"></table></div>
     </div>
     <div class="card">
-      <div class="card-h"><h2>支援人員名冊</h2></div>
-      <p class="note" style="margin:0">名冊已併入「人員」頁：每位人員可設定館別、身分（正職／PT／外部支援）、預設時薪與車資；平常上什麼班由上傳的班表推測。日報選到名單上的人會自動帶入時薪與車資。</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn" type="button" data-go="people">到人員頁編輯</button><button class="btn" type="button" data-go="sched">班表／找支援</button></div>
+      <div class="card-h"><h2>員工名冊</h2></div>
+      <p class="note" style="margin:0">名冊已併入「員工名冊」頁：每位人員可設定館別、身分（正職／PT／外部支援）、預設時薪與車資；平常上什麼班由上傳的班表推測。日報選到名單上的人會自動帶入時薪與車資。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn" type="button" data-go="people">到員工名冊編輯</button><button class="btn" type="button" data-go="sched">班表／找支援</button></div>
     </div>
+  </section>
+
+  <!-- ========== 支援薪資核對 ========== -->
+  <section id="view-supay" hidden>
+    <div class="card">
+      <div class="card-h"><h2>支援明細 <span class="sub" id="spy-sub"></span></h2><span class="spacer"></span><div class="seg seg3" id="spy-mode" style="margin-right:8px"><button type="button" data-v="chk">核對明細</button><button type="button" data-v="alloc">跨館分攤底稿</button></div><button class="btn sm" type="button" data-go="sup">支援統計（依人統整、每日明細）›</button></div>
+      <div class="v-form">
+        <label class="f"><span>起日</span><input class="in" type="date" id="spy-from"></label>
+        <label class="f"><span>迄日</span><input class="in" type="date" id="spy-to"></label>
+        <div class="f" style="width:auto"><span>&nbsp;</span><div style="display:flex;gap:6px"><button class="btn" type="button" data-spym="0">本月</button><button class="btn" type="button" data-spym="-1">上月</button></div></div>
+        <label class="f" data-spyonly="chk"><span>人員分組</span><select class="in" id="spy-br"></select></label>
+        <div class="f" style="width:auto" data-spyonly="chk"><span>核對狀態</span><div class="seg seg3" id="spy-st"><button type="button" data-v="all">全部</button><button type="button" data-v="no">未核對</button><button type="button" data-v="ok">已核對</button></div></div>
+        <label class="f"><span>搜尋姓名</span><input class="in" id="spy-q" placeholder="姓名"></label>
+        <span class="spacer" style="flex:1"></span>
+        <div class="f" style="width:auto"><span>&nbsp;</span><div style="display:flex;gap:6px"><button class="btn" type="button" id="spy-csv">匯出 CSV</button><button class="btn primary" type="button" id="spy-print">列印核對表</button></div></div>
+      </div>
+      <p class="note" data-spyonly="chk">依人員所屬館別分組：其他館的人員來支援、本館人員加班、外部支援分開列，方便兩館對帳。金額取自每天日報「人力支援」的支付金額；勾「已核對」會記在該天日報上，兩館都看得到。</p>
+    </div>
+    <div class="kpis k8" id="spy-kpis" data-spyonly="chk" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"></div>
+    <div id="spy-body" data-spyonly="chk"></div>
+    <div id="spy-alloc" data-spyonly="alloc" hidden></div>
   </section>
 
   <!-- ========== 班表／找支援 ========== -->
@@ -939,7 +1007,7 @@ body{background:var(--bg);color:var(--ink)}
   <!-- ========== 錯帳統計 ========== -->
   <section id="view-err" hidden>
     <div class="card">
-      <div class="card-h"><h2>錯帳統計</h2>
+      <div class="card-h"><h2>錯帳分析</h2>
         <div class="seg seg3" id="er-scope"><button type="button" data-v="month">單月</button><button type="button" data-v="year">全年</button></div>
         <input class="in" type="month" id="er-month" style="width:160px">
         <span class="spacer"></span>
@@ -990,7 +1058,7 @@ body{background:var(--bg);color:var(--ink)}
   <!-- ========== 人員 ========== -->
   <section id="view-people" hidden>
     <div class="card">
-      <div class="card-h"><h2>人員名單 <span class="sub">報表、零用金庫的人員選單、日報支援時薪與「找支援」都從這裡來</span></h2></div>
+      <div class="card-h"><h2>員工名冊 <span class="sub">報表、零用金庫的人員選單、日報支援時薪與「找支援」都從這裡來</span></h2></div>
       <form class="p-add" id="p-form">
         <label class="f"><span>姓名／暱稱</span><input class="in" id="p-name" placeholder="例如：七七" required></label>
         <label class="f"><span>職稱（選填）</span><input class="in" id="p-role" placeholder="例如：櫃台、荷官、店長"></label>
@@ -1457,8 +1525,13 @@ const seg=(path,val)=>`<div class="seg" data-seg="${path}"><button type="button"
 const numIn=(path,val,ph="")=>`<input class="in n" data-k="${path}" value="${esc(show(val))}" inputmode="numeric" placeholder="${ph}">`;
 const txtIn=(path,val,ph="",extra="")=>`<input class="in" data-k="${path}" value="${esc(val)}" placeholder="${ph}" ${extra}>`;
 
+const LV=[["大眾","#2a78d6"],["中階","#1baf7a"],["高額","#8a5a00"],["豪客","#e87ba4"]],LVM=["MTT","#eda100"];
+const lvOf=s=>{if(isMTT(s.type))return {c:"lvm",n:LVM[0],col:LVM[1]};const t=tierOf(s.buy);return t==null?{c:"lvn",n:"未選級別",col:"var(--line-2)"}:{c:"lv"+t,n:LV[t][0],col:LV[t][1]}};
+const lvTag=s=>{const v=lvOf(s);return `<span class="s-lv" data-lv="1"><i style="background:${v.col}"></i>${v.n}</span>`};
+function lvSync(){D.sessions.forEach((s,i)=>{const el=document.querySelector(`.sess[data-sid="${s.id}"]`);if(!el)return;const v=lvOf(s);
+  if(!el.classList.contains(v.c)){el.classList.remove("lv0","lv1","lv2","lv3","lvm","lvn");el.classList.add(v.c);const t=el.querySelector("[data-lv]");if(t)t.outerHTML=lvTag(s)}})}
 function renderSessions(){
-  const list=$("sess-list");
+  const list=$("sess-list");const k=$("lv-key");if(k)k.innerHTML=LV.concat([LVM]).map(([n,c],i)=>`<span><i style="background:${c}"></i>${n}${i<4?`<small style="color:var(--muted)"> ${["≤3.4k","6.6k–11k","22k–33k","54k+"][i]}</small>`:""}</span>`).join("");
   if(!D.sessions.length){
     list.innerHTML=`<div class="empty"><p>這一天還沒有場次。用下方按鈕新增，或按上方「沿用上次場次」帶入上一次的賽程。</p></div>`;return;
   }
@@ -1466,9 +1539,9 @@ function renderSessions(){
     const b=`sessions.${i}`;const opts=buys(isMTT(s.type)?cfg.mttList:cfg.tlt);const cur=num(s.buy);if(cur&&!opts.includes(cur))opts.push(cur);
     const dsum=num(s.pr)+num(s.act)+num(s.disc)+num(s.jp)+num(s.pool);
     const open=openDisc.has(s.id)||dsum>0;
-    return `<div class="sess ${s.shift==="晚"?"late":s.shift==="跨"?"cross":""}" data-sid="${s.id}">
+    return `<div class="sess ${s.shift==="晚"?"late":s.shift==="跨"?"cross":""} ${lvOf(s).c}" data-sid="${s.id}">
       <div class="sess-row">
-        <span class="s-idx">${i+1}</span>
+        <span class="s-head"><span class="s-idx">${i+1}</span>${lvTag(s)}</span>
         <div class="f"><span>班別</span>${segS(b+".shift",s.shift)}</div>
         <label class="f w-type"><span>類型</span><select class="in" data-k="${b}.type" data-rebuild="1">${Object.entries(TYPE).map(([k,v])=>`<option value="${k}"${s.type===k?" selected":""}>${v}</option>`).join("")}</select></label>
         ${isMTT(s.type)?`<label class="f w-name"><span>賽事名稱</span>${txtIn(b+".name",s.name,"選擇或輸入",'list="dl-names"')}</label>`:""}
@@ -1514,17 +1587,16 @@ function renderLines(){fillSupportList();
       <button type="button" class="icon-x" data-delline="${key}.${i}" aria-label="刪除">×</button></div>`).join("")}
     <button type="button" class="btn sm add" data-addline="${key}">＋ 新增</button></div>`;
   const supGrp=`<div class="grp"><div class="grp-h"><span>人力支援（人事成本）</span><b id="sum-support">0</b></div>
-    ${D.support.map((r,i)=>{const det=supHas(r);return `<div class="sup-line">
-      <div class="sup-who">${txtIn(`support.${i}.who`,r.who,"支援人員姓名",'list="dl-support"')}</div>
-      <div class="sup-sh">${segS(`support.${i}.shift`,r.shift)}</div>
+    ${D.support.map((r,i)=>`<div class="sup-line">
+      <label class="sf sup-who"><span>① 支援人員</span>${supSel(i,r.who)}</label>
+      <label class="sf"><span>② 支援時數</span><input class="in n dec" data-k="support.${i}.hours" value="${esc(r.hours??"")}" inputmode="decimal" placeholder="小時"></label>
+      <label class="sf tot"><span>③ 支付金額</span><input class="in n" data-k="support.${i}.amt" value="${esc(show(r.amt))}" inputmode="numeric" placeholder="自動帶入"></label>
+      <div class="sf sup-sh"><span>班別</span>${segS(`support.${i}.shift`,r.shift)}</div>
       <button type="button" class="icon-x" data-delline="support.${i}" aria-label="刪除">×</button>
-      <label class="sf"><span>時數</span><input class="in n dec" data-k="support.${i}.hours" value="${esc(r.hours??"")}" inputmode="decimal" placeholder="0"></label>
-      <label class="sf"><span>時薪</span>${numIn(`support.${i}.rate`,r.rate,"0")}</label>
-      <label class="sf"><span>車資</span>${numIn(`support.${i}.travel`,r.travel,"0")}</label>
-      <label class="sf tot"><span>總額</span><input class="in n${det?" auto":""}" data-k="support.${i}.amt" value="${esc(show(r.amt))}" inputmode="numeric" placeholder="自動"${det?" readonly":""}></label>
-    </div>`}).join("")}
+      <div class="sup-hint" data-suphint="${i}"></div>
+    </div>`).join("")}
     <button type="button" class="btn sm add" data-addline="support">＋ 新增支援人員</button> <button type="button" class="btn sm" data-findsup="1">找可支援人員</button>
-    <p class="note" style="margin:4px 0 0">總額＝時數 × 時薪 ＋ 車資。名冊裡的人員會自動帶入預設時薪與車資。</p></div>`;
+    <p class="note" style="margin:4px 0 0">選人後填時數，支付金額會依「員工名冊」頁的時薪與車資自動帶入（時數 × 時薪 ＋ 車資），實際付多少可以直接改。</p></div>`;
   $("exp").innerHTML=grp("daily","日常支出",["item"],"項目")+supGrp+grp("meal","限時餐點",["item","shift"],"場次，如 11#1")+grp("ref","舊帶新紅包",["who","shift"],"負責人")+grp("petty","補充零用金（從金庫拿上來，現金＋）",["who"],"負責人")+grp("oth","其他收入／回帳（現金＋）",["item"],"項目，如 竹北獎池回款");
   if(!Array.isArray(D.mem))D.mem=[];
   $("mems").innerHTML=D.mem.map((r,i)=>`<div class="line mem-line">
@@ -1558,7 +1630,7 @@ function renderDay(){
   renderSessions();renderLines();renderCreditDay();refresh();setStatus();
 }
 function refresh(){
-  supSync();
+  supSync();lvSync();
   const R=compute(D);
   R.rows.forEach((c,i)=>{const el=document.querySelector(`[data-out="${i}"]`);if(!el)return;const s=D.sessions[i];
     el.innerHTML=(c.found?"":`<span class="s-warn">此買入不在對照表，請到「設定」新增</span>`)+
@@ -1608,10 +1680,17 @@ function refresh(){
 function setPath(p,v){const ks=p.split(".");let o=D;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v}
 const day=$("view-day");
 const valOf=el=>el.type==="checkbox"?el.checked:el.value;
-day.addEventListener("input",e=>{const k=e.target.dataset.k;if(!k||e.target.value==="__new")return;setPath(k,valOf(e.target));refresh();save()});
+day.addEventListener("input",e=>{const k=e.target.dataset.k;if(!k||e.target.value==="__new"||e.target.value==="__newsup")return;setPath(k,valOf(e.target));
+  const m=/^support\.(\d+)\.amt$/.exec(k);if(m){const r=D.support[+m[1]];r.amtSet=String(r.amt??"").trim()!==""}
+  refresh();save()});
 day.addEventListener("change",e=>{
   const k=e.target.dataset.k;if(!k)return;
   if(e.target.value==="__new"){const nm=askNewPerson();if(nm)setPath(k,nm);renderDay();save();return}
+  if(e.target.dataset.supwho){const i=+k.split(".")[1],r=D.support[i];let v=e.target.value;
+    if(v==="__newsup"){const nm=(window.prompt("名單外支援人員姓名（會加入人員名單，身分為外部支援）")||"").trim();if(!nm){renderLines();refresh();return}
+      if(!supFind(nm)){cfg.people.push(normPerson({name:nm,role:"",kind:"外部支援",active:true}));saveCfg();toast(`已把「${nm}」加入人員名單，可到「員工名冊」頁補時薪`)}v=supFind(nm).name}
+    const p=supFind(v);r.who=v;r.rate=p&&p.rate!==""&&p.rate!=null?num(p.rate):"";r.travel=p&&p.travel!==""&&p.travel!=null?num(p.travel):"";r.autoFrom=p?p.name:"";
+    renderLines();refresh();save();return}
   setPath(k,valOf(e.target));
   if(e.target.dataset.rebuild){const s=D.sessions[+k.split(".")[1]];s.buy=defaultBuy(s.type,s);if(s.type==="tlt"&&!s.fmt)s.fmt="NLH";renderSessions()}
   refresh();save();
@@ -1624,6 +1703,7 @@ day.addEventListener("keydown",e=>{
 });
 day.addEventListener("click",e=>{
   const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.supreset!=null){const r=D.support[+t.dataset.supreset];if(r){r.amtSet=false;refresh();save()}return}
   const segEl=t.closest("[data-seg]");
   if(segEl){setPath(segEl.dataset.seg,t.dataset.v);segEl.dataset.seg.startsWith("sessions.")?renderSessions():renderLines();refresh();save();return}
   if(t.dataset.addsess){addSession(t.dataset.addsess);return}
@@ -1823,7 +1903,7 @@ setv.addEventListener("click",e=>{
 $("ref-reset").addEventListener("click",()=>{cfg.tlt=clone(DEF_TLT);cfg.mttList=clone(DEF_MTT);cfg.names=DEF_NAMES.slice();saveCfg();renderSettings();toast("對照表已還原預設")});
 $("bk-export").addEventListener("click",()=>{
   flush();const days={};store.days().forEach(x=>days[x]=store.get("day:"+x));
-  download(`營運管理系統備份_${todayISO().replace(/-/g,"")}.json`,JSON.stringify({app:"ctp-hsinchu-daily",ver:4,exportedAt:new Date().toISOString(),cfg,days,vault,credit,proj:PJ,sched:Object.fromEntries(localKeys().filter(k=>k.startsWith("sched:")).map(k=>[k.slice(6),store.get(k)])),fin:{tx:TXm,ev:EVm,ovr:OVR,evmeta:EVMETA,xfer:XF,recv:RCV,close:CLOSE,open:OPEN,hist:HIST}}),"application/json");
+  download(`營運管理系統備份_${todayISO().replace(/-/g,"")}.json`,JSON.stringify({app:"ctp-hsinchu-daily",ver:4,exportedAt:new Date().toISOString(),cfg,days,vault,credit,proj:PJ,supx:SUPX,sched:Object.fromEntries(localKeys().filter(k=>k.startsWith("sched:")).map(k=>[k.slice(6),store.get(k)])),fin:{tx:TXm,ev:EVm,ovr:OVR,evmeta:EVMETA,xfer:XF,recv:RCV,close:CLOSE,open:OPEN,hist:HIST}}),"application/json");
   toast("備份已下載");
 });
 $("bk-file").addEventListener("change",e=>{
@@ -1834,6 +1914,7 @@ $("bk-file").addEventListener("change",e=>{
       if(Array.isArray(j.vault)){vault=j.vault;saveVault()}
       if(Array.isArray(j.credit)){credit=j.credit;saveCredit()}
       if(Array.isArray(j.proj)){PJ=j.proj;savePJ()}
+      if(Array.isArray(j.supx)){SUPX=j.supx;store.set("supx",SUPX)}
       if(j.sched)Object.entries(j.sched).forEach(([m,v])=>{if(v&&v.people)store.set("sched:"+m,v)});
       if(j.fin){TXm=j.fin.tx||[];EVm=j.fin.ev||[];OVR=j.fin.ovr||{};EVMETA=j.fin.evmeta||{};XF=j.fin.xfer||[];RCV=j.fin.recv||[];CLOSE=j.fin.close||{};OPEN=j.fin.open||null;HIST=j.fin.hist||{months:{}};saveTXm();saveEVm();saveOVR();saveEVMETA();saveXF();saveRCV();saveCLOSE();saveOPEN();saveHIST()}
       D=loadDay(D.date);renderSettings();toast(`已還原 ${n} 天報表`)}
@@ -2009,7 +2090,7 @@ const crPaidOn=(c,d)=>crPays(c).filter(p=>p.date===d).reduce((a,p)=>a+num(p.amt)
 function crSync(c){if(!Array.isArray(c.pays))c.pays=crPays(c).map(p=>Object.assign({},p,{id:p.id==="legacy"?uid():p.id}));const left=crLeft(c);c.paid=num(c.amt)>0&&left<=0;
   const last=c.pays.slice().sort((a,b)=>a.date<b.date?1:-1)[0];c.paidDate=c.paid&&last?last.date:"";c.recv=last?last.recv||"":""}
 const saveCredit=()=>store.set("credit",credit);
-let crFilter="open",crCollect=null;
+let crFilter="all",crCollect=null;   // 預設全部：未結排最上面
 const daysBetween=(a,b)=>Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/864e5);
 function playerNames(){return [...new Set(credit.map(c=>c.player).filter(Boolean))]}
 function fillPlayers(){$("dl-players").innerHTML=playerNames().map(n=>`<option value="${esc(n)}">`).join("")}
@@ -2060,18 +2141,26 @@ function renderCredit(){
   let list=credit.filter(c=>c.player||num(c.amt));
   if(crFilter==="open")list=list.filter(crOpen);if(crFilter==="paid")list=list.filter(c=>!crOpen(c));
   if(q)list=list.filter(c=>(c.player||"").includes(q));
-  list=list.slice().sort((a,b)=>a.date<b.date?1:-1);
-  $("cr-table").innerHTML=`<thead><tr><th>掛帳日</th><th style="text-align:left">玩家</th><th style="text-align:left">場次</th><th>掛帳金額</th><th>已回帳</th><th>未收餘額</th><th>經手人</th><th>已掛天數</th><th>狀態</th><th></th></tr></thead><tbody>`+
-    (list.map(c=>{const paidAmt=crPaidAmt(c),left=crLeft(c),isOpen=crOpen(c),pays=crPays(c).slice().sort((x,y)=>x.date<y.date?-1:1);
-      const lastPay=pays[pays.length-1];const days=daysBetween(c.date,isOpen||!lastPay?todayISO():lastPay.date);
-      const st=isOpen?(paidAmt?`<span class="tag t-count">部分回帳</span>`:`<span class="tag t-out">未收</span>`):`<span class="tag t-in">已收清</span>`;
-      const act=crCollect===c.id?`<span class="cr-form"><input type="date" class="in" id="crc-date" value="${todayISO()}"><input class="in n" id="crc-amt" value="${fmt(left)}" inputmode="numeric" placeholder="回帳金額"> ${personSel("crc-recv",D.staff.lm||D.staff.em||"","收款人","id")}<input class="in" id="crc-note" placeholder="備註（選填）"> <button class="btn sm primary" data-crok="${c.id}">確認回帳</button> <button class="btn sm" data-crcancel="1">取消</button></span>`
-        :`${isOpen?`<button class="btn sm primary" data-crpay="${c.id}">回帳</button> `:""}${pays.length?`<button class="btn sm" data-crhist="${c.id}">${crHist.has(c.id)?"收起":"紀錄 "+pays.length}</button> `:""}<button class="btn sm" data-cropen="${c.date}">日報</button>`;
-      const hist=crHist.has(c.id)&&pays.length?`<tr class="cr-hist"><td></td><td colspan="9"><div class="cr-pays">${pays.map(p=>`<div><span>${p.date.slice(5).replace("-","/")} ${wdOf(p.date)}</span><b class="num">${fmt(num(p.amt))}</b><span>收款人 ${esc(p.recv||"—")}</span><span class="note" style="margin:0">${esc(p.note||"")}</span><button type="button" class="icon-x" data-crpdel="${c.id}|${p.id}" aria-label="刪除這筆回帳">×</button></div>`).join("")}</div></td></tr>`:"";
-      return `<tr><td>${c.date.slice(5).replace("-","/")} ${wdOf(c.date)}</td><td style="text-align:left;font-family:var(--f-body)"><b>${esc(c.player||"（未填）")}</b></td><td class="cr-sess" title="${esc(c.sess||"")}"><div>${esc(c.sess||"")}</div></td>
-        <td>${fmt(num(c.amt))}</td><td>${paidAmt?fmt(paidAmt):""}</td><td class="${left?"bad":""}"><b>${fmt(left)}</b></td><td style="font-family:var(--f-body)">${esc(c.hand||"")}</td><td class="${isOpen&&days>=7?"bad":""}">${days}</td>
-        <td>${st}</td><td class="act cr-act">${act}</td></tr>${hist}`}).join("")
-      ||`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:24px;font-family:var(--f-body)">${crFilter==="open"?"目前沒有未收的掛帳 ✓":"沒有紀錄"}</td></tr>`)+`</tbody>`;
+  // 未結的排最上面（最久未收的在前），已收清的接在後面（新的在前）
+  const oL=list.filter(crOpen).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0),pL=list.filter(c=>!crOpen(c)).sort((a,b)=>a.date<b.date?1:-1);
+  const card=c=>{const paidAmt=crPaidAmt(c),left=crLeft(c),isOpen=crOpen(c),pays=crPays(c).slice().sort((x,y)=>x.date<y.date?-1:1);
+    const lastPay=pays[pays.length-1],days=daysBetween(c.date,isOpen||!lastPay?todayISO():lastPay.date),late=isOpen&&days>=7;
+    const st=isOpen?(paidAmt?`<span class="tag t-count">部分回帳</span>`:`<span class="tag t-out">未收</span>`):`<span class="tag t-in">已收清</span>`;
+    const collect=crCollect===c.id?`<div class="cr-collect"><label class="f"><span>回帳日期</span><input type="date" class="in" id="crc-date" value="${todayISO()}"></label>
+        <label class="f"><span>回帳金額</span><input class="in n" id="crc-amt" value="${fmt(left)}" inputmode="numeric"></label>
+        <label class="f"><span>收款人</span>${personSel("crc-recv",D.staff.lm||D.staff.em||"","收款人","id")}</label>
+        <label class="f grow"><span>備註（選填）</span><input class="in" id="crc-note"></label>
+        <div class="f" style="width:auto"><span>&nbsp;</span><div style="display:flex;gap:6px"><button class="btn primary" type="button" data-crok="${c.id}">確認回帳</button><button class="btn" type="button" data-crcancel="1">取消</button></div></div></div>`:"";
+    const hist=crHist.has(c.id)&&pays.length?`<div class="cr-pays">${pays.map(p=>`<div><span>${p.date.slice(5).replace("-","/")} ${wdOf(p.date)}</span><b class="num">${fmt(num(p.amt))}</b><span>收款人 ${esc(p.recv||"—")}</span><span class="note" style="margin:0">${esc(p.note||"")}</span><button type="button" class="icon-x" data-crpdel="${c.id}|${p.id}" aria-label="刪除這筆回帳">×</button></div>`).join("")}</div>`:"";
+    return `<div class="cr-item ${isOpen?(paidAmt?"part":""):"done"}">
+      <div class="cr-top">${st}<span class="nm">${esc(c.player||"（未填）")}</span>${late?`<span class="tag t-out">已掛 ${days} 天</span>`:""}
+        <span class="left">${isOpen?`<small>未收</small><b>${fmt(left)}</b>`:`<small>已收</small><b class="ok">${fmt(paidAmt)}</b>`}</span></div>
+      <div class="cr-meta"><span>${c.date.slice(5).replace("-","/")} ${wdOf(c.date)} 掛帳 <b>${fmt(num(c.amt))}</b></span>${paidAmt&&isOpen?`<span>已回 <b>${fmt(paidAmt)}</b></span>`:""}${c.sess?`<span>場次 ${esc(c.sess)}</span>`:""}${c.hand?`<span>經手 ${esc(c.hand)}</span>`:""}<span>${isOpen?"已掛":"共"} ${days} 天</span></div>
+      ${crCollect===c.id?"":`<div class="cr-acts">${isOpen?`<button class="btn sm primary" type="button" data-crpay="${c.id}">回帳</button>`:""}${pays.length?`<button class="btn sm" type="button" data-crhist="${c.id}">${crHist.has(c.id)?"收起紀錄":"回帳紀錄 "+pays.length}</button>`:""}<button class="btn sm" type="button" data-cropen="${c.date}">開啟日報</button></div>`}
+      ${collect}${hist}</div>`};
+  $("cr-table").innerHTML=(oL.length?`<div class="cr-sec">未結 ${oL.length} 筆・未收 <b>${fmt(oL.reduce((a,c)=>a+crLeft(c),0))}</b></div>`+oL.map(card).join(""):"")
+    +(pL.length?`<div class="cr-sec">已收清 ${pL.length} 筆</div>`+pL.map(card).join(""):"")
+    ||`<p class="note" style="text-align:center;padding:18px 0;margin:0">${crFilter==="open"?"目前沒有未收的掛帳 ✓":"沒有紀錄"}</p>`;
   const by={};open.forEach(c=>{const k=c.player||"（未填）";by[k]=by[k]||{n:0,amt:0};by[k].n++;by[k].amt+=crLeft(c)});
   const rows=Object.entries(by).sort((a,b)=>b[1].amt-a[1].amt);
   $("cr-byp").innerHTML=rows.length?`<tr><th>玩家</th><th>筆數</th><th>未收金額</th></tr>`+rows.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="v">${v.n}</td><td class="v" style="color:var(--bad)">${fmt(v.amt)}</td></tr>`).join(""):`<tr><td style="color:var(--muted)">沒有未收款的玩家</td></tr>`;
@@ -2104,14 +2193,25 @@ $("cr-table").addEventListener("click",e=>{
 const supRoster=()=>cfg.people;   // 支援人員名冊已併入人員名單（舊的 cfg.supRoster 保留不動，只在第一次載入時合併）
 const supHas=r=>String(r.hours??"").trim()!==""||String(r.rate??"").trim()!==""||String(r.travel??"").trim()!=="";
 const supFind=name=>{const n=String(name||"").trim().toLowerCase();return n?supRoster().find(p=>p.name.trim().toLowerCase()===n):null};
+// 日報人力支援：① 選人（人員名單，依館別分組）→ ② 時數 → ③ 支付金額（依時薪×時數＋車資自動帶入；手動改過記 amtSet，不再自動覆蓋）
+function supSel(i,who){const v=String(who||"").trim(),act=cfg.people.filter(p=>p.active!==false);
+  const groups=cfg.branches.map(b=>[b,act.filter(p=>p.branch===b)]).filter(g=>g[1].length);const other=act.filter(p=>!cfg.branches.includes(p.branch));if(other.length)groups.push(["其他",other]);
+  const known=act.some(p=>p.name===v);
+  return `<select class="in" data-k="support.${i}.who" data-supwho="1"><option value="">選擇支援人員</option>${v&&!known?`<option selected>${esc(v)}</option>`:""}
+    ${groups.map(([b,L])=>`<optgroup label="${esc(b)}">${L.map(p=>`<option value="${esc(p.name)}"${p.name===v?" selected":""}>${esc(p.name)}${p.kind!=="正職"?"（"+esc(p.kind)+"）":""}${p.rate!==""&&p.rate!=null?"・時薪 "+fmt(num(p.rate)):""}</option>`).join("")}</optgroup>`).join("")}
+    <option value="__newsup">＋ 名單外的人…</option></select>`}
+const supSug=r=>String(r.hours??"").trim()!==""&&String(r.rate??"").trim()!==""?Math.round(num(r.hours)*num(r.rate)+num(r.travel)):null;
 function supSync(){
   (D.support||[]).forEach((r,i)=>{
     const p=supFind(r.who);
-    if(p&&(("hours" in r)||String(r.amt??"").trim()==="")&&r.autoFrom!==p.name&&String(r.rate??"").trim()===""&&String(r.travel??"").trim()===""&&(String(r.amt??"").trim()===""||r.autoFrom)){r.rate=p.rate===""||p.rate==null?"":num(p.rate);r.travel=p.travel===""||p.travel==null?"":num(p.travel);r.autoFrom=p.name;
-      [["rate",r.rate],["travel",r.travel]].forEach(([k,v])=>{const el=document.querySelector(`[data-k="support.${i}.${k}"]`);if(el&&document.activeElement!==el)el.value=show(v)})}
-    const tot=document.querySelector(`[data-k="support.${i}.amt"]`);
-    if(supHas(r)){const a=Math.round(num(r.hours)*num(r.rate)+num(r.travel));r.amt=a||"";if(tot){tot.readOnly=true;tot.classList.add("auto");if(document.activeElement!==tot)tot.value=show(r.amt)}}
-    else if(tot){tot.readOnly=false;tot.classList.remove("auto")}
+    if(p&&(("hours" in r)||String(r.amt??"").trim()==="")&&r.autoFrom!==p.name&&String(r.rate??"").trim()===""&&String(r.travel??"").trim()===""&&(String(r.amt??"").trim()===""||r.autoFrom)){r.rate=p.rate===""||p.rate==null?"":num(p.rate);r.travel=p.travel===""||p.travel==null?"":num(p.travel);r.autoFrom=p.name}
+    const sug=supSug(r);if(!r.amtSet&&sug!=null)r.amt=sug||"";
+    const tot=document.querySelector(`[data-k="support.${i}.amt"]`);if(tot&&document.activeElement!==tot)tot.value=show(r.amt);
+    const h=document.querySelector(`[data-suphint="${i}"]`);if(!h)return;
+    const who=String(r.who||"").trim(),rate=String(r.rate??"").trim()!=="";
+    const hh=!who?"":!rate?`${p?"員工名冊沒有設定時薪":"名單外人員"}，請直接填支付金額${p?"（可到「員工名冊」頁補上時薪）":""}`
+      :`時薪 <b>${fmt(num(r.rate))}</b>${num(r.travel)?` ＋ 車資 <b>${fmt(num(r.travel))}</b>`:""}${sug!=null?` → 建議 <b>${fmt(num(r.hours))}</b> 小時 × ${fmt(num(r.rate))}${num(r.travel)?" ＋ "+fmt(num(r.travel)):""} ＝ <b>${fmt(sug)}</b>`:"，填時數後自動帶入金額"}${r.amtSet&&sug!=null&&num(r.amt)!==sug?`・<span style="color:var(--warn)">已手動改為 ${fmt(num(r.amt))}</span> <button type="button" data-supreset="${i}">改回建議金額</button>`:""}`;
+    if(h.innerHTML!==hh)h.innerHTML=hh;   // 內容沒變就不重畫，避免按鈕在點擊過程中被換掉
   });
 }
 
@@ -2150,7 +2250,7 @@ $("sp-month").addEventListener("change",renderSup);$("sp-q").addEventListener("i
 $("view-sup").addEventListener("click",e=>{
   const o=e.target.closest("[data-spopen]");if(o){goDate(o.dataset.spopen);showView("day");return}
   const w=e.target.closest("[data-spwho]");if(w){e.preventDefault();$("sp-q").value=w.dataset.spwho;renderSup();return}
-  const a=e.target.closest("[data-spaddname]");if(a){if(supAdd({name:a.dataset.spaddname})){toast(`已把「${a.dataset.spaddname}」加入人員名單（外部支援），可到「人員」頁補上時薪與館別`);renderSup()}return}
+  const a=e.target.closest("[data-spaddname]");if(a){if(supAdd({name:a.dataset.spaddname})){toast(`已把「${a.dataset.spaddname}」加入人員名單（外部支援），可到「員工名冊」頁補上時薪與館別`);renderSup()}return}
 });
 $("view-sup").addEventListener("focusout",e=>{const el=e.target;if(el.classList.contains("n")&&/\d/.test(el.value))el.value=fmt(num(el.value))});
 $("sp-csv").addEventListener("click",()=>{const L=supRows();if(!L.length){toast("沒有支援紀錄");return}
@@ -2239,7 +2339,7 @@ $("view-err").addEventListener("click",e=>{const o=e.target.closest("[data-erope
 $("er-csv").addEventListener("click",()=>{const m=$("er-month").value||todayISO().slice(0,7),y=m.slice(0,4);const rows=errRows(erScope==="year"?y+"-01-01":m+"-01",erScope==="year"?y+"-12-31":m+"-31");
   if(!rows.length){toast("沒有錯帳資料");return}const L=[["日期","星期","錯帳金額","已登記明細","尚未說明","班別","場次","負責人","類型","明細金額","說明","補充說明"]];
   rows.forEach(r=>{const base=[r.date,wdOf(r.date),r.err??"",r.es,r.left??""];if(!r.ents.length)L.push([...base,"","","","","","",r.d.errNote||""]);else r.ents.forEach((e,i)=>L.push([...(i?["","","","",""]:base),e.shift||"",e.sess||"",e.who||"",e.type||"",num(e.amt),e.note||"",i?"":r.d.errNote||""]))});
-  download(`錯帳統計_${erScope==="year"?y:m}.csv`,"﻿"+L.map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
+  download(`錯帳分析_${erScope==="year"?y:m}.csv`,"﻿"+L.map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
 
 /* ================= 人員 ================= */
 const KINDS=["正職","PT","外部支援"];
@@ -2247,7 +2347,8 @@ const SHS=["早","跨","晚"];
 // 人員欄位（只新增、不改名）：name, role, active ＋ id, kind（身分）, branch（館別）, rate（時薪）, travel（車資）, shifts（常態班別，已改由班表推測、畫面不再使用）, hours（上班時間，同上）, contact, note
 // 以姓名產生 id：多台電腦各自升級時 id 一致，雲端合併才不會重複
 function normPerson(p){if(!p.id)p.id=String(p.name||"").trim()?"p:"+String(p.name).trim():uid();if(!KINDS.includes(p.kind))p.kind="正職";if(!p.branch)p.branch=cfg.homeBranch||(cfg.branches||[])[0]||"竹科旗艦館";
-  if(!Array.isArray(p.shifts))p.shifts=[];["role","contact","note","hours"].forEach(k=>{if(p[k]==null)p[k]=""});if(p.rate==null)p.rate="";if(p.travel==null)p.travel="";if(p.active==null)p.active=true;return p}
+  if(!Array.isArray(p.shifts))p.shifts=[];["role","contact","note","hours"].forEach(k=>{if(p[k]==null)p[k]=""});if(p.rate==null)p.rate="";if(p.travel==null)p.travel="";if(p.active==null)p.active=true;
+  if(p.code==null)p.code="";if(p.pay==null)p.pay="";/* pay：""＝依身分預設（正職→月薪，其他→領現） */return p}
 function staffNames(){return cfg.people.filter(p=>p.active!==false&&p.kind!=="外部支援").map(p=>p.name)}   // 店內人員選單不含外部支援
 function addPerson(name,role,extra){
   name=String(name||"").trim();if(!name)return false;
@@ -2274,11 +2375,12 @@ function renderPeople(){
   L.sort((a,b)=>(a.p.active===false)-(b.p.active===false)||ord(a.p)-ord(b.p)||a.i-b.i);
   $("p-count").textContent=`顯示 ${L.length} 位／共 ${cfg.people.length} 位`;
   const sel=(i,f,list,v)=>`<select class="in" data-pi="${i}" data-pf="${f}" style="width:auto">${list.map(x=>`<option${x===v?" selected":""}>${esc(x)}</option>`).join("")}${v&&!list.includes(v)?`<option selected>${esc(v)}</option>`:""}</select>`;
-  $("p-table").innerHTML=`<thead><tr><th>姓名</th><th>職稱</th><th>身分</th><th>館別</th><th>時薪</th><th>車資</th><th>平常時段（依班表推測）</th><th>聯絡方式</th><th>備註</th><th>在職</th><th></th></tr></thead><tbody>`+
+  $("p-table").innerHTML=`<thead><tr><th>姓名</th><th>員工代號</th><th>職稱</th><th>身分</th><th>薪資方式</th><th>館別</th><th>時薪</th><th>車資</th><th>平常時段（依班表推測）</th><th>聯絡方式</th><th>備註</th><th>在職</th><th></th></tr></thead><tbody>`+
     (L.map(({p,i})=>`<tr class="${p.active===false?"off":""}">
       <td><input class="in" data-pi="${i}" data-pf="name" value="${esc(p.name)}" style="width:96px"></td>
+      <td><input class="in" data-pi="${i}" data-pf="code" value="${esc(p.code||"")}" placeholder="代號" style="width:64px"></td>
       <td><input class="in" data-pi="${i}" data-pf="role" value="${esc(p.role)}" placeholder="職稱" style="width:80px"></td>
-      <td>${sel(i,"kind",KINDS,p.kind)}</td><td>${sel(i,"branch",cfg.branches,p.branch)}</td>
+      <td>${sel(i,"kind",KINDS,p.kind)}</td><td><select class="in" data-pi="${i}" data-pf="pay" style="width:auto" title="月薪：有打卡、薪資由原屬館發；領現：無打卡、在哪館領現金就算哪館付">${["","月薪","領現"].map(x=>`<option value="${x}"${(p.pay||"")===x?" selected":""}>${x||`預設（${payType(Object.assign({},p,{pay:""}))}）`}</option>`).join("")}</select></td><td>${sel(i,"branch",cfg.branches,p.branch)}</td>
       <td><input class="in n" data-pi="${i}" data-pf="rate" value="${esc(show(p.rate))}" inputmode="numeric"></td>
       <td><input class="in n" data-pi="${i}" data-pf="travel" value="${esc(show(p.travel))}" inputmode="numeric"></td>
       <td style="font-size:12.5px;color:var(--ink-2);white-space:nowrap">${(()=>{const f=inferShift(p.name,todayISO())||inferShift(p.name,nextYM(todayISO().slice(0,7))+"-01");return f?esc(f.label):"<span style='color:var(--muted)'>—</span>"})()}</td>
@@ -2286,7 +2388,7 @@ function renderPeople(){
       <td><input class="in" data-pi="${i}" data-pf="note" value="${esc(p.note)}" style="width:104px"></td>
       <td><input type="checkbox" data-pi="${i}" data-pf="active"${p.active!==false?" checked":""} aria-label="在職"></td>
       <td><button type="button" class="icon-x" data-pdel="${i}" aria-label="刪除">×</button></td></tr>`).join("")
-     ||`<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px">${cfg.people.length?"沒有符合條件的人員":"還沒有人員，從上面新增第一位。"}</td></tr>`)+`</tbody>`;
+     ||`<tr><td colspan="14" style="text-align:center;color:var(--muted);padding:24px">${cfg.people.length?"沒有符合條件的人員":"還沒有人員，從上面新增第一位。"}</td></tr>`)+`</tbody>`;
 }
 $("p-form").addEventListener("submit",e=>{e.preventDefault();
   const n=$("p-name").value.trim();if(!n)return;
@@ -2302,11 +2404,194 @@ $("p-table").addEventListener("change",e=>{const i=e.target.dataset.pi;if(i==nul
     if(f==="name"){if(!v||cfg.people.some((x,j)=>j!==+i&&x.name===v)){toast(v?`「${v}」已在名單中`:"姓名不能空白");e.target.value=p.name;return}
       if(p.name!==v)toast("已改名。班表與日報依姓名對應，舊紀錄仍是原本的名字")}
     p[f]=v}
-  saveCfg();if(["active","kind","branch"].includes(f))renderPeople()});
+  saveCfg();if(["active","kind","branch","pay"].includes(f))renderPeople()});
 $("p-table").addEventListener("focusout",e=>{const el=e.target;if(el.classList.contains("n")&&/\d/.test(el.value))el.value=fmt(num(el.value))});
 $("p-table").addEventListener("click",e=>{
   const b=e.target.closest("[data-pdel]");if(!b)return;const i=+b.dataset.pdel;const rm=cfg.people.splice(i,1)[0];saveCfg();renderPeople();
   toast(`已刪除「${rm.name}」`,()=>{cfg.people.splice(i,0,rm);saveCfg();renderPeople()})});
+
+/* ================= 支援薪資核對 =================
+   來源：日報人力支援（日報屬於「日報所屬館別」，所以都是在該館發生的支援）；依人員所屬館別分組，給兩館對帳。
+   每筆支援列可標記已核對：support[i].chk（true/false）、chkAt（時間）——只新增欄位 */
+let spyOpen=new Set(),spySt="all";
+function spyRange(){const t=todayISO();if(!$("spy-from").value){$("spy-from").value=t.slice(0,8)+"01";$("spy-to").value=t.slice(0,8)+String(new Date(+t.slice(0,4),+t.slice(5,7),0).getDate()).padStart(2,"0")}
+  let f=$("spy-from").value,to=$("spy-to").value||f;if(f>to){const x=f;f=to;to=x}return [f,to]}
+function spyRows(from,to){const out=[];store.days().forEach(x=>{if(x<from||x>to)return;const d=x===D.date?D:store.get("day:"+x);if(!d||!Array.isArray(d.support))return;
+  d.support.forEach((r,i)=>{const who=String(r.who||"").trim();if(!who&&!num(r.amt))return;const p=supFind(who);
+    out.push({date:x,i,who:who||"（未填姓名）",p,branch:p?p.branch:"",kind:p?p.kind:"名單外",shift:r.shift||"",hours:String(r.hours??"").trim()===""?null:num(r.hours),rate:String(r.rate??"").trim()===""?null:num(r.rate),travel:num(r.travel),amt:num(r.amt),chk:!!r.chk})})});return out}
+const spyGroup=r=>!r.p||r.kind==="外部支援"?"外部支援／名單外":r.branch===cfg.homeBranch?`本館人員（${r.branch}）`:`${r.branch||"未設定館別"}人員`;
+function spyGroups(rows){const G={};rows.forEach(r=>{const g=spyGroup(r);(G[g]=G[g]||{});(G[g][r.who]=G[g][r.who]||[]).push(r)});
+  const rank=g=>g.startsWith("外部")?2:g.startsWith("本館")?1:0;return Object.keys(G).sort((a,b)=>rank(a)-rank(b)||a.localeCompare(b)).map(g=>[g,G[g]])}
+const spySum=L=>({n:L.length,h:L.reduce((a,r)=>a+(r.hours||0),0),amt:L.reduce((a,r)=>a+r.amt,0),ok:L.filter(r=>r.chk).length,okAmt:L.filter(r=>r.chk).reduce((a,r)=>a+r.amt,0)});
+function renderSupay(){
+  spyModeSync();if(spyMode==="alloc"){renderAlloc();return}
+  const [from,to]=spyRange(),bf=$("spy-br").value,q=($("spy-q").value||"").trim().toLowerCase();
+  const gs=[...new Set(spyRows("0000","9999").map(spyGroup))];$("spy-br").innerHTML=`<option value="">全部人員</option>`+gs.map(g=>`<option${g===bf?" selected":""}>${esc(g)}</option>`).join("");
+  document.querySelectorAll("#spy-st button").forEach(b=>b.className=b.dataset.v===spySt?"on o":"");
+  const all=spyRows(from,to).filter(r=>(!bf||spyGroup(r)===bf)&&(!q||r.who.toLowerCase().includes(q))),rows=all.filter(r=>spySt==="all"||(spySt==="ok"?r.chk:!r.chk));
+  const T=spySum(all);
+  $("spy-sub").textContent=`${from.replace(/-/g,"/")} – ${to.replace(/-/g,"/")}・支援地點：${cfg.homeBranch}（日報所屬館別）`;
+  $("spy-kpis").innerHTML=`<div class="kpi hl"><div class="k">應付支援薪資</div><div class="v">${fmt(T.amt)}</div><div class="ks">${T.n} 人次・${f1(T.h)} 小時</div></div>
+    <div class="kpi good"><div class="k">已核對</div><div class="v">${fmt(T.okAmt)}</div><div class="ks">${T.ok} / ${T.n} 筆</div></div>
+    <div class="kpi ${T.n-T.ok?"bad":""}"><div class="k">未核對</div><div class="v">${fmt(T.amt-T.okAmt)}</div><div class="ks">${T.n-T.ok} 筆</div></div>
+    ${spyGroups(all).map(([g,P])=>{const S=spySum(Object.values(P).flat());return `<div class="kpi"><div class="k">${esc(g)}</div><div class="v">${fmt(S.amt)}</div><div class="ks">${Object.keys(P).length} 人・${S.n} 人次・${f1(S.h)} 小時</div></div>`}).join("")}`;
+  const groups=spyGroups(rows);
+  $("spy-body").innerHTML=groups.length?groups.map(([g,P])=>{const GS=spySum(Object.values(P).flat());
+    const people=Object.entries(P).sort((a,b)=>spySum(b[1]).amt-spySum(a[1]).amt);
+    return `<div class="card"><div class="card-h"><h2>${esc(g)} <span class="sub">${people.length} 人・${GS.n} 人次・${f1(GS.h)} 小時・<b style="color:var(--ink)">${fmt(GS.amt)}</b>・已核對 ${GS.ok}/${GS.n}</span></h2><span class="spacer"></span>
+      ${GS.ok<GS.n?`<button class="btn sm" type="button" data-spyall="${esc(g)}">整組標記已核對</button>`:`<span class="tag t-in">整組已核對</span>`}</div>
+      <div class="tbl-wrap"><table class="hist spy-t"><thead><tr><th>姓名</th><th>身分</th><th>次數</th><th>時數</th><th>平均時薪</th><th>應付金額</th><th>核對</th><th></th></tr></thead><tbody>
+      ${people.map(([who,L])=>{const S=spySum(L),open=spyOpen.has(g+"|"+who),hr=L.filter(r=>r.rate!=null&&r.hours);const avg=hr.length?hr.reduce((a,r)=>a+r.rate*r.hours,0)/hr.reduce((a,r)=>a+r.hours,0):null;
+        return `<tr class="spy-p${S.ok===S.n?" done":""}"><td><button type="button" class="spy-tg" data-spyopen="${esc(g+"|"+who)}">${open?"▾":"▸"} <b>${esc(who)}</b></button></td><td>${esc(L[0].kind)}</td><td>${S.n}</td><td>${f1(S.h)}</td><td>${avg!=null?fmt(avg):"—"}</td><td><b>${fmt(S.amt)}</b></td>
+          <td>${S.ok===S.n?`<span class="tag t-in">✓ 已核對</span>`:`<span class="tag t-out">${S.ok}/${S.n}</span>`}</td>
+          <td class="act">${S.ok<S.n?`<button class="btn sm" type="button" data-spyperson="${esc(g+"|"+who)}">全部核對</button>`:`<button class="btn sm" type="button" data-spyunperson="${esc(g+"|"+who)}">取消核對</button>`}</td></tr>
+          ${open?`<tr class="spy-d"><td colspan="8"><table class="spy-dt"><tr><th>日期</th><th>班別</th><th class="r">時數</th><th class="r">時薪</th><th class="r">車資</th><th class="r">金額</th><th>核對</th><th></th></tr>
+            ${L.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>`<tr class="${r.chk?"ok":""}"><td>${r.date.slice(5).replace("-","/")} ${wdOf(r.date)}</td><td>${esc(r.shift)}</td><td class="r">${r.hours!=null?f1(r.hours):"—"}</td><td class="r">${r.rate!=null?fmt(r.rate):"—"}</td><td class="r">${r.travel?fmt(r.travel):""}</td><td class="r"><b>${fmt(r.amt)}</b></td>
+              <td><label class="jpchk" style="height:28px"><input type="checkbox" data-spychk="${r.date}|${r.i}"${r.chk?" checked":""}> 已核對</label></td><td><a href="#" data-spyday="${r.date}">開啟日報</a></td></tr>`).join("")}</table></td></tr>`:""}`}).join("")}
+      </tbody><tfoot><tr><td>小計</td><td></td><td>${GS.n}</td><td>${f1(GS.h)}</td><td></td><td>${fmt(GS.amt)}</td><td>${GS.ok}/${GS.n}</td><td></td></tr></tfoot></table></div></div>`}).join("")
+    :`<div class="card"><p class="note" style="text-align:center;padding:18px 0">${all.length?"沒有符合篩選條件的支援紀錄":"這段期間的日報沒有人力支援"}</p></div>`;
+}
+function spySet(list,val){const by={};list.forEach(r=>(by[r.date]=by[r.date]||[]).push(r.i));
+  Object.entries(by).forEach(([date,idx])=>{const d=date===D.date?D:store.get("day:"+date);if(!d||!Array.isArray(d.support))return;
+    idx.forEach(i=>{const r=d.support[i];if(!r)return;if(val){r.chk=true;r.chkAt=Date.now()}else{r.chk=false;delete r.chkAt}});d.updatedAt=Date.now();store.set("day:"+date,d)});
+  renderSupay()}
+const spyFind=key=>{const [from,to]=spyRange();return spyRows(from,to)};
+$("spy-body").addEventListener("click",e=>{const t=e.target;
+  const o=t.closest("[data-spyopen]");if(o){const k=o.dataset.spyopen;spyOpen.has(k)?spyOpen.delete(k):spyOpen.add(k);renderSupay();return}
+  const dy=t.closest("[data-spyday]");if(dy){e.preventDefault();flush();$("d-date").value=dy.dataset.spyday;$("d-date").dispatchEvent(new Event("change"));showView("day");return}
+  const ga=t.closest("[data-spyall]");if(ga){spySet(spyFind().filter(r=>spyGroup(r)===ga.dataset.spyall&&!r.chk),true);toast(`${ga.dataset.spyall} 已全部標記核對`);return}
+  const pp=t.closest("[data-spyperson],[data-spyunperson]");if(pp){const on=!!pp.dataset.spyperson,[g,who]=(pp.dataset.spyperson||pp.dataset.spyunperson).split("|");
+    spySet(spyFind().filter(r=>spyGroup(r)===g&&r.who===who),on);toast(on?`${who} 已全部標記核對`:`已取消 ${who} 的核對`)}});
+$("spy-body").addEventListener("change",e=>{const c=e.target.dataset.spychk;if(!c)return;const [date,i]=c.split("|");spySet([{date,i:+i}],e.target.checked)});
+$("spy-st").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;spySt=b.dataset.v;renderSupay()});
+["spy-from","spy-to","spy-br"].forEach(id=>$(id).addEventListener("change",renderSupay));$("spy-q").addEventListener("input",renderSupay);
+document.querySelectorAll("[data-spym]").forEach(b=>b.addEventListener("click",()=>{let m=todayISO().slice(0,7);if(b.dataset.spym==="-1")m=prevYM(m);
+  $("spy-from").value=m+"-01";$("spy-to").value=m+"-"+String(new Date(+m.slice(0,4),+m.slice(5,7),0).getDate()).padStart(2,"0");renderSupay()}));
+$("spy-csv").addEventListener("click",()=>{if(spyMode==="alloc"){allocCSV();return}const [from,to]=spyRange();const bf=$("spy-br").value;
+  const L=spyRows(from,to).filter(r=>!bf||spyGroup(r)===bf).sort((a,b)=>spyGroup(a).localeCompare(spyGroup(b))||a.who.localeCompare(b.who)||a.date.localeCompare(b.date));
+  const H=["人員分組","人員所屬館別","姓名","身分","日期","星期","班別","時數","時薪","車資","金額","核對"];
+  download(`支援明細_${from}_${to}.csv`,"﻿"+[H,...L.map(r=>[spyGroup(r),r.branch,r.who,r.kind,r.date,wdOf(r.date),r.shift,r.hours??"",r.rate??"",r.travel||"",r.amt,r.chk?"已核對":""])].map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")});
+$("spy-print").addEventListener("click",()=>{if(spyMode==="alloc"){allocPrint();return}const [from,to]=spyRange(),bf=$("spy-br").value;const rows=spyRows(from,to).filter(r=>!bf||spyGroup(r)===bf);
+  const html=`<div class="pr" style="font-size:9pt"><style>.spr table{width:100%;border-collapse:collapse;margin:2mm 0 4mm}.spr th,.spr td{border:1px solid #c8cbdc;padding:1.2mm 2mm;text-align:left}.spr td.r,.spr th.r{text-align:right}.spr h3{margin:4mm 0 1mm;font-size:11pt}.spr tr.st td{background:#eef0f6;font-weight:700}.spr .sg{display:flex;gap:20mm;margin-top:10mm}.spr .sg div{flex:1;border-top:1px solid #1d2150;padding-top:1mm}</style>
+    <div class="spr"><div class="mast"><div><h1 style="margin:0;font-size:15pt">支援明細核對表</h1><div>${from.replace(/-/g,"/")} – ${to.replace(/-/g,"/")}・支援地點：${esc(cfg.homeBranch)}</div></div><div>列印 ${todayISO().replace(/-/g,"/")}</div></div>
+    ${spyGroups(rows).map(([g,P])=>{const GS=spySum(Object.values(P).flat());return `<h3>${esc(g)}　合計 ${fmt(GS.amt)}（${GS.n} 人次・${f1(GS.h)} 小時）</h3><table><tr><th>姓名</th><th>日期</th><th>班別</th><th class="r">時數</th><th class="r">時薪</th><th class="r">車資</th><th class="r">金額</th><th>核對</th></tr>
+      ${Object.entries(P).map(([who,L])=>{const S=spySum(L);return L.slice().sort((a,b)=>a.date.localeCompare(b.date)).map((r,j)=>`<tr><td>${j?"":esc(who)}</td><td>${r.date.slice(5).replace("-","/")} ${wdOf(r.date)}</td><td>${esc(r.shift)}</td><td class="r">${r.hours!=null?f1(r.hours):""}</td><td class="r">${r.rate!=null?fmt(r.rate):""}</td><td class="r">${r.travel?fmt(r.travel):""}</td><td class="r">${fmt(r.amt)}</td><td>${r.chk?"✓":""}</td></tr>`).join("")+`<tr class="st"><td colspan="3">${esc(who)} 小計</td><td class="r">${f1(S.h)}</td><td></td><td></td><td class="r">${fmt(S.amt)}</td><td></td></tr>`}).join("")}</table>`}).join("")||"<p>這段期間沒有支援紀錄</p>"}
+    <div class="sg">${cfg.branches.map(b=>`<div>${esc(b)} 確認簽名</div>`).join("")}</div></div></div>`;
+  flush();preparePrintHTML(html,false);setTimeout(()=>window.print(),60)});
+
+/* ================= 跨館分攤底稿（附件2） =================
+   規則：月薪有打卡、薪資先歸原館；領現無打卡，用簽收／排班佐證。
+   自動列：日報人力支援中，名冊所屬館別≠日報所屬館別的人員（本館人員、外部支援不列），依 月份×人×班別 彙總。
+   手動列：store「supx」＝[{id,month,who,pay,from,at,shift,hours,times,amt,paidBy,note,createdAt,updatedAt}]（pay：""＝依員工名冊）——日報沒記到的跨館支援（如本館人員去對館、在對館領錢）
+   月薪：成本＝時數×名冊時薪，原屬館已發 → 支援館應轉列給原屬館
+   領現：成本＝實際領現金額；實際支付館≠支援館 → 支援館應轉列給實際支付館 */
+let SUPX=store.get("supx")||[],spyMode="chk",spxEdit=null;
+function payType(p){return p&&(p.pay==="月薪"||p.pay==="領現")?p.pay:(p&&p.kind==="正職"?"月薪":"領現")}
+function allocCalc(a){
+  const pt=a.payOv==="月薪"||a.payOv==="領現"?a.payOv:a.p?payType(a.p):"領現",rate=a.p&&String(a.p.rate??"").trim()!==""?num(a.p.rate):null;
+  a.pay=pt;a.code=a.p?a.p.code||"":"";a.rate=rate;a.warn=[];
+  if(pt==="月薪"){a.paidBy=a.from;a.cost=a.hours&&rate?Math.round(a.hours*rate):null;
+    a.basis=a.hours==null?"時數待輸入":rate==null?`${f1(a.hours)} 小時 × 時薪待輸入`:`${f1(a.hours)} 小時 × ${fmt(rate)}`;
+    if(a.amt)a.warn.push(`${a.src==="日報"?"日報":"此筆"}另記支付 ${fmt(a.amt)}；月薪人員薪資已由原館發，請確認是否重複`)}
+  else{if(!a.paidBy)a.paidBy=a.at;a.cost=a.amt||null;a.basis=a.cost?`領現 ${fmt(a.cost)}`:"金額待輸入"}
+  if(!a.p&&!a.payOv)a.warn.push("不在員工名冊，依領現處理");
+  if(!a.at)a.warn.push("缺支援館");
+  a.bear=a.at;a.cross=!!(a.paidBy&&a.bear&&a.paidBy!==a.bear);
+  a.xfer=a.cross?(a.cost||0):0;a.need=a.cross&&a.cost==null;
+  a.qty=a.hours!=null?`${f1(a.hours)} 小時${a.times>1?`（${a.times} 次）`:""}`:`${a.times||0} 次`;return a}
+function allocRows(from,to){const A={};let same=0,ext=0;
+  spyRows(from,to).forEach(r=>{if(!r.p||r.kind==="外部支援"){ext++;return}if(r.branch===cfg.homeBranch){same++;return}
+    const m=r.date.slice(0,7),k=[m,r.who,r.shift].join("|");
+    const a=A[k]||(A[k]={src:"日報",month:m,who:r.who,p:r.p,from:r.branch,at:cfg.homeBranch,shift:r.shift,hours:null,times:0,amt:0,paidBy:"",note:""});
+    if(r.hours!=null)a.hours=(a.hours||0)+r.hours;a.times++;a.amt+=r.amt});
+  const fm=from.slice(0,7),tm=to.slice(0,7),L=Object.values(A);
+  SUPX.forEach(x=>{if(!x||!x.month||x.month<fm||x.month>tm)return;const p=supFind(x.who);
+    L.push({src:"手動",id:x.id,month:x.month,who:x.who||"（未填姓名）",p,from:x.from||(p&&p.branch)||"",at:x.at||"",shift:x.shift||"",
+      hours:String(x.hours??"").trim()===""?null:num(x.hours),times:num(x.times)||(String(x.hours??"").trim()===""?0:1),amt:num(x.amt),paidBy:x.paidBy||"",note:x.note||"",payOv:x.pay||""})});
+  L.forEach(allocCalc);
+  L.sort((a,b)=>a.month.localeCompare(b.month)||a.from.localeCompare(b.from)||a.who.localeCompare(b.who)||String(a.shift).localeCompare(String(b.shift)));
+  return {L,same,ext}}
+function allocSettle(L){const S={};L.filter(a=>a.cross).forEach(a=>{const k=a.bear+"→"+a.paidBy,s=S[k]||(S[k]={from:a.bear,to:a.paidBy,amt:0,n:0,pend:0});s.amt+=a.xfer;s.n++;if(a.need)s.pend++});
+  const list=Object.values(S),net=[],B=[...new Set([...cfg.branches,...list.flatMap(s=>[s.from,s.to])])];
+  for(let i=0;i<B.length;i++)for(let j=i+1;j<B.length;j++){const ab=S[B[i]+"→"+B[j]],ba=S[B[j]+"→"+B[i]];if(!ab&&!ba)continue;
+    const d=(ab?ab.amt:0)-(ba?ba.amt:0);net.push({a:B[i],b:B[j],d,pend:(ab?ab.pend:0)+(ba?ba.pend:0)})}
+  return {list,net}}
+const allocDir=a=>a.cross?`${shortBr(a.bear)} → ${shortBr(a.paidBy)}`:"不需轉列";
+const allocNetTxt=n=>n.d===0?`${shortBr(n.a)}、${shortBr(n.b)} 互抵為 0`:`${shortBr(n.d>0?n.a:n.b)} 應轉給 ${shortBr(n.d>0?n.b:n.a)} <b>${fmt(Math.abs(n.d))}</b>`;
+const ALLOC_NOTE="月薪有打卡，薪資先歸原館；領現無打卡，用簽收／排班佐證。金額欄待輸入正式資料。";
+function renderAlloc(){const [from,to]=spyRange(),{L,same,ext}=allocRows(from,to),{list,net}=allocSettle(L);
+  const brOpt=(v,blank)=>(blank!=null?`<option value="">${blank}</option>`:"")+cfg.branches.map(b=>`<option value="${esc(b)}"${b===v?" selected":""}>${esc(b)}</option>`).join("");
+  const X=spxEdit?SUPX.find(x=>x.id===spxEdit):null,pend=L.filter(a=>a.cost==null).length;
+  $("spy-sub").textContent=`${from.slice(0,7).replace("-","/")}${from.slice(0,7)!==to.slice(0,7)?" – "+to.slice(0,7).replace("-","/"):""}・跨館人力支援與分攤`;
+  $("spy-alloc").innerHTML=`<div class="card"><div class="card-h"><h2>分攤結算 <span class="sub">${esc(ALLOC_NOTE)}</span></h2></div>
+    <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:0">
+      ${net.length?net.map(n=>`<div class="kpi hl"><div class="k">淨額結算</div><div class="v" style="font-size:18px">${allocNetTxt(n)}</div><div class="ks">${n.pend?`<span class="tag t-out">${n.pend} 筆金額待輸入</span>`:"金額齊全"}</div></div>`).join(""):`<div class="kpi"><div class="k">淨額結算</div><div class="v" style="font-size:18px">本期沒有需要轉列的成本</div></div>`}
+      ${list.map(s=>`<div class="kpi"><div class="k">${esc(shortBr(s.from))} 應轉給 ${esc(shortBr(s.to))}</div><div class="v">${fmt(s.amt)}</div><div class="ks">${s.n} 筆${s.pend?`・${s.pend} 筆待輸入`:""}</div></div>`).join("")}
+      <div class="kpi ${pend?"bad":""}"><div class="k">待輸入金額</div><div class="v">${pend}</div><div class="ks">缺時數、時薪或領現金額</div></div>
+    </div>
+    <p class="note" style="margin-top:10px">月薪人員：成本＝支援時數 × 員工名冊時薪，由原屬館發薪，支援館要轉列給原屬館。領現人員：在哪館領現金就算哪館付；實際支付館不是支援館時，支援館要轉列給支付館。日報自動帶入 ${esc(shortBr(cfg.homeBranch))} 的跨館支援（不含本館人員 ${same} 筆、外部支援／名單外 ${ext} 筆）；日報沒記到的（例如本館人員去對館、在對館領錢）用下方「手動補登」。</p></div>
+  <div class="card"><div class="card-h"><h2>分攤底稿 <span class="sub">${L.length} 筆</span></h2></div>
+    <div class="tbl-wrap"><table class="hist spy-t"><thead><tr><th>月份</th><th>員工類型</th><th>員工代號</th><th style="text-align:left">姓名</th><th>原屬館</th><th>支援館</th><th>班別</th><th>支援時數或次數</th><th>成本基準／費用</th><th>實際支付館</th><th>應轉列成本</th><th>轉列方向</th><th>來源</th><th></th></tr></thead><tbody>
+    ${L.map(a=>`<tr><td>${a.month.replace("-","/")}</td><td>${a.pay}${a.p?`<div class="note" style="margin:0;font-size:11.5px">${esc(a.p.kind)}</div>`:""}</td><td>${a.code?esc(a.code):`<span style="color:var(--muted)">—</span>`}</td>
+      <td style="text-align:left"><b>${esc(a.who)}</b>${a.warn.map(w=>`<div style="font-size:11.5px;color:var(--warn);white-space:normal;min-width:160px">⚠ ${esc(w)}</div>`).join("")}${a.note?`<div style="font-size:11.5px;color:var(--muted)">${esc(a.note)}</div>`:""}</td>
+      <td>${esc(shortBr(a.from))}</td><td>${esc(shortBr(a.at))}</td><td>${esc(a.shift)}</td><td>${a.qty}</td>
+      <td>${a.cost==null?`<span class="tag t-out">待輸入</span> <span style="font-size:12px;color:var(--muted)">${esc(a.basis)}</span>`:`${esc(a.basis)}${a.pay==="月薪"?` ＝ <b>${fmt(a.cost)}</b>`:""}`}</td>
+      <td>${esc(shortBr(a.paidBy))}</td><td>${a.cross?(a.cost==null?`<span class="tag t-out">待輸入</span>`:`<b>${fmt(a.xfer)}</b>`):`<span style="color:var(--muted)">0</span>`}</td>
+      <td>${a.cross?esc(allocDir(a)):`<span style="color:var(--muted)">不需轉列</span>`}</td><td>${a.src==="日報"?`<span class="tag t-count">日報</span>`:`<span class="tag t-count">手動</span>`}</td>
+      <td class="act">${a.src==="手動"?`<button class="btn sm" type="button" data-spxedit="${esc(a.id)}">編輯</button> <button type="button" class="icon-x" data-spxdel="${esc(a.id)}" aria-label="刪除">×</button>`:""}</td></tr>`).join("")
+     ||`<tr><td colspan="14" style="text-align:center;color:var(--muted);padding:18px">這段期間沒有跨館支援紀錄</td></tr>`}
+    </tbody><tfoot><tr><td colspan="10">合計應轉列成本</td><td>${fmt(L.reduce((x,a)=>x+a.xfer,0))}</td><td colspan="3"></td></tr></tfoot></table></div></div>
+  <div class="card" id="spx-card"><div class="card-h"><h2>${X?"編輯手動補登":"手動補登"} <span class="sub">日報沒記到的跨館支援，或薪資付到對館的情況</span></h2></div>
+    <form class="v-form" id="spx-form">
+      <label class="f"><span>月份</span><input class="in" type="month" id="spx-month" value="${esc(X?X.month:from.slice(0,7))}" required></label>
+      <label class="f"><span>姓名</span><input class="in" id="spx-who" list="spx-names" value="${esc(X?X.who:"")}" placeholder="員工名冊姓名" required></label>
+      <label class="f"><span>員工類型</span><select class="in" id="spx-pay">${[["","依員工名冊"],["月薪","月薪"],["領現","領現"]].map(([v,t])=>`<option value="${v}"${(X?X.pay||"":"")===v?" selected":""}>${t}</option>`).join("")}</select></label>
+      <label class="f"><span>原屬館</span><select class="in" id="spx-from">${brOpt(X?X.from:"","依員工名冊")}</select></label>
+      <label class="f"><span>支援館</span><select class="in" id="spx-at">${brOpt(X?X.at:"")}</select></label>
+      <label class="f"><span>班別</span><input class="in" id="spx-shift" value="${esc(X?X.shift:"")}" placeholder="早／晚" style="width:80px"></label>
+      <label class="f"><span>時數</span><input class="in n" id="spx-hours" value="${esc(X?show(X.hours):"")}" inputmode="decimal" style="width:80px"></label>
+      <label class="f"><span>次數</span><input class="in n" id="spx-times" value="${esc(X?show(X.times):"")}" inputmode="numeric" style="width:70px"></label>
+      <label class="f"><span>領現金額</span><input class="in n" id="spx-amt" value="${esc(X?show(X.amt):"")}" inputmode="numeric" placeholder="月薪免填" style="width:100px"></label>
+      <label class="f"><span>實際支付館</span><select class="in" id="spx-paid">${brOpt(X?X.paidBy:"","同支援館")}</select></label>
+      <label class="f"><span>備註／佐證</span><input class="in" id="spx-note" value="${esc(X?X.note:"")}" placeholder="簽收單、排班…"></label>
+      <div class="f" style="width:auto"><span>&nbsp;</span><div style="display:flex;gap:6px"><button class="btn primary" type="submit">${X?"儲存":"新增"}</button>${X?`<button class="btn" type="button" id="spx-cancel">取消</button>`:""}</div></div>
+      <datalist id="spx-names">${cfg.people.filter(p=>p.active!==false&&p.kind!=="外部支援").map(p=>`<option value="${esc(p.name)}">${esc(shortBr(p.branch))}・${payType(p)}</option>`).join("")}</datalist>
+    </form><p class="note">月薪人員只要填時數，成本會用員工名冊的時薪計算、由原屬館支付；領現人員填實際領到的金額，並選在哪一館領的。</p></div>`;
+  if(!X&&!$("spx-at").value)$("spx-at").value=cfg.homeBranch;
+}
+function spyModeSync(){document.querySelectorAll("#spy-mode button").forEach(b=>b.className=b.dataset.v===spyMode?"on o":"");
+  document.querySelectorAll("#view-supay [data-spyonly]").forEach(el=>el.hidden=el.dataset.spyonly!==spyMode);
+  $("spy-print").textContent=spyMode==="alloc"?"列印分攤底稿":"列印核對表"}
+const saveSUPX=()=>store.set("supx",SUPX);
+$("spy-mode").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;spyMode=b.dataset.v;renderSupay()});
+$("spy-alloc").addEventListener("input",e=>{if(e.target.id!=="spx-who")return;const p=supFind(e.target.value.trim());if(!p)return;
+  $("spx-from").value=p.branch;const o=cfg.branches.find(b=>b!==p.branch);if(o&&$("spx-at").value===p.branch)$("spx-at").value=o});
+$("spy-alloc").addEventListener("submit",e=>{if(e.target.id!=="spx-form")return;e.preventDefault();
+  const g=id=>$(id).value.trim(),nv=id=>g(id)===""?"":num(g(id));
+  const r={month:g("spx-month"),who:g("spx-who"),from:g("spx-from"),at:g("spx-at"),shift:g("spx-shift"),hours:nv("spx-hours"),times:nv("spx-times"),amt:nv("spx-amt"),paidBy:g("spx-paid"),note:g("spx-note"),pay:g("spx-pay")};
+  if(!r.month||!r.who){toast("請填月份與姓名");return}
+  const p=supFind(r.who);if(!r.from&&p)r.from=p.branch;
+  if(r.from&&r.from===r.at){toast("原屬館和支援館相同，不算跨館支援");return}
+  if(spxEdit){const x=SUPX.find(x=>x.id===spxEdit);if(x)Object.assign(x,r,{updatedAt:Date.now()})}
+  else SUPX.push(Object.assign({id:uid()},r,{createdAt:Date.now()}));
+  saveSUPX();toast(spxEdit?"已儲存":`已補登 ${r.who}`);spxEdit=null;renderAlloc()});
+$("spy-alloc").addEventListener("click",e=>{const t=e.target;
+  if(t.id==="spx-cancel"){spxEdit=null;renderAlloc();return}
+  const ed=t.closest("[data-spxedit]");if(ed){spxEdit=ed.dataset.spxedit;renderAlloc();$("spx-card").scrollIntoView({block:"center"});return}
+  const dl=t.closest("[data-spxdel]");if(dl){const i=SUPX.findIndex(x=>x.id===dl.dataset.spxdel);if(i<0)return;const rm=SUPX.splice(i,1)[0];if(spxEdit===rm.id)spxEdit=null;saveSUPX();renderAlloc();
+    toast(`已刪除 ${rm.who} 的補登`,()=>{SUPX.splice(i,0,rm);saveSUPX();renderAlloc()})}});
+function allocCSV(){const [from,to]=spyRange(),{L}=allocRows(from,to);
+  const H=["月份","員工類型","員工代號","原屬館","支援館","班別","支援時數或次數","成本基準／費用","應轉列成本","姓名","身分","實際支付館","應負擔館","轉列方向","來源","備註"];
+  download(`跨館分攤底稿_${from.slice(0,7)}_${to.slice(0,7)}.csv`,"﻿"+[H,...L.map(a=>[a.month,a.pay,a.code,a.from,a.at,a.shift,a.qty,a.cost==null?"待輸入（"+a.basis+"）":a.cost,a.cross?(a.cost==null?"待輸入":a.xfer):0,a.who,a.p?a.p.kind:"名單外",a.paidBy,a.bear,allocDir(a),a.src,[a.note,...a.warn].filter(Boolean).join("；")])].map(r=>r.map(csvq).join(",")).join("\r\n"),"text/csv")}
+function allocPrint(){const [from,to]=spyRange(),{L}=allocRows(from,to),{list,net}=allocSettle(L);
+  const html=`<div class="pr" style="font-size:8.5pt"><style>.spr table{width:100%;border-collapse:collapse;margin:2mm 0 4mm}.spr th,.spr td{border:1px solid #c8cbdc;padding:1.2mm 1.6mm;text-align:left}.spr td.r,.spr th.r{text-align:right}.spr th{background:#eef0f6}.spr .sg{display:flex;gap:20mm;margin-top:10mm}.spr .sg div{flex:1;border-top:1px solid #1d2150;padding-top:1mm}.spr .nt{margin:1mm 0 3mm;color:#555}</style>
+    <div class="spr"><div class="mast"><div><h1 style="margin:0;font-size:15pt">跨館人力支援與分攤底稿</h1><div>${from.slice(0,7).replace("-","/")}${from.slice(0,7)!==to.slice(0,7)?" – "+to.slice(0,7).replace("-","/"):""}</div></div><div>列印 ${todayISO().replace(/-/g,"/")}</div></div>
+    <div class="nt">${esc(ALLOC_NOTE)}</div>
+    <table><tr><th>月份</th><th>員工類型</th><th>員工代號</th><th>姓名</th><th>原屬館</th><th>支援館</th><th>班別</th><th>支援時數或次數</th><th>成本基準／費用</th><th>實際支付館</th><th class="r">應轉列成本</th><th>轉列方向</th></tr>
+    ${L.map(a=>`<tr><td>${a.month.replace("-","/")}</td><td>${a.pay}</td><td>${esc(a.code)}</td><td>${esc(a.who)}</td><td>${esc(shortBr(a.from))}</td><td>${esc(shortBr(a.at))}</td><td>${esc(a.shift)}</td><td>${a.qty}</td><td>${a.cost==null?"待輸入":esc(a.basis)+(a.pay==="月薪"?" ＝ "+fmt(a.cost):"")}</td><td>${esc(shortBr(a.paidBy))}</td><td class="r">${a.cross?(a.cost==null?"待輸入":fmt(a.xfer)):"0"}</td><td>${esc(allocDir(a))}</td></tr>`).join("")||`<tr><td colspan="12">這段期間沒有跨館支援紀錄</td></tr>`}</table>
+    <h3 style="font-size:11pt;margin:3mm 0 1mm">結算</h3><table>${list.map(s=>`<tr><td>${esc(shortBr(s.from))} 應轉給 ${esc(shortBr(s.to))}</td><td class="r">${fmt(s.amt)}${s.pend?`（另 ${s.pend} 筆待輸入）`:""}</td></tr>`).join("")}${net.map(n=>`<tr><td><b>淨額</b></td><td class="r">${allocNetTxt(n)}</td></tr>`).join("")||`<tr><td colspan="2">本期沒有需要轉列的成本</td></tr>`}</table>
+    <div class="sg">${cfg.branches.map(b=>`<div>${esc(b)} 確認簽名</div>`).join("")}</div></div></div>`;
+  flush();preparePrintHTML(html,false);setTimeout(()=>window.print(),60)}
 
 /* ================= 班表／找支援 =================
    資料：sched:YYYY-MM = {month, people:{姓名:{"1":"早","2":"休",…}}, updatedAt, src}
@@ -2497,7 +2782,7 @@ function gridHTML(S,m,names,click){
       if(K.t==="work")K.sh.forEach(s=>cnt[s][d-1]++);else if(K.t==="off")cnt.off[d-1]++;
       return `<td class="c ${schedCls(K)}${/^\d{4}$/.test(schedDisp(c,K))?" k4":""}"${click?` data-scc="${esc(r.key)}|${d}"`:""} title="${esc(r.name)} ${mo}/${d}${c?"："+esc(c):""}">${esc(schedDisp(c,K))}</td>`}).join("")}</tr>`}).join("");
   const crow=(t,a)=>`<tr class="cnt"><td class="nm">${t}</td>${a.map(x=>`<td>${x||""}</td>`).join("")}</tr>`;
-  return head+`<tbody>${body||`<tr><td colspan="${last+1}" style="text-align:center;color:var(--muted);padding:24px">沒有人員；可到「人員」頁新增，或直接上傳班表</td></tr>`}${names.length?crow("早班人數",cnt.早)+crow("晚班人數",cnt.晚)+crow("休假人數",cnt.off):""}</tbody>`}
+  return head+`<tbody>${body||`<tr><td colspan="${last+1}" style="text-align:center;color:var(--muted);padding:24px">沒有人員；可到「員工名冊」頁新增，或直接上傳班表</td></tr>`}${names.length?crow("早班人數",cnt.早)+crow("晚班人數",cnt.晚)+crow("休假人數",cnt.off):""}</tbody>`}
 function renderGrid(){const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m);$("sc-grid").innerHTML=gridHTML(S,m,gridNames(S,$("sc-gbranch").value),true)}
 $("sc-grid").addEventListener("click",e=>{
   const h=e.target.closest("[data-scd]");if(h){$("sc-date").value=h.dataset.scd;renderFind();$("sc-find").scrollIntoView({behavior:"smooth",block:"start"});return}
@@ -2810,18 +3095,18 @@ function opChart(id,labels,series,type,fy){const W=540,H=210,pl=54,pr=type==="li
   const vals=series.flatMap(s=>s.vals.filter(v=>v!=null&&isFinite(v)));let mn=Math.min(0,...vals),mx=Math.max(1,...vals);
   const st=niceStep((mx-mn)/4||1);mn=Math.floor(mn/st)*st;mx=Math.ceil(mx/st)*st;
   const x=i=>pl+bw*(i+.5),y=v=>pt+(H-pt-pb)*(1-(v-mn)/(mx-mn||1));
-  let g="";for(let v=mn;v<=mx+1e-9;v+=st)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${Math.abs(v)<1e-9?"#4a5262":"#232934"}"/><text x="${pl-8}" y="${y(v)+4}" fill="#8a91a0" font-size="11" text-anchor="end">${fy(v)}</text>`;
-  labels.forEach((l,i)=>g+=`<text x="${x(i)}" y="${H-8}" fill="#a5adbb" font-size="11" text-anchor="middle">${esc(l)}</text>`);
+  let g="";for(let v=mn;v<=mx+1e-9;v+=st)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${Math.abs(v)<1e-9?"#b5bcc8":"#e8ebf0"}"/><text x="${pl-8}" y="${y(v)+4}" fill="#737b8c" font-size="11" text-anchor="end">${fy(v)}</text>`;
+  labels.forEach((l,i)=>g+=`<text x="${x(i)}" y="${H-8}" fill="#4a5263" font-size="11" text-anchor="middle">${esc(l)}</text>`);
   let marks="";
   if(type==="line")series.forEach(s=>{let d="",on=false,last=-1;s.vals.forEach((v,i)=>{if(v==null||!isFinite(v)){on=false;return}d+=`${on?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`;on=true;last=i});
       marks+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`+s.vals.map((v,i)=>v==null||!isFinite(v)?"":`<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="${s.color}" stroke="var(--panel)" stroke-width="2"/>`).join("");
-      if(last>=0)marks+=`<text x="${x(last)+9}" y="${y(s.vals[last])+4}" fill="#a5adbb" font-size="11">${esc(s.short||s.name)}</text>`});
+      if(last>=0)marks+=`<text x="${x(last)+9}" y="${y(s.vals[last])+4}" fill="#4a5263" font-size="11">${esc(s.short||s.name)}</text>`});
   else{const k=series.length,gw=bw*.68,w=gw/k-2,y0=y(0);
     series.forEach((s,j)=>s.vals.forEach((v,i)=>{if(v==null||!v)return;const bx=x(i)-gw/2+j*(w+2),by=y(v),r=Math.min(4,w/2,Math.abs(y0-by));
       marks+=v>0?`<path d="M${bx},${y0}V${by+r}Q${bx},${by} ${bx+r},${by}H${bx+w-r}Q${bx+w},${by} ${bx+w},${by+r}V${y0}Z" fill="${s.color}"/>`
         :`<path d="M${bx},${y0}V${by-r}Q${bx},${by} ${bx+r},${by}H${bx+w-r}Q${bx+w},${by} ${bx+w},${by-r}V${y0}Z" fill="${s.color}"/>`}))}
   return `<div class="legend">${series.length>1?series.map(s=>`<span><i style="background:${s.color}${type==="bar"?";height:8px;width:8px":""}"></i>${esc(s.name)}</span>`).join(""):""}</div>
-    <div class="chart" data-opch="${id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(series.map(s=>s.name).join("、"))}">${g}${marks}<line class="op-x" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="#a5adbb" stroke-dasharray="3 3" opacity="0"/><rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent" class="op-hit"/></svg><div class="tip" hidden></div></div>`}
+    <div class="chart" data-opch="${id}"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(series.map(s=>s.name).join("、"))}">${g}${marks}<line class="op-x" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="#737b8c" stroke-dasharray="3 3" opacity="0"/><rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent" class="op-hit"/></svg><div class="tip" hidden></div></div>`}
 function opHover(e){const c=e.target.closest("[data-opch]");if(!c)return;const C=OPCH[c.dataset.opch],svg=c.querySelector("svg"),tip=c.querySelector(".tip"),ln=c.querySelector(".op-x");
   const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,sx=(e.clientX-r.left)/r.width*vb.width,pl=C.pl,bw=(vb.width-pl-C.pr)/C.labels.length;
   const i=Math.max(0,Math.min(C.labels.length-1,Math.floor((sx-pl)/bw))),xx=pl+bw*(i+.5);
@@ -3285,12 +3570,12 @@ function lineChart(S){
   const W=520,H=220,pl=56,pr=16,pt=18,pb=28;const vals=S.flatMap(s=>[s.net,s.ni]);let mn=Math.min(0,...vals),mx=Math.max(1,...vals);
   const st=niceStep((mx-mn)/4);mn=Math.floor(mn/st)*st;mx=Math.ceil(mx/st)*st;
   const x=i=>pl+(W-pl-pr)*(S.length===1?.5:i/(S.length-1)),y=v=>pt+(H-pt-pb)*(1-(v-mn)/(mx-mn||1));
-  let g="";for(let v=mn;v<=mx+1e-6;v+=st)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${v===0?"#4a5262":"#232934"}"/><text x="${pl-8}" y="${y(v)+4}" fill="#8a91a0" font-size="11" text-anchor="end">${fmtK(v)}</text>`;
+  let g="";for(let v=mn;v<=mx+1e-6;v+=st)g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${v===0?"#b5bcc8":"#e8ebf0"}"/><text x="${pl-8}" y="${y(v)+4}" fill="#737b8c" font-size="11" text-anchor="end">${fmtK(v)}</text>`;
   const path=k=>S.map((s,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(s[k]).toFixed(1)}`).join("");
   const dots=k=>S.map((s,i)=>s.n?`<circle cx="${x(i)}" cy="${y(s[k])}" r="4" fill="var(--${k==="net"?"s1":"s2"})" stroke="var(--panel)" stroke-width="2"/>`:"").join("");
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="近六個月營業收入淨額與本期淨利">${g}${S.map((s,i)=>`<text x="${x(i)}" y="${H-8}" fill="#a5adbb" font-size="11" text-anchor="middle">${+s.m.slice(5)} 月</text>`).join("")}
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="近六個月營業收入淨額與本期淨利">${g}${S.map((s,i)=>`<text x="${x(i)}" y="${H-8}" fill="#4a5263" font-size="11" text-anchor="middle">${+s.m.slice(5)} 月</text>`).join("")}
     <path d="${path("net")}" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/><path d="${path("ni")}" fill="none" stroke="var(--s2)" stroke-width="2" stroke-linejoin="round"/>${dots("net")}${dots("ni")}
-    <line id="tr-x" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="#a5adbb" stroke-dasharray="3 3" opacity="0"/><rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent" id="tr-hit"/></svg><div class="tip" id="tr-tip" hidden></div>`;
+    <line id="tr-x" x1="0" x2="0" y1="${pt}" y2="${H-pb}" stroke="#737b8c" stroke-dasharray="3 3" opacity="0"/><rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent" id="tr-hit"/></svg><div class="tip" id="tr-tip" hidden></div>`;
 }
 function niceStep(r){if(r<=0)return 1;const p=Math.pow(10,Math.floor(Math.log10(r)));const f=r/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p}
 function bindTrend(S){
@@ -3663,8 +3948,8 @@ function toast(msg,undo){
 }
 function showView(v){
   flush();
-  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.view===v));
-  ["day","history","month","credit","err","mem","sup","sched","jp","vault","people","settings","fin","ops","mpl","tx","events","proj","year","bs","cfs","funds","play"].forEach(x=>$("view-"+x).hidden=x!==v);
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.view===(v==="sup"?"supay":v)));
+  ["day","history","month","credit","err","mem","sup","supay","sched","jp","vault","people","settings","fin","ops","mpl","tx","events","proj","year","bs","cfs","funds","play"].forEach(x=>$("view-"+x).hidden=x!==v);
   if(v==="fin")renderFin();
   if(v==="mpl")renderMPL();
   if(v==="play"){if(!$("pl-month").value)$("pl-month").value=D.date.slice(0,7);renderPlay()}
@@ -3680,6 +3965,7 @@ function showView(v){
   if(v==="vault"){if(!$("v-month").value)$("v-month").value=todayISO().slice(0,7);renderVaultForm();renderVault()}
   if(v==="people")renderPeople();
   if(v==="sched")renderSched();
+  if(v==="supay")renderSupay();
   if(v==="credit"){crCollect=null;renderCredit()}
   if(v==="sup"){if(!$("sp-month").value)$("sp-month").value=D.date.slice(0,7);renderSup()}
   if(v==="mem"){if(!$("mm-month").value)$("mm-month").value=D.date.slice(0,7);renderMem()}
@@ -3942,6 +4228,7 @@ function changed(keys){
     else if(k==="fin:open")OPEN=store.get(k)||null;
     else if(k==="fin:hist"){HIST=store.get(k)||{months:{}};fixHist()}
     else if(k==="proj")PJ=store.get("proj")||[];
+    else if(k==="supx")SUPX=store.get("supx")||[];
     else if(k==="day:"+D.date)day=true;
   });
   if(day&&!saveTimer)D=loadDay(D.date);
