@@ -980,6 +980,7 @@ body{background:var(--bg);color:var(--ink)}
         <button class="btn" type="button" id="sc-tpl">下載本月範本／匯出 CSV</button>
         <button class="btn danger" type="button" id="sc-clear">清除本月班表</button>
       </div>
+      <div class="note" id="sc-months" style="margin:0 0 8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
       <div id="sc-preview"></div>
       <div class="tbl-wrap"><table class="hist sc-grid" id="sc-grid"></table></div>
       <p class="note"><b>排班系統的班表</b>：打開排班系統的 Google 試算表 →「檔案 → 下載 → Microsoft Excel（.xlsx）」，整本上傳即可。系統會自動選「班表」分頁（要匯入上個月請在預覽裡選「班表_年-月」），並讀取「設定」分頁的時段班別；「員工」分頁可順便同步人員名單（不讀 PIN 碼）。中班（例如 1600 開始）會跨到晚上，找支援時視為早晚都在班。<br>點格子可以直接修改（空白 → 早 → 晚 → 跨 → 休 → 空白）；點日期可帶到上方「找支援」。上傳檔案格式：第一欄（或「姓名」欄）放人名，同一列放日期 1–31（也可以是 11/1、2026/11/1 或 Excel 日期），格子填 早、晚、跨（全天）、休（例、特休、病假、事假都算休），或 14:00-23:00 這類時間。
@@ -2692,13 +2693,22 @@ function parseSched(rows,month){
   if(nc<0){let bn=0;for(let c=0;c<first;c++){const n=body.filter(r=>{const v=r[c];return typeof v==="string"&&v&&!/^\d+$/.test(v)}).length;if(n>bn){bn=n;nc=c}}}
   if(nc<0)throw new Error("找不到姓名欄：日期左邊要有一欄人名");
   const SKIP=/合計|小計|人數|總計|統計|備註|說明|^星期|^週$|^日期$|姓名|^[早中晚跨]班$|^外地支援$|^[早晚]值$|^▍/;
+  const mLen=mm=>{const [y,mo]=mm.split("-").map(Number);return new Date(y,mo,0).getDate()};   // 只有「日」的日期列：超過該月天數的欄（例如 11 月的 31 日）不寫入
+  best.cols=best.cols.filter(({dd})=>dd.d<=mLen(fixM(dd.m,month)));
   const out={},cover={};best.cols.forEach(({dd})=>{const mm=fixM(dd.m,month);(cover[mm]=cover[mm]||new Set()).add(dd.d)});
   let stop=false,curG="";const grp={};   // 排班系統的分區標題（▍早班陣容／▍晚班陣容／▍支援人員）→ 每人所屬班別
   body.forEach(r=>{const nm=String(r[nc]??"").trim();if(stop||/^時段人力$/.test(nm)){stop=true;return}
     if(/^▍/.test(nm)){curG=/支援/.test(nm)?"支援":/早/.test(nm)?"早班":/中/.test(nm)?"中班":/晚/.test(nm)?"晚班":"";return}
     if(!nm||SKIP.test(nm)||/^\d+(\.\d+)?$/.test(nm))return;if(curG)grp[nm]=curG;
     best.cols.forEach(({c,dd})=>{const mm=fixM(dd.m,month);const row=((out[mm]=out[mm]||{})[nm]=out[mm][nm]||{});const v=codeStr(r[c]);if(v)row[dd.d]=v})});
-  const R=pack(out,cover,"月曆");R.grp=grp;return R}
+  const R=pack(out,cover,"月曆");R.grp=grp;R.dayOnly=best.cols.some(({dd})=>!dd.m);return R}
+/* 日期列只有「1、2、3…」時，月份從工作表名稱（班表_2026-12）或前幾列標題（2026年12月、12月班表）判斷；都沒有才用上方月份選單 */
+function schedMonthHint(sh,fallback){const base=fallback||todayISO().slice(0,7);
+  const ym=t=>{let x=/(20\d{2})\s*[年\-\/._]\s*(\d{1,2})(?!\d)/.exec(t);if(x&&+x[2]>=1&&+x[2]<=12)return ymOf(+x[1],+x[2]);
+    x=/(?:^|[^\d\/])(\d{1,2})\s*月/.exec(t);if(x&&+x[1]>=1&&+x[1]<=12){let y=+base.slice(0,4);const d=+x[1]-+base.slice(5);if(d<-6)y++;else if(d>6)y--;return ymOf(y,+x[1])}return null};
+  const a=ym(String(sh.name||""));if(a)return {m:a,from:`工作表名稱「${sh.name}」`};
+  for(const r of (sh.rows||[]).slice(0,4))for(const v of (r||[]))if(typeof v==="string"&&v.trim()&&!/^\d{1,4}[\/\-.]\d{1,2}([\/\-.]\d{1,2})?$/.test(v.trim())){const b=ym(v);if(b)return {m:b,from:`標題「${v.trim().slice(0,20)}」`}}
+  return null}
 
 /* ---------- 排班系統匯出的 Excel：「員工」分頁（不讀 PIN）、「設定」分頁的時段班別 ---------- */
 function bookEmployees(sheets){
@@ -2722,7 +2732,7 @@ function syncBookEmployees(list,branch){let add=0,ch=0;
 
 /* ---------- 依班表推測平常的上班時段（取當月，不足 8 天再加上個月） ---------- */
 function inferShift(name,date){const m=date.slice(0,7);const cnt={早:0,晚:0,跨:0},codes={};let n=0;
-  for(const mm of [m,prevYM(m)]){const S=schedGet(mm),k=schedKey(S,name);if(k)Object.values(S.people[k]).forEach(c=>{const K=schedKind(c,S.slots);if(K.t!=="work"||K.unk)return;n++;
+  for(const mm of [m,prevYM(m),nextYM(m)]){const S=schedGet(mm),k=schedKey(S,name);if(k)Object.values(S.people[k]).forEach(c=>{const K=schedKind(c,S.slots);if(K.t!=="work"||K.unk)return;n++;
       cnt[K.k||(K.sh.length>1?"跨":K.sh[0])]++;const key=K.tm||K.c;codes[key]=(codes[key]||0)+1});if(n>=8)break}
   if(!n)return null;const top=Object.entries(codes).sort((a,b)=>b[1]-a[1])[0][0];
   const sh=cnt.早/n>=.6?["早"]:cnt.晚/n>=.6?["晚"]:cnt.跨/n>=.6?["跨"]:["早","晚"];
@@ -2760,7 +2770,7 @@ function renderFind(){
   $("sc-result").innerHTML=`<div class="tbl-wrap"><table class="sc-res" style="min-width:920px"><tr><th>姓名</th><th>館別</th><th>身分</th><th>當天狀況</th><th>平常時段（依班表推測）</th><th style="text-align:right">時薪</th><th style="text-align:right">車資</th><th style="text-align:right">近 30 天支援</th><th>聯絡方式</th><th></th></tr>
     ${grp("① 當天休假","班表排休，優先詢問",G.a)}${grp("② 沒有排班","班表空白、沒有班表或外部支援人員",G.b)}${grp("③ 當天上另一班","可詢問是否延長或加班",G.c)}
     ${n?"":`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">找不到可支援的人；可以勾選「含其他館人員」或「含外部支援」擴大範圍</td></tr>`}</table></div>
-    <p class="note">${date.slice(5).replace("-","/")} ${wdOf(date)} ${sh}班 · ${esc(B)}缺人 · 排序：同館優先 → 平常就上這個班 → 時薪低到高${skip.length?`<br>已在班、請假或已在日報，不列入：${skip.map(esc).join("、")}`:""}${hasS?"":`<br><span style="color:var(--warn)">${+date.slice(5,7)} 月還沒有班表，結果只依人員資料判斷</span>`}</p>`;
+    <p class="note">${date.slice(5).replace("-","/")} ${wdOf(date)} ${sh}班 · ${esc(B)}缺人 · 排序：同館優先 → 平常就上這個班 → 時薪低到高${skip.length?`<br>已在班、請假或已在日報，不列入：${skip.map(esc).join("、")}`:""}${hasS?"":`<br><span style="color:var(--warn)">${+date.slice(5,7)} 月還沒有班表，「當天狀況」無法判斷${schedMonths().length?`（已存的班表：${schedMonths().map(x=>+x.slice(5)+" 月").join("、")}；平常時段會參考相鄰月份）`:""}，請上傳 ${+date.slice(5,7)} 月班表或改選日期</span>`}</p>`;
 }
 function scAddSupport(pid){const p=cfg.people.find(x=>x.id===pid);if(!p)return;const date=$("sc-date").value||todayISO();flush();
   const d=date===D.date?D:loadDay(date);if(!Array.isArray(d.support))d.support=[];
@@ -2787,7 +2797,13 @@ function gridHTML(S,m,names,click){
       return `<td class="c ${schedCls(K)}${/^\d{4}$/.test(schedDisp(c,K))?" k4":""}"${click?` data-scc="${esc(r.key)}|${d}"`:""} title="${esc(r.name)} ${mo}/${d}${c?"："+esc(c):""}">${esc(schedDisp(c,K))}</td>`}).join("")}</tr>`}).join("");
   const crow=(t,a)=>`<tr class="cnt"><td class="nm">${t}</td>${a.map(x=>`<td>${x||""}</td>`).join("")}</tr>`;
   return head+`<tbody>${body||`<tr><td colspan="${last+1}" style="text-align:center;color:var(--muted);padding:24px">沒有人員；可到「員工名冊」頁新增，或直接上傳班表</td></tr>`}${names.length?crow("早班人數",cnt.早)+crow("晚班人數",cnt.晚)+crow("休假人數",cnt.off):""}</tbody>`}
-function renderGrid(){const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m);$("sc-grid").innerHTML=gridHTML(S,m,gridNames(S,$("sc-gbranch").value),true)}
+const schedMonths=()=>localKeys().filter(k=>/^sched:\d{4}-\d{2}$/.test(k)&&Object.keys(schedGet(k.slice(6)).people).length).map(k=>k.slice(6)).sort();
+const scMonthSave=m=>lsSet("ctp-hs~scm",m);
+function scDefaultMonth(){const t=todayISO().slice(0,7),L=schedMonths(),last=lsGet("ctp-hs~scm");   // 重新整理後回到上次看的月份；沒有就用本月，本月沒班表時改看最近有班表的月份
+  if(last&&L.includes(last))return last;if(!L.length||L.includes(t))return t;return L.find(x=>x>t)||L[L.length-1]}
+function renderGrid(){const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m);$("sc-grid").innerHTML=gridHTML(S,m,gridNames(S,$("sc-gbranch").value),true);
+  const L=schedMonths();$("sc-months").innerHTML=L.length?`已存的班表：${L.map(x=>`<button class="btn sm${x===m?" primary":""}" type="button" data-scm="${x}">${+x.slice(0,4)}/${+x.slice(5)}</button>`).join(" ")}`:"還沒有上傳任何班表"}
+$("sc-months").addEventListener("click",e=>{const b=e.target.closest("[data-scm]");if(!b)return;$("sc-month").value=b.dataset.scm;scMonthSave(b.dataset.scm);renderGrid();scPreview()});
 $("sc-grid").addEventListener("click",e=>{
   const h=e.target.closest("[data-scd]");if(h){$("sc-date").value=h.dataset.scd;renderFind();$("sc-find").scrollIntoView({behavior:"smooth",block:"start"});return}
   const c=e.target.closest("[data-scc]");if(!c)return;const v=c.dataset.scc,cut=v.lastIndexOf("|"),name=v.slice(0,cut),d=v.slice(cut+1);
@@ -2799,7 +2815,7 @@ $("sc-grid").addEventListener("click",e=>{
 let SCPV=null;
 $("sc-file").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
   try{const sheets=await readTable(f);let si=sheets.findIndex(x=>x.name==="班表");if(si<0)si=sheets.findIndex(x=>/班表/.test(x.name));
-    SCPV={file:f.name,sheets,si:Math.max(0,si),emps:bookEmployees(sheets),slots:bookSlots(sheets)};scPreview()}catch(err){SCPV=null;scPreview();toast("讀取失敗："+(err&&err.message||err))}});
+    SCPV={file:f.name,sheets,si:Math.max(0,si),emps:bookEmployees(sheets),slots:bookSlots(sheets),month:null};scPreview()}catch(err){SCPV=null;scPreview();toast("讀取失敗："+(err&&err.message||err))}});
 /* 排班系統的班表只標休假、上班日留白（自動排班前）：空白格依員工的可上時段／班別補成上班。
    可上時段只有一個代碼 → 用那個代碼；否則依班別取設定頁該班別最早的開始時間；都沒有 → 早／晚／跨。外部支援、離職、看不出班別的人不補 */
 function scFillCode(nm,R){const e=(SCPV.emps||[]).find(x=>x.name.toLowerCase()===nm.trim().toLowerCase());
@@ -2815,7 +2831,9 @@ function scFill(R){if(R.mode!=="月曆")return {R,n:0,skip:[]};let n=0;const ski
   return {R:Object.assign({},R,{months}),n,skip:[...skip]}}
 function scPreview(){
   const el=$("sc-preview");if(!SCPV){el.innerHTML="";return}
-  const m=$("sc-month").value||todayISO().slice(0,7);let R=null,err="";
+  const sel=$("sc-month").value||todayISO().slice(0,7),hint=schedMonthHint(SCPV.sheets[SCPV.si],sel);
+  // 日期只有「日」時，以上方選的月份為準；檔案標題看起來是別的月份時只提示，不自動改
+  if(!SCPV.month)SCPV.month=sel;const m=SCPV.month;let R=null,err="";
   try{R=parseSched(SCPV.sheets[SCPV.si].rows,m)}catch(e){err=e.message||String(e)}
   let F=null;if(R&&R.mode==="月曆"){if(SCPV.fill==null)SCPV.fill=!!((SCPV.emps||[]).some(e=>e.group||e.avail)||Object.keys(R.grp||{}).length);F=scFill(R);if(SCPV.fill)R=F.R}
   SCPV.R=R;
@@ -2826,7 +2844,11 @@ function scPreview(){
   const newE=(SCPV.emps||[]).filter(e=>e.active&&!cfg.people.some(p=>p.name.trim().toLowerCase()===e.name.toLowerCase()));
   const ms=Object.keys(R.months).sort().map(mm=>`${ymLabel(mm)}（${R.cover[mm]?R.cover[mm].size+" 天":"清單"}，${Object.keys(R.months[mm]).length} 人）`).join("、");
   const pvS={people:R.months[R.main]||{},slots:SCPV.slots},pvN=Object.keys(pvS.people).map(k=>({name:k,key:k,p:cfg.people.find(p=>p.name.trim().toLowerCase()===k.trim().toLowerCase())||null}));
-  el.innerHTML=`<div class="sc-pv"><div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap"><div><b>預覽：${esc(SCPV.file)}</b><div class="note" style="margin:2px 0 0">${R.mode}格式 · ${ms}</div></div>${shSel}</div>
+  el.innerHTML=`<div class="sc-pv"><div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap"><div><b>預覽：${esc(SCPV.file)}</b><div class="note" style="margin:2px 0 0">${R.mode}格式 · 寫入 ${ms}</div></div>${shSel}
+    ${R.dayOnly?`<label class="f" style="width:auto"><span>檔案日期只有「日」，寫入月份</span><input class="in" type="month" id="scp-month" value="${m}" style="width:160px"></label><span class="note" style="margin:0 0 6px">依上方選的月份寫入，請確認是否正確</span>`:""}</div>
+    ${R.dayOnly&&hint&&hint.m!==m?`<p class="note" style="color:var(--warn)">注意：${esc(hint.from)}看起來是 ${ymLabel(hint.m)} 的班表，目前會寫入 ${ymLabel(m)}。<button class="btn sm" type="button" id="scp-usehint" data-m="${hint.m}">改寫入 ${ymLabel(hint.m)}</button></p>`:""}
+    ${!R.dayOnly&&!R.months[sel]?(()=>{const alt=SCPV.sheets.findIndex((x,i)=>i!==SCPV.si&&x.name.includes(sel));
+      return `<p class="note" style="color:var(--warn)">注意：這個工作表的日期是 ${Object.keys(R.months).sort().map(ymLabel).join("、")}，會照檔案日期寫入，不是上方選的 ${ymLabel(sel)}。${alt>=0?`<button class="btn sm" type="button" id="scp-alt" data-i="${alt}">改用「${esc(SCPV.sheets[alt].name)}」工作表</button>`:`要匯入 ${ymLabel(sel)}，請在上方「工作表」選對應月份的分頁（例如「班表_${sel}」）。`}</p>`})():""}
     ${(SCPV.emps||[]).length?`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><label class="jpchk"><input type="checkbox" id="scp-emp" checked> 同步「員工」分頁名單</label><span class="note" style="margin:0">${newE.length?`新增 ${newE.length} 位在職人員：${newE.map(e=>esc(e.name)).join("、")}`:"人員名單已是最新"}・館別</span><select class="in" id="scp-ebr" style="width:auto">${branchOpts($("sc-gbranch").value||cfg.homeBranch)}</select><span class="note" style="margin:0">（不讀取 PIN 碼）</span></div>`:""}
     ${F&&(F.n||SCPV.fill)?`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px"><label class="jpchk"><input type="checkbox" id="scp-fill"${SCPV.fill?" checked":""}> 空白格視為上班（依員工的可上時段／班別補上）</label><span class="note" style="margin:0">${SCPV.fill?`已補 ${F.n} 格上班`:`可補 ${F.n} 格`}${F.skip.length?`・看不出班別、未補：${F.skip.slice(0,8).map(esc).join("、")}${F.skip.length>8?"…":""}（到排班系統「員工」分頁 I 欄設定班別）`:""}</span></div>`:""}
     ${Object.keys(SCPV.slots||{}).length?`<p class="note">時段班別：${Object.entries(SCPV.slots).map(([c,g])=>c+" "+g).join("、")}</p>`:""}
@@ -2837,19 +2859,22 @@ function scPreview(){
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="button" id="scp-ok">確認匯入</button><button class="btn" type="button" id="scp-cancel">取消</button>
     <span class="note" style="margin:0">${R.mode==="月曆"?"檔案涵蓋的日期會以檔案為準（空白格會清掉原本的班別），其他日期和檔案裡沒有的人不受影響。":"只寫入清單裡有的日期與人員。"}</span></div></div>`;
 }
-$("sc-preview").addEventListener("change",e=>{if(e.target.id==="scp-sheet"){SCPV.si=+e.target.value;SCPV.fill=null;scPreview()}if(e.target.id==="scp-fill"){SCPV.fill=e.target.checked;scPreview()}});
+$("sc-preview").addEventListener("change",e=>{if(e.target.id==="scp-sheet"){SCPV.si=+e.target.value;SCPV.fill=null;SCPV.month=null;scPreview()}if(e.target.id==="scp-month"&&e.target.value){SCPV.month=e.target.value;SCPV.fill=null;scPreview()}if(e.target.id==="scp-fill"){SCPV.fill=e.target.checked;scPreview()}});
 $("sc-preview").addEventListener("click",e=>{
   if(e.target.id==="scp-cancel"){SCPV=null;scPreview();return}
+  if(e.target.id==="scp-usehint"){SCPV.month=e.target.dataset.m;SCPV.fill=null;scPreview();return}
+  if(e.target.id==="scp-alt"){SCPV.si=+e.target.dataset.i;SCPV.fill=null;SCPV.month=null;scPreview();return}
   if(e.target.id!=="scp-ok"||!SCPV||!SCPV.R)return;const R=SCPV.R;
   const addE=SCPV.emps&&SCPV.emps.length&&$("scp-emp")&&$("scp-emp").checked?syncBookEmployees(SCPV.emps,$("scp-ebr").value):0;
   if(SCPV.unmatched.length&&$("scp-add")&&$("scp-add").checked){const kind=$("scp-kind").value,branch=$("scp-br").value;
     SCPV.unmatched.forEach(nm=>{if(!cfg.people.some(p=>p.name.trim().toLowerCase()===nm.trim().toLowerCase()))cfg.people.push(normPerson({name:nm.trim(),role:"",kind,branch,active:true}))});saveCfg()}
-  let n=0;Object.entries(R.months).forEach(([mm,P])=>{const S=schedGet(mm),cov=R.cover[mm];
+  let n=0;const fail=[];Object.entries(R.months).forEach(([mm,P])=>{const S=schedGet(mm),cov=R.cover[mm];
     Object.entries(P).forEach(([nm,row])=>{const pp=cfg.people.find(p=>p.name.trim().toLowerCase()===nm.trim().toLowerCase());const name=pp?pp.name:nm;
       const key=schedKey(S,name)||name,tgt=S.people[key]||(S.people[key]={});
       if(cov)cov.forEach(d=>{if(row[d])tgt[d]=row[d];else delete tgt[d]});else Object.assign(tgt,row);n++});
-    if(Object.keys(SCPV.slots||{}).length)S.slots=SCPV.slots;S.month=mm;S.updatedAt=Date.now();S.src=SCPV.file;store.set("sched:"+mm,S)});
-  $("sc-month").value=R.main;SCPV=null;scPreview();renderGrid();renderFind();
+    if(Object.keys(SCPV.slots||{}).length)S.slots=SCPV.slots;S.month=mm;S.updatedAt=Date.now();S.src=SCPV.file;if(!store.set("sched:"+mm,S))fail.push(ymLabel(mm))});
+  if(fail.length){toast(`${fail.join("、")} 班表沒有存進去：瀏覽器儲存空間可能已滿，請先到「設定」下載備份後告知管理者`);return}
+  $("sc-month").value=R.main;scMonthSave(R.main);SCPV=null;scPreview();renderGrid();renderFind();
   toast(`已匯入 ${n} 位人員的班表（${Object.keys(R.months).sort().map(x=>+x.slice(5)+" 月").join("、")}）${addE?`，新增 ${addE} 位人員`:""}`)});
 $("sc-tpl").addEventListener("click",()=>{const m=$("sc-month").value||todayISO().slice(0,7),S=schedGet(m),[y,mo]=m.split("-").map(Number),last=new Date(y,mo,0).getDate();
   const days=Array.from({length:last},(_,i)=>i+1);const names=gridNames(S,$("sc-gbranch").value);
@@ -2861,11 +2886,11 @@ $("sc-clear").addEventListener("click",e=>{const b=e.target,m=$("sc-month").valu
   delete b.dataset.armed;b.textContent="清除本月班表";store.del("sched:"+m);renderGrid();renderFind();toast(`已清除 ${ymLabel(m)} 班表`,()=>{store.set("sched:"+m,S);renderGrid();renderFind()})});
 $("sc-shift").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;scShift=b.dataset.v;renderFind()});
 ["sc-date","sc-branch","sc-other","sc-ext"].forEach(id=>$(id).addEventListener("change",renderFind));
-["sc-month","sc-gbranch"].forEach(id=>$(id).addEventListener("change",()=>{renderGrid();scPreview()}));
+["sc-month","sc-gbranch"].forEach(id=>$(id).addEventListener("change",()=>{if(id==="sc-month"&&$("sc-month").value){scMonthSave($("sc-month").value);if(SCPV){SCPV.month=null;SCPV.fill=null}}renderGrid();scPreview()}));
 $("sc-split").addEventListener("change",e=>{const v=num(e.target.value);if(v<1||v>30){e.target.value=schedSplit();return}cfg.schedSplit=v;saveCfg();renderGrid();renderFind();scPreview()});
 $("sc-result").addEventListener("click",e=>{const b=e.target.closest("[data-scadd]");if(b)scAddSupport(b.dataset.scadd)});
 function renderSched(){
-  if(!$("sc-date").value)$("sc-date").value=todayISO();if(!$("sc-month").value)$("sc-month").value=($("sc-date").value||todayISO()).slice(0,7);
+  if(!$("sc-date").value)$("sc-date").value=todayISO();if(!$("sc-month").value)$("sc-month").value=scDefaultMonth();
   const b=$("sc-branch").value;$("sc-branch").innerHTML=branchOpts(b||cfg.homeBranch);const g=$("sc-gbranch").value;$("sc-gbranch").innerHTML=branchOpts(g,"全部館別");
   $("sc-split").value=schedSplit();renderFind();renderGrid();scPreview()}
 
