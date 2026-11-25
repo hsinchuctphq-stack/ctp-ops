@@ -356,6 +356,9 @@ body{background:var(--bg);color:var(--ink)}
 @media (max-width:980px){.fin .mgrid{grid-template-columns:repeat(2,1fr)}}
 .fin .mgrid b{font:600 19px var(--f-num)}
 .fin table.lst{width:100%;border-collapse:collapse;font-size:12.5px}
+.fin .pie-w{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}.fin .pie-w svg{width:200px;height:200px}.fin .pie-w path{cursor:pointer;transition:opacity .15s}.fin .pie-w:hover path{opacity:.55}.fin .pie-w path:hover{opacity:1}
+.fin .pie-l td{padding:4px 6px}.fin .pie-l i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px}.fin .pie-l small{color:var(--tx2);font-size:11px}
+@media (max-width:640px){.fin .pie-w{grid-template-columns:1fr;justify-items:center}}
 .fin table.exp-t td{padding:4px 8px;vertical-align:middle}.fin table.exp-t tr.exg td{background:var(--panel2);border-top:1px solid var(--line)}.fin table.exp-t input.in{height:30px}
 .fin .lst th{font-size:11px;color:var(--mut);font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid var(--line2)}
 .fin .lst td{padding:5px 6px;border-bottom:1px solid var(--line)}
@@ -3622,7 +3625,7 @@ function finParts(){
 function renderFin(){
   const P=finParts();syncPLV();$("r-title").innerHTML=P.title;
   if(!P.TX.length){$("r-body").innerHTML=`<div class="empty-state"><p>還沒有任何財務資料。填寫「今日報表」後，營收、優惠、成本會自動出現在這裡；也可以到「設定」匯入 115 年歷史月結資料。</p><div class="btns"><button class="btn primary" type="button" data-go="settings">匯入歷史資料</button><button class="btn" type="button" data-go="day">去填今日報表</button><button class="btn" type="button" data-go="tx">新增交易</button></div></div>`+`<div style="margin-top:14px">${expInHTML(P.p)}</div>`;return}
-  $("r-body").innerHTML=`<div class="g2 even" style="margin-bottom:14px">${P.evHTML}${P.ratHTML}</div>`+P.kpis+`<div style="height:14px"></div>`+P.alerts+`<div class="g2" style="margin-top:14px"><div>${P.pl}</div><div>${P.trend}${P.expHTML}</div></div><div class="g2 even">${expInHTML(P.p)}${P.cfHTML}</div>`;
+  $("r-body").innerHTML=`<div class="g2 even" style="margin-bottom:14px">${P.evHTML}${P.ratHTML}</div>`+P.kpis+`<div style="height:14px"></div>`+P.alerts+`<div class="g2" style="margin-top:14px"><div>${P.pl}</div><div>${P.trend}${P.expHTML}</div></div><div class="g2 even">${expInHTML(P.p)}<div>${P.cfHTML}${expPieHTML(P.p)}</div></div>`;
   bindTrend(P.series);
 }
 /* ---------- 各項支出填寫（財務每月填金額；存成手動交易 fin:tx，欄位 exp="大項|小項"，計入損益） ---------- */
@@ -3654,6 +3657,26 @@ function expInHTML(p){
   return `<div class="panel" id="exp-in"><div class="ph"><h2>各項支出填寫</h2><span class="sub">${ymLabel(p)} · 填完離開欄位即存檔，計入損益表</span><span class="sp"></span><select class="in" id="exp-br" style="width:auto">${branchOpts(b)}</select></div>
     <div class="tbl-wrap"><table class="lst exp-t"><tr><th>項目</th><th class="r">金額</th><th class="r">小計</th></tr>${rows}<tr class="exg"><td><b>合計</b></td><td></td><td class="r"><b>${fmt(all)}</b></td></tr></table></div>
     <p class="note">小項可不分，直接填在大項的「未分小項」。這裡的金額會記在「交易資料」（${ymLabel(p)}，付款日期預設月底，可到交易資料修改）。零用金庫、日報已記的支出會自動入帳，不用在這裡重複填。</p></div>`}
+/* ---------- 支出比例圓餅圖：直接營運成本各項＋各項支出填寫的小項＋其他來源已入帳的費用（零用金庫、交易資料） ---------- */
+const PIEC=["#257de0","#f47230","#00b894","#f2a600","#ee7fac","#008a17","#6a4ce2","#9aa1ad"];
+function expPieHTML(p){const b=FR.b,cur=PL(allData().TX,p,b);const S=[];
+  Object.entries(cur.L["直接營運成本"]).forEach(([k,v])=>{if(v>0)S.push({k:k+(k==="非常態人事"?"（日報人力支援）":""),v,g:"直接營運成本"})});
+  const used={};TXm.filter(t=>t.exp&&t.period===p&&inBranch(t,b)&&t.dir==="out").forEach(t=>{const [g,x]=t.exp.split("|");const lb=x||g;const f=S.find(z=>z.k===lb&&z.g===g);if(f)f.v+=num(t.amt);else S.push({k:lb,v:num(t.amt),g});
+    if(t.l1!=="直接營運成本")used[t.l1+"|"+t.l2]=(used[t.l1+"|"+t.l2]||0)+num(t.amt)});
+  TXm.filter(t=>t.exp&&t.period===p&&inBranch(t,b)&&t.l1==="直接營運成本").forEach(t=>{const f=S.find(z=>z.g==="直接營運成本"&&z.k.startsWith(t.l2));if(f)f.v-=num(t.amt)});   // 填寫在直接成本科目的（支援薪資）不重複算
+  ["固定營業費用","其他營運費用"].forEach(sec=>Object.entries(cur.L[sec]).forEach(([k,v])=>{const r=v-(used[sec+"|"+k]||0);if(r>0.5)S.push({k:k+"（其他來源）",v:r,g:sec})}));
+  const L=S.filter(x=>x.v>0.5).sort((a,c)=>c.v-a.v),tot=L.reduce((a,x)=>a+x.v,0);
+  const head=`<div class="panel"><div class="ph"><h2>支出比例</h2><span class="sub">${ymLabel(p)}${b?" · "+esc(b):""} · 直接營運成本＋各項支出</span></div>`;
+  if(!tot)return head+`<p class="note">本月還沒有支出資料</p></div>`;
+  const top=L.length>8?L.slice(0,7).concat([{k:`其他 ${L.length-7} 項`,v:L.slice(7).reduce((a,x)=>a+x.v,0),g:L.slice(7).map(x=>x.k).join("、")}]):L;
+  const R=80,r=50,cx=100,cy=100;let a0=-Math.PI/2;
+  const arcs=top.map((x,i)=>{const a1=a0+x.v/tot*Math.PI*2,lg=a1-a0>Math.PI?1:0,P=(rr,a)=>`${(cx+rr*Math.cos(a)).toFixed(2)},${(cy+rr*Math.sin(a)).toFixed(2)}`;
+    const d=top.length===1?`M${cx-R},${cy}a${R},${R} 0 1,0 ${2*R},0a${R},${R} 0 1,0 ${-2*R},0M${cx-r},${cy}a${r},${r} 0 1,1 ${2*r},0a${r},${r} 0 1,1 ${-2*r},0`
+      :`M${P(R,a0)}A${R},${R} 0 ${lg} 1 ${P(R,a1)}L${P(r,a1)}A${r},${r} 0 ${lg} 0 ${P(r,a0)}Z`;a0=a1;
+    return `<path d="${d}" fill="${PIEC[i===7?7:i]}" stroke="var(--panel)" stroke-width="2" fill-rule="evenodd" data-pi="${i}"><title>${esc(x.k)}：${fmt(x.v)}（${fpct(x.v/tot*100)}）${i===7?"\n"+esc(x.g):""}</title></path>`}).join("");
+  return head+`<div class="pie-w"><svg viewBox="0 0 200 200" role="img" aria-label="${ymLabel(p)} 支出比例">${arcs}<text x="100" y="95" text-anchor="middle" font-size="11" fill="#737b8c">支出合計</text><text x="100" y="114" text-anchor="middle" font-size="16" font-weight="700" fill="var(--tx)">${fmtK(tot)}</text></svg>
+    <table class="lst pie-l">${top.map((x,i)=>`<tr data-pi="${i}"><td><i style="background:${PIEC[i===7?7:i]}"></i>${esc(x.k)}${x.g==="直接營運成本"?` <small>直接成本</small>`:""}${i===7?`<div><small>${esc(L.slice(7).map(y=>`${y.k} ${fmt(y.v)}`).join("、"))}</small></div>`:""}</td><td class="r">${fmt(x.v)}</td><td class="r"><b>${fpct(x.v/tot*100)}</b></td></tr>`).join("")}</table></div>
+    <p class="note">「其他來源」是零用金庫、交易資料已入帳、但沒有在左邊填寫的費用。滑過圓餅可看金額。</p></div>`}
 function expSave(k,v){const p=ymOf(FR.y,FR.m),b=EXB||cfg.homeBranch;const [g,x]=k.split("|"),map=EXPMAP[k];if(!map)return;
   const L=expTx(p,b,k);const a=num(v);
   if(!a){if(!L.length)return;TXm=TXm.filter(t=>!L.includes(t))}
