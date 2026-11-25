@@ -356,9 +356,17 @@ body{background:var(--bg);color:var(--ink)}
 @media (max-width:980px){.fin .mgrid{grid-template-columns:repeat(2,1fr)}}
 .fin .mgrid b{font:600 19px var(--f-num)}
 .fin table.lst{width:100%;border-collapse:collapse;font-size:12.5px}
-.fin .pie-w{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}.fin .pie-w svg{width:200px;height:200px}.fin .pie-w path{cursor:pointer;transition:opacity .15s}.fin .pie-w:hover path{opacity:.55}.fin .pie-w path:hover{opacity:1}
-.fin .pie-l td{padding:4px 6px}.fin .pie-l i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px}.fin .pie-l small{color:var(--tx2);font-size:11px}
-@media (max-width:640px){.fin .pie-w{grid-template-columns:1fr;justify-items:center}}
+.fin .xs-stack{display:flex;height:22px;border-radius:5px;overflow:hidden;gap:2px;background:var(--panel)}.fin .xs-stack span{display:block;min-width:2px}
+.fin .xs-key{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 12px;font-size:12px;color:var(--tx2)}.fin .xs-key b{color:var(--tx);font-weight:600}
+.fin .xs-key i,.fin .xs-n i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.fin .xs-h,.fin .xs-g summary,.fin .xs-i{display:grid;grid-template-columns:150px 1fr 90px 56px;gap:10px;align-items:center}
+.fin .xs-h{font-size:11px;color:var(--tx2);padding:0 4px 4px;border-bottom:1px solid var(--line)}.fin .xs-h span:nth-child(n+3){text-align:right}
+.fin .xs-g{border-bottom:1px solid var(--line)}.fin .xs-g summary{list-style:none;cursor:pointer;padding:8px 4px;font-weight:700;font-size:13px}.fin .xs-g summary::-webkit-details-marker{display:none}
+.fin .xs-g summary:hover{background:var(--panel2)}.fin .xs-g summary .xs-n::after{content:" ▸";color:var(--tx2);font-weight:400}.fin .xs-g[open] summary .xs-n::after{content:" ▾"}
+.fin .xs-i{padding:3px 4px 3px 20px;font-size:12px;color:var(--tx2)}.fin .xs-i:last-child{padding-bottom:8px}
+.fin .xs-bar{height:10px;background:var(--panel2);border-radius:0 4px 4px 0;overflow:hidden}.fin .xs-i .xs-bar{height:6px}.fin .xs-bar span{display:block;height:100%;border-radius:0 4px 4px 0}
+.fin .xs-v,.fin .xs-p{text-align:right;font-family:var(--f-num)}.fin .xs-i .xs-v{color:var(--tx)}
+@media (max-width:640px){.fin .xs-h,.fin .xs-g summary,.fin .xs-i{grid-template-columns:100px 1fr 76px 48px;gap:6px}}
 .fin table.exp-t td{padding:4px 8px;vertical-align:middle}.fin table.exp-t tr.exg td{background:var(--panel2);border-top:1px solid var(--line)}.fin table.exp-t input.in{height:30px}
 .fin .lst th{font-size:11px;color:var(--mut);font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid var(--line2)}
 .fin .lst td{padding:5px 6px;border-bottom:1px solid var(--line)}
@@ -3657,26 +3665,29 @@ function expInHTML(p){
   return `<div class="panel" id="exp-in"><div class="ph"><h2>各項支出填寫</h2><span class="sub">${ymLabel(p)} · 填完離開欄位即存檔，計入損益表</span><span class="sp"></span><select class="in" id="exp-br" style="width:auto">${branchOpts(b)}</select></div>
     <div class="tbl-wrap"><table class="lst exp-t"><tr><th>項目</th><th class="r">金額</th><th class="r">小計</th></tr>${rows}<tr class="exg"><td><b>合計</b></td><td></td><td class="r"><b>${fmt(all)}</b></td></tr></table></div>
     <p class="note">小項可不分，直接填在大項的「未分小項」。這裡的金額會記在「交易資料」（${ymLabel(p)}，付款日期預設月底，可到交易資料修改）。零用金庫、日報已記的支出會自動入帳，不用在這裡重複填。</p></div>`}
-/* ---------- 支出比例圓餅圖：直接營運成本各項＋各項支出填寫的小項＋其他來源已入帳的費用（零用金庫、交易資料） ---------- */
-const PIEC=["#257de0","#f47230","#00b894","#f2a600","#ee7fac","#008a17","#6a4ce2","#9aa1ad"];
-function expPieHTML(p){const b=FR.b,cur=PL(allData().TX,p,b);const S=[];
-  Object.entries(cur.L["直接營運成本"]).forEach(([k,v])=>{if(v>0)S.push({k:k+(k==="非常態人事"?"（日報人力支援）":""),v,g:"直接營運成本"})});
-  const used={};TXm.filter(t=>t.exp&&t.period===p&&inBranch(t,b)&&t.dir==="out").forEach(t=>{const [g,x]=t.exp.split("|");const lb=x||g;const f=S.find(z=>z.k===lb&&z.g===g);if(f)f.v+=num(t.amt);else S.push({k:lb,v:num(t.amt),g});
-    if(t.l1!=="直接營運成本")used[t.l1+"|"+t.l2]=(used[t.l1+"|"+t.l2]||0)+num(t.amt)});
-  TXm.filter(t=>t.exp&&t.period===p&&inBranch(t,b)&&t.l1==="直接營運成本").forEach(t=>{const f=S.find(z=>z.g==="直接營運成本"&&z.k.startsWith(t.l2));if(f)f.v-=num(t.amt)});   // 填寫在直接成本科目的（支援薪資）不重複算
-  ["固定營業費用","其他營運費用"].forEach(sec=>Object.entries(cur.L[sec]).forEach(([k,v])=>{const r=v-(used[sec+"|"+k]||0);if(r>0.5)S.push({k:k+"（其他來源）",v:r,g:sec})}));
-  const L=S.filter(x=>x.v>0.5).sort((a,c)=>c.v-a.v),tot=L.reduce((a,x)=>a+x.v,0);
-  const head=`<div class="panel"><div class="ph"><h2>支出比例</h2><span class="sub">${ymLabel(p)}${b?" · "+esc(b):""} · 直接營運成本＋各項支出</span></div>`;
+/* ---------- 支出結構：依「各項支出填寫」的大項分組（直接營運成本另成一組）；金額＝填寫的金額＋零用金庫、日報、交易資料已入帳的同科目費用 ---------- */
+const EXG=[["直接營運成本","#257de0"],["人事","#f47230"],["行銷支出","#00b894"],["固定支出","#f2a600"],["日常消耗品","#ee7fac"],["器材添購","#008a17"],["系統費用","#6a4ce2"],["其他雜支","#9aa1ad"]];
+const EXREV={"固定營業費用|正職薪資":["人事","當月薪資"],"固定營業費用|PT 薪資":["人事","PT 薪資"],"固定營業費用|獎金":["人事","獎金"],"其他營運費用|員工福利":["人事","員工聚餐"],"直接營運成本|非常態人事":["人事","支援薪資"],
+  "其他營運費用|行銷":["行銷支出","行銷"],"其他營運費用|活動":["行銷支出","活動"],
+  "固定營業費用|租金":["固定支出","租金"],"固定營業費用|稅捐":["固定支出","稅金"],"固定營業費用|勞健保":["固定支出","勞健保"],"固定營業費用|管理費":["固定支出","管理費"],"固定營業費用|水電":["固定支出","水電"],"固定營業費用|電信":["固定支出","電信費"],"固定營業費用|總會上繳":["固定支出","總會上繳"],"固定營業費用|其他固定支出":["固定支出","其他"],
+  "固定營業費用|系統費":["系統費用",""],"其他營運費用|耗材":["日常消耗品",""],"其他營運費用|設備":["器材添購","器材添購"],"其他營運費用|維修":["器材添購","場館維修"],"其他營運費用|其他":["其他雜支",""]};
+function expPieHTML(p){const b=FR.b,cur=PL(allData().TX,p,b);const G={};EXG.forEach(([g])=>G[g]={});
+  const add=(g,x,v)=>{if(!G[g])g="其他雜支";G[g][x]=(G[g][x]||0)+v};const used={};
+  TXm.filter(t=>t.exp&&t.period===p&&inBranch(t,b)).forEach(t=>{const [g,x]=t.exp.split("|");const v=signed(t);add(g,x,v);used[t.l1+"|"+t.l2]=(used[t.l1+"|"+t.l2]||0)+v});
+  ["直接營運成本","固定營業費用","其他營運費用"].forEach(sec=>Object.entries(cur.L[sec]).forEach(([k,v])=>{const r=v-(used[sec+"|"+k]||0);if(Math.abs(r)<0.5)return;
+    const m=EXREV[sec+"|"+k];if(m)add(m[0],m[1],r);else if(sec==="直接營運成本")add("直接營運成本",k,r);else add("其他雜支",k,r)}));
+  const L=EXG.map(([g,c])=>{const it=Object.entries(G[g]).filter(([,v])=>v>0.5).sort((x,y)=>y[1]-x[1]);return {g,c,it,v:it.reduce((a,[,v])=>a+v,0)}}).filter(x=>x.v>0.5).sort((x,y)=>y.v-x.v);
+  const tot=L.reduce((a,x)=>a+x.v,0),net=cur.net;
+  const head=`<div class="panel"><div class="ph"><h2>支出結構</h2><span class="sub">${ymLabel(p)}${b?" · "+esc(b):""} · 合計 ${fmt(tot)}${net>0?`，占營收淨額 ${fpct(tot/net*100)}`:""}</span></div>`;
   if(!tot)return head+`<p class="note">本月還沒有支出資料</p></div>`;
-  const top=L.length>8?L.slice(0,7).concat([{k:`其他 ${L.length-7} 項`,v:L.slice(7).reduce((a,x)=>a+x.v,0),g:L.slice(7).map(x=>x.k).join("、")}]):L;
-  const R=80,r=50,cx=100,cy=100;let a0=-Math.PI/2;
-  const arcs=top.map((x,i)=>{const a1=a0+x.v/tot*Math.PI*2,lg=a1-a0>Math.PI?1:0,P=(rr,a)=>`${(cx+rr*Math.cos(a)).toFixed(2)},${(cy+rr*Math.sin(a)).toFixed(2)}`;
-    const d=top.length===1?`M${cx-R},${cy}a${R},${R} 0 1,0 ${2*R},0a${R},${R} 0 1,0 ${-2*R},0M${cx-r},${cy}a${r},${r} 0 1,1 ${2*r},0a${r},${r} 0 1,1 ${-2*r},0`
-      :`M${P(R,a0)}A${R},${R} 0 ${lg} 1 ${P(R,a1)}L${P(r,a1)}A${r},${r} 0 ${lg} 0 ${P(r,a0)}Z`;a0=a1;
-    return `<path d="${d}" fill="${PIEC[i===7?7:i]}" stroke="var(--panel)" stroke-width="2" fill-rule="evenodd" data-pi="${i}"><title>${esc(x.k)}：${fmt(x.v)}（${fpct(x.v/tot*100)}）${i===7?"\n"+esc(x.g):""}</title></path>`}).join("");
-  return head+`<div class="pie-w"><svg viewBox="0 0 200 200" role="img" aria-label="${ymLabel(p)} 支出比例">${arcs}<text x="100" y="95" text-anchor="middle" font-size="11" fill="#737b8c">支出合計</text><text x="100" y="114" text-anchor="middle" font-size="16" font-weight="700" fill="var(--tx)">${fmtK(tot)}</text></svg>
-    <table class="lst pie-l">${top.map((x,i)=>`<tr data-pi="${i}"><td><i style="background:${PIEC[i===7?7:i]}"></i>${esc(x.k)}${x.g==="直接營運成本"?` <small>直接成本</small>`:""}${i===7?`<div><small>${esc(L.slice(7).map(y=>`${y.k} ${fmt(y.v)}`).join("、"))}</small></div>`:""}</td><td class="r">${fmt(x.v)}</td><td class="r"><b>${fpct(x.v/tot*100)}</b></td></tr>`).join("")}</table></div>
-    <p class="note">「其他來源」是零用金庫、交易資料已入帳、但沒有在左邊填寫的費用。滑過圓餅可看金額。</p></div>`}
+  const mx=Math.max(...L.map(x=>x.v));
+  const stack=`<div class="xs-stack">${L.map(x=>`<span style="width:${x.v/tot*100}%;background:${x.c}" title="${esc(x.g)}：${fmt(x.v)}（${fpct(x.v/tot*100)}）"></span>`).join("")}</div>
+    <div class="xs-key">${L.map(x=>`<span><i style="background:${x.c}"></i>${esc(x.g)} <b>${fpct(x.v/tot*100)}</b></span>`).join("")}</div>`;
+  const rows=L.map((x,gi)=>`<details class="xs-g"${gi<3?" open":""}><summary><span class="xs-n"><i style="background:${x.c}"></i>${esc(x.g)}</span>
+      <span class="xs-bar"><span style="width:${x.v/mx*100}%;background:${x.c}"></span></span><span class="xs-v">${fmt(x.v)}</span><span class="xs-p">${fpct(x.v/tot*100)}</span></summary>
+      ${x.it.map(([k,v])=>`<div class="xs-i"><span class="xs-n">${esc(k||"未分小項")}</span><span class="xs-bar"><span style="width:${v/mx*100}%;background:${x.c};opacity:.55"></span></span><span class="xs-v">${fmt(v)}</span><span class="xs-p">${fpct(v/tot*100)}</span></div>`).join("")}</details>`).join("");
+  return head+stack+`<div class="xs-h"><span>大項（點開看小項）</span><span></span><span>金額</span><span>占支出</span></div>${rows}
+    <p class="note">金額包含左邊填寫的支出，以及零用金庫、日報、交易資料已入帳的同類費用。直接營運成本（餐點、活動票券等）由日報自動計算。</p></div>`}
 function expSave(k,v){const p=ymOf(FR.y,FR.m),b=EXB||cfg.homeBranch;const [g,x]=k.split("|"),map=EXPMAP[k];if(!map)return;
   const L=expTx(p,b,k);const a=num(v);
   if(!a){if(!L.length)return;TXm=TXm.filter(t=>!L.includes(t))}
