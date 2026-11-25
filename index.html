@@ -367,6 +367,11 @@ body{background:var(--bg);color:var(--ink)}
 .fin .xs-bar{height:10px;background:var(--panel2);border-radius:0 4px 4px 0;overflow:hidden}.fin .xs-i .xs-bar{height:6px}.fin .xs-bar span{display:block;height:100%;border-radius:0 4px 4px 0}
 .fin .xs-v,.fin .xs-p{text-align:right;font-family:var(--f-num)}.fin .xs-i .xs-v{color:var(--tx)}
 @media (max-width:640px){.fin .xs-h,.fin .xs-g summary,.fin .xs-i{grid-template-columns:100px 1fr 76px 48px;gap:6px}}
+.fin .lv-t td{padding:5px 6px}.fin .lv-t .lv-nc{display:grid;grid-template-columns:1fr 84px;gap:8px;align-items:center;min-width:180px}.fin .lv-t .lv-nc b{text-align:right;font:600 13px var(--f-num)}
+.fin .lv-bar{height:10px;background:var(--panel2);border-radius:0 4px 4px 0;overflow:hidden}.fin .lv-bar span{display:block;height:100%;border-radius:0 4px 4px 0}
+.fin .lv-t tr.lv-gh td{background:var(--panel2);font-weight:700;font-size:12px;padding:6px}.fin .lv-t tr.lv-gh i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.fin .lv-t tr.lv-sum td{font-weight:700;border-top:1px solid var(--line2)}.fin .lv-t tr.lv-sum2 td{color:var(--tx2)}.fin .lv-t small{font-size:11px;color:var(--tx2);font-weight:400}
+.fin .lv-c{font-size:11.5px;font-family:var(--f-num)}.fin .lv-c.up{color:var(--good)}.fin .lv-c.dn{color:var(--bad)}
 .fin table.exp-t td{padding:4px 8px;vertical-align:middle}.fin table.exp-t tr.exg td{background:var(--panel2);border-top:1px solid var(--line)}.fin table.exp-t input.in{height:30px}
 .fin .lst th{font-size:11px;color:var(--mut);font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid var(--line2)}
 .fin .lst td{padding:5px 6px;border-bottom:1px solid var(--line)}
@@ -3633,7 +3638,7 @@ function finParts(){
 function renderFin(){
   const P=finParts();syncPLV();$("r-title").innerHTML=P.title;
   if(!P.TX.length){$("r-body").innerHTML=`<div class="empty-state"><p>還沒有任何財務資料。填寫「今日報表」後，營收、優惠、成本會自動出現在這裡；也可以到「設定」匯入 115 年歷史月結資料。</p><div class="btns"><button class="btn primary" type="button" data-go="settings">匯入歷史資料</button><button class="btn" type="button" data-go="day">去填今日報表</button><button class="btn" type="button" data-go="tx">新增交易</button></div></div>`+`<div style="margin-top:14px">${expInHTML(P.p)}</div>`;return}
-  $("r-body").innerHTML=`<div class="g2 even" style="margin-bottom:14px">${P.evHTML}${P.ratHTML}</div>`+P.kpis+`<div style="height:14px"></div>`+P.alerts+`<div class="g2" style="margin-top:14px"><div>${P.pl}</div><div>${P.trend}${P.expHTML}</div></div><div class="g2 even">${expInHTML(P.p)}<div>${P.cfHTML}${expPieHTML(P.p)}</div></div>`;
+  $("r-body").innerHTML=`<div class="g2 even" style="margin-bottom:14px">${P.evHTML}${P.ratHTML}</div>`+P.kpis+`<div style="height:14px"></div>`+P.alerts+`<div class="g2" style="margin-top:14px"><div>${P.pl}</div><div>${lvHTML(P.p)}${expPieHTML(P.p)}</div></div><div class="g2 even">${expInHTML(P.p)}${P.cfHTML}</div>`;
   bindTrend(P.series);
 }
 /* ---------- 各項支出填寫（財務每月填金額；存成手動交易 fin:tx，欄位 exp="大項|小項"，計入損益） ---------- */
@@ -3688,6 +3693,25 @@ function expPieHTML(p){const b=FR.b,cur=PL(allData().TX,p,b);const G={};EXG.forE
       ${x.it.map(([k,v])=>`<div class="xs-i"><span class="xs-n">${esc(k||"未分小項")}</span><span class="xs-bar"><span style="width:${v/mx*100}%;background:${x.c};opacity:.55"></span></span><span class="xs-v">${fmt(v)}</span><span class="xs-p">${fpct(v/tot*100)}</span></div>`).join("")}</details>`).join("");
   return head+stack+`<div class="xs-h"><span>大項（點開看小項）</span><span></span><span>金額</span><span>占支出</span></div>${rows}
     <p class="note">金額包含左邊填寫的支出，以及零用金庫、日報、交易資料已入帳的同類費用。直接營運成本（餐點、活動票券等）由日報自動計算。</p></div>`}
+/* ---------- 賽事級別表現：限時各級別、MTT 的開賽次數、人次、淨收入（服務費 − 賽事優惠 − 活動票券 − 公關票券）；限時另列扣除限時餐點 ---------- */
+const LV_FIX=[1200,3400,11000,22000,33000,54000,105000];
+function lvHTML(p){const A=opsMonth(p),B=opsMonth(prevYM(p));const net=G=>G?(G.fee||0)-(G.disc||0)-(G.act||0)-(G.pr||0):0;
+  const lvs=[...new Set([...LV_FIX,...Object.keys(A.lvT).map(Number)])].sort((a,c)=>a-c);
+  const rows=lvs.map(l=>({k:fmt(l),G:A.lvT[l],P:B.lvT[l],t:"T"})).filter(r=>r.G||LV_FIX.includes(+r.k.replace(/,/g,"")));
+  const tN=net(A.T),mealN=tN-(A.T.meal||0),mN=net(A.M);
+  const mx=Math.max(1,...rows.map(r=>net(r.G)),mN);
+  const chg=(a,b)=>{if(!b)return `<span class="lv-c">—</span>`;const d=(a-b)/Math.abs(b)*100;return `<span class="lv-c ${d<0?"dn":"up"}">${d>=0?"▲":"▼"} ${Math.abs(d).toFixed(0)}%</span>`};
+  const bar=(v,c)=>`<span class="lv-bar"><span style="width:${Math.max(0,v)/mx*100}%;background:${c}"></span></span>`;
+  const tr=(lab,G,P,c,cls="")=>`<tr class="${cls}"><td>${lab}</td><td class="r">${G&&G.sess?fmt(G.sess):"—"}</td><td class="r">${G&&G.heads?fmt(G.heads):"—"}</td><td class="lv-nc">${cls==="lv-sum"&&lab!=="MTT 合計"?"<span></span>":bar(net(G),c)}<b>${G&&G.sess?fmt(net(G)):"—"}</b></td><td class="r">${G&&G.sess?chg(net(G),net(P)):""}</td></tr>`;
+  return `<div class="panel"><div class="ph"><h2>賽事級別表現</h2><span class="sub">${ymLabel(p)} · 淨收入＝服務費 − 賽事優惠 − 活動票券 − 公關票券；比較上月</span><span class="sp"></span><button class="btn sm" type="button" data-go="ops">營運分析 ›</button></div>
+    <div class="tbl-wrap"><table class="lst lv-t"><tr><th>級別</th><th class="r">開賽次數</th><th class="r">人次</th><th>淨收入</th><th class="r">vs 上月</th></tr>
+    <tr class="lv-gh"><td colspan="5"><i style="background:var(--s1)"></i>限時錦標賽</td></tr>
+    ${rows.map(r=>tr(r.k,r.G,r.P,"var(--s1)")).join("")}
+    ${tr("限時合計",A.T,B.T,"var(--s1)","lv-sum")}
+    <tr class="lv-sum2"><td>扣除限時餐點後 <small>餐點 ${fmt(A.T.meal||0)}</small></td><td></td><td></td><td class="lv-nc"><span></span><b>${A.T.sess?fmt(mealN):"—"}</b></td><td class="r">${A.T.sess?chg(mealN,net(B.T)-(B.T.meal||0)):""}</td></tr>
+    <tr class="lv-gh"><td colspan="5"><i style="background:var(--s2)"></i>MTT 錦標賽</td></tr>
+    ${tr("MTT 合計",A.M,B.M,"var(--s2)","lv-sum")}
+    </table></div><p class="note">各級別依買入金額歸類；淨收入未扣 HHJP、保底補足與人力等成本，完整盈餘請看營運分析。</p></div>`}
 function expSave(k,v){const p=ymOf(FR.y,FR.m),b=EXB||cfg.homeBranch;const [g,x]=k.split("|"),map=EXPMAP[k];if(!map)return;
   const L=expTx(p,b,k);const a=num(v);
   if(!a){if(!L.length)return;TXm=TXm.filter(t=>!L.includes(t))}
