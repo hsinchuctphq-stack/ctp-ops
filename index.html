@@ -681,6 +681,9 @@ body{background:var(--bg);color:var(--ink)}
 .sc-res tr.gh td small{font-weight:400;color:var(--muted);margin-left:6px}
 .sc-why{font-size:12px;color:var(--ink-2)}
 .sc-why b{color:var(--good);font-weight:500}
+.st{display:inline-block;font:700 12px var(--f-body);border-radius:4px;padding:2px 8px;white-space:nowrap}
+.st.s-早{background:var(--early-bg);color:var(--early)}.st.s-晚{background:var(--late-bg);color:var(--late)}.st.s-跨{background:#fbf1da;color:#8a5d00}
+.st.s-off{background:var(--good-bg);color:var(--good)}.st.s-leave{background:var(--bad-bg);color:var(--bad)}.st.s-none{background:#eef0f4;color:var(--muted);font-weight:500}
 .sc-pv{border:1px solid #ecd29a;background:#fdf8ec;border-radius:10px;padding:12px 14px;margin-bottom:12px}
 .sc-pv .sc-grid td.c{cursor:default}
 #op-body .g2>.panel,#op-body .g2>div>.panel{margin-top:0}
@@ -2749,28 +2752,30 @@ function renderFind(){
   if(raw){Object.values(raw.staff||{}).forEach(n=>n&&inDay.add(String(n).trim().toLowerCase()));(raw.support||[]).forEach(r=>(r.who||"").trim()&&inDay.add(r.who.trim().toLowerCase()))}
   const need=sh==="跨"?["早","晚"]:[sh];
   const recent={},from=isoAdd(date,-30);supRows().forEach(r=>{if(r.date>=from&&r.date<=date){const k=r.who.toLowerCase();recent[k]=(recent[k]||0)+1}});
-  const G={a:[],b:[],c:[]},skip=[];
+  const G={a:[],b:[],c:[],d:[]},skip=[],mo=+date.slice(5,7);
+  const stTag=(K,isExt)=>K.t==="work"?`<span class="st s-${K.unk?"跨":K.k||"跨"}">上班 ${esc(K.tm||K.c)}</span>`:K.t==="off"?(K.leave?`<span class="st s-leave">請假 ${esc(K.c)}</span>`:`<span class="st s-off">休假 ${esc(K.c)}</span>`)
+    :K.t==="none"?`<span class="st s-none">未排班</span>`:isExt?`<span class="st s-none">外部支援</span>`:`<span class="st s-none">${hasS?"班表沒有此人":`未上傳 ${mo} 月班表`}</span>`;
   cfg.people.forEach(p=>{normPerson(p);if(p.active===false)return;const isExt=p.kind==="外部支援";
     if(isExt&&!ext)return;if(!other&&p.branch!==B)return;
     const key=p.name.trim().toLowerCase(),k=schedKey(S,p.name),K=k?schedKind(S.people[k][dd],S.slots):{t:"nosched"};
     const inf=inferShift(p.name,date),fit=inf?need.every(s=>inf.sh.includes(s)||inf.sh.includes("跨")):null;
-    const row={p,K,fit,inf,n:recent[key]||0};
+    const row={p,K,fit,inf,n:recent[key]||0,st:stTag(K,isExt)};
     if(inDay.has(key)){skip.push(`${p.name}（已在日報）`);return}
-    if(K.t==="work"){if(need.some(s=>K.sh.includes(s))){skip.push(`${p.name}（${K.c}）`);return}row.why=`當天上 ${K.c}`;G.c.push(row);return}
-    if(K.t==="off"){if(K.leave){skip.push(`${p.name}（${K.c}）`);return}row.why=`班表：${K.c}`;G.a.push(row);return}
-    row.why=K.t==="none"?"班表空白":isExt?"外部支援":"本月沒有這個人的班表";G.b.push(row)});
+    if(K.t==="work"){if(need.some(s=>K.sh.includes(s))){row.why="已在這個班";row.on=true;G.d.push(row);return}row.why="可詢問延長";G.c.push(row);return}
+    if(K.t==="off"){if(K.leave){row.why="不列入詢問";row.on=true;G.d.push(row);return}row.why="";G.a.push(row);return}
+    row.why="";G.b.push(row)});
   const rk=x=>x.fit===true?0:x.fit===null?1:2,rt=x=>x.p.rate===""?1e9:num(x.p.rate);
   const sortF=(x,y)=>(x.p.branch!==B)-(y.p.branch!==B)||rk(x)-rk(y)||rt(x)-rt(y)||x.p.name.localeCompare(y.p.name);
   const tr=r=>`<tr><td><b>${esc(r.p.name)}</b>${r.p.role?` <span class="sc-why">${esc(r.p.role)}</span>`:""}</td><td>${esc(r.p.branch)}${r.p.branch!==B?` <span class="tag t-count">跨館</span>`:""}</td><td>${esc(r.p.kind)}</td>
-    <td class="sc-why">${esc(r.why)}</td><td>${r.inf?esc(r.inf.label):"<span class='sc-why'>沒有班表可推測</span>"}${r.fit===false?`<div class="sc-why" style="color:var(--warn)">平常不上${sh}班</div>`:""}</td>
+    <td>${r.st}${r.why?` <span class="sc-why">${esc(r.why)}</span>`:""}</td><td>${r.inf?esc(r.inf.label):"<span class='sc-why'>沒有班表可推測</span>"}${r.fit===false?`<div class="sc-why" style="color:var(--warn)">平常不上${sh}班</div>`:""}</td>
     <td class="r">${r.p.rate===""?"—":fmt(num(r.p.rate))}</td><td class="r">${num(r.p.travel)?fmt(num(r.p.travel)):""}</td><td class="r">${r.n||""}</td><td>${esc(r.p.contact)}</td>
-    <td style="white-space:nowrap"><button class="btn sm primary" type="button" data-scadd="${esc(r.p.id)}">加入日報支援</button></td></tr>`;
+    <td style="white-space:nowrap">${r.on?"":`<button class="btn sm primary" type="button" data-scadd="${esc(r.p.id)}">加入日報支援</button>`}</td></tr>`;
   const grp=(t,sub,L)=>L.length?`<tr class="gh"><td colspan="10">${t}（${L.length}）<small>${sub}</small></td></tr>`+L.sort(sortF).map(tr).join(""):"";
   const n=G.a.length+G.b.length+G.c.length;
   $("sc-result").innerHTML=`<div class="tbl-wrap"><table class="sc-res" style="min-width:920px"><tr><th>姓名</th><th>館別</th><th>身分</th><th>當天狀況</th><th>平常時段（依班表推測）</th><th style="text-align:right">時薪</th><th style="text-align:right">車資</th><th style="text-align:right">近 30 天支援</th><th>聯絡方式</th><th></th></tr>
-    ${grp("① 當天休假","班表排休，優先詢問",G.a)}${grp("② 沒有排班","班表空白、沒有班表或外部支援人員",G.b)}${grp("③ 當天上另一班","可詢問是否延長或加班",G.c)}
+    ${grp("① 當天休假","班表排休，優先詢問",G.a)}${grp("② 沒有排班","班表空白、沒有班表或外部支援人員",G.b)}${grp("③ 當天上另一班","可詢問是否延長或加班",G.c)}${grp("④ 當天已在班／請假","不需詢問，僅供查看",G.d)}
     ${n?"":`<tr><td colspan="10" style="text-align:center;color:var(--muted);padding:20px">找不到可支援的人；可以勾選「含其他館人員」或「含外部支援」擴大範圍</td></tr>`}</table></div>
-    <p class="note">${date.slice(5).replace("-","/")} ${wdOf(date)} ${sh}班 · ${esc(B)}缺人 · 排序：同館優先 → 平常就上這個班 → 時薪低到高${skip.length?`<br>已在班、請假或已在日報，不列入：${skip.map(esc).join("、")}`:""}${hasS?"":`<br><span style="color:var(--warn)">${+date.slice(5,7)} 月還沒有班表，「當天狀況」無法判斷${schedMonths().length?`（已存的班表：${schedMonths().map(x=>+x.slice(5)+" 月").join("、")}；平常時段會參考相鄰月份）`:""}，請上傳 ${+date.slice(5,7)} 月班表或改選日期</span>`}</p>`;
+    <p class="note">${date.slice(5).replace("-","/")} ${wdOf(date)} ${sh}班 · ${esc(B)}缺人 · 排序：同館優先 → 平常就上這個班 → 時薪低到高${skip.length?`<br>已在當天日報，不列入：${skip.map(esc).join("、")}`:""}${hasS?"":`<br><span style="color:var(--warn)">${+date.slice(5,7)} 月還沒有班表，「當天狀況」無法判斷${schedMonths().length?`（已存的班表：${schedMonths().map(x=>+x.slice(5)+" 月").join("、")}；平常時段會參考相鄰月份）`:""}，請上傳 ${+date.slice(5,7)} 月班表或改選日期</span>`}</p>`;
 }
 function scAddSupport(pid){const p=cfg.people.find(x=>x.id===pid);if(!p)return;const date=$("sc-date").value||todayISO();flush();
   const d=date===D.date?D:loadDay(date);if(!Array.isArray(d.support))d.support=[];
