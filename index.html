@@ -281,6 +281,7 @@ body{background:var(--bg);color:var(--ink)}
 .fin .ph .sp,.fin .filters .sp{flex:1}
 .fin .g2{display:grid;grid-template-columns:1.35fr 1fr;gap:14px}
 .fin .g2.even{grid-template-columns:1fr 1fr}
+.fin .g2>.panel+.panel{margin-top:0}
 .fin .g2>*{min-width:0}
 @media (max-width:1180px){.fin .g2,.fin .g2.even{grid-template-columns:1fr}}
 .fin .in{height:36px;border-radius:7px}
@@ -355,6 +356,7 @@ body{background:var(--bg);color:var(--ink)}
 @media (max-width:980px){.fin .mgrid{grid-template-columns:repeat(2,1fr)}}
 .fin .mgrid b{font:600 19px var(--f-num)}
 .fin table.lst{width:100%;border-collapse:collapse;font-size:12.5px}
+.fin table.exp-t td{padding:4px 8px;vertical-align:middle}.fin table.exp-t tr.exg td{background:var(--panel2);border-top:1px solid var(--line)}.fin table.exp-t input.in{height:30px}
 .fin .lst th{font-size:11px;color:var(--mut);font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid var(--line2)}
 .fin .lst td{padding:5px 6px;border-bottom:1px solid var(--line)}
 .fin .lst td.r,.fin .lst th.r{text-align:right;font-family:var(--f-num)}
@@ -3363,7 +3365,7 @@ const COA=[
   {key:"rev",  no:"一",code:"4000",name:"營業收入",      std:"營業收入",         dir:"in", items:[["4110","TLT 限時錦標賽服務費"],["4120","MTT 一般錦標賽服務費"],["4130","入會費"],["4190","其他營業收入"]]},
   {key:"disc", no:"二",code:"4500",name:"優惠與折讓",    std:"營業收入減項",     dir:"out",items:[["4510","賽事優惠"],["4520","活動票券"],["4530","公關票券"],["4590","其他優惠"]]},
   {key:"cogs", no:"四",code:"5000",name:"直接營運成本",  std:"營業成本",         dir:"out",items:[["5110","玩家餐點"],["5120","活動成本"],["5130","非常態人事"],["5140","玩家獎勵"],["5150","獎盃（獎池支付）"],["5190","其他直接成本"]]},
-  {key:"fixed",no:"六",code:"6100",name:"固定營業費用",  std:"營業費用－固定",   dir:"out",items:[["6110","正職薪資"],["6120","PT 薪資"],["6130","勞健保"],["6140","租金"],["6150","管理費"],["6160","水電"],["6170","電信"],["6180","系統費"],["6185","稅捐"],["6190","總會上繳"]]},
+  {key:"fixed",no:"六",code:"6100",name:"固定營業費用",  std:"營業費用－固定",   dir:"out",items:[["6110","正職薪資"],["6120","PT 薪資"],["6125","獎金"],["6130","勞健保"],["6140","租金"],["6150","管理費"],["6160","水電"],["6170","電信"],["6180","系統費"],["6185","稅捐"],["6190","總會上繳"],["6195","其他固定支出"]]},
   {key:"opex", no:"七",code:"6200",name:"其他營運費用",  std:"營業費用－變動",   dir:"out",items:[["6210","行銷"],["6220","活動"],["6230","耗材"],["6240","設備"],["6250","維修"],["6260","員工福利"],["6290","其他"]]},
   {key:"nonop",no:"九",code:"7000",name:"業外收入／支出",std:"營業外收入及支出", dir:"both",items:[["7110","貼咖盈虧"],["7120","現金短溢"],["7130","利息收支"],["7140","對帳調整"],["7180","業外收入"],["7190","業外支出"]]},
   {key:"tax",  no:"十一",code:"8000",name:"所得稅費用",  std:"所得稅費用",       dir:"out",items:[["8110","營利事業所得稅"]]},
@@ -3619,10 +3621,49 @@ function finParts(){
 }
 function renderFin(){
   const P=finParts();syncPLV();$("r-title").innerHTML=P.title;
-  if(!P.TX.length){$("r-body").innerHTML=`<div class="empty-state"><p>還沒有任何財務資料。填寫「今日報表」後，營收、優惠、成本會自動出現在這裡；也可以到「設定」匯入 115 年歷史月結資料。</p><div class="btns"><button class="btn primary" type="button" data-go="settings">匯入歷史資料</button><button class="btn" type="button" data-go="day">去填今日報表</button><button class="btn" type="button" data-go="tx">新增交易</button></div></div>`;return}
-  $("r-body").innerHTML=P.kpis+`<div style="height:14px"></div>`+P.alerts+`<div class="g2" style="margin-top:14px"><div>${P.pl}${P.ratHTML}</div><div>${P.trend}${P.expHTML}</div></div><div class="g2 even">${P.cfHTML}${P.evHTML}</div>`;
+  if(!P.TX.length){$("r-body").innerHTML=`<div class="empty-state"><p>還沒有任何財務資料。填寫「今日報表」後，營收、優惠、成本會自動出現在這裡；也可以到「設定」匯入 115 年歷史月結資料。</p><div class="btns"><button class="btn primary" type="button" data-go="settings">匯入歷史資料</button><button class="btn" type="button" data-go="day">去填今日報表</button><button class="btn" type="button" data-go="tx">新增交易</button></div></div>`+`<div style="margin-top:14px">${expInHTML(P.p)}</div>`;return}
+  $("r-body").innerHTML=`<div class="g2 even" style="margin-bottom:14px">${P.evHTML}${P.ratHTML}</div>`+P.kpis+`<div style="height:14px"></div>`+P.alerts+`<div class="g2" style="margin-top:14px"><div>${P.pl}</div><div>${P.trend}${P.expHTML}</div></div><div class="g2 even">${expInHTML(P.p)}${P.cfHTML}</div>`;
   bindTrend(P.series);
 }
+/* ---------- 各項支出填寫（財務每月填金額；存成手動交易 fin:tx，欄位 exp="大項|小項"，計入損益） ---------- */
+const EXPC=[
+  ["人事",["當月薪資","支援薪資","員工聚餐","獎金"]],
+  ["行銷支出",["活動","影片","公關"]],
+  ["固定支出",["租金","稅金","二代健保","管理費","車位租金","水費","電費","電信費"]],
+  ["日常消耗品",[]],
+  ["器材添購",["器材添購","場館維修"]],
+  ["系統費用",[]],
+  ["其他雜支",[]]];
+const EXPMAP={   // 對應損益表科目（空白小項 → 大項本身）
+  "人事|":["固定營業費用","正職薪資"],"人事|當月薪資":["固定營業費用","正職薪資"],"人事|支援薪資":["直接營運成本","非常態人事"],"人事|員工聚餐":["其他營運費用","員工福利"],"人事|獎金":["固定營業費用","獎金"],
+  "行銷支出|":["其他營運費用","行銷"],"行銷支出|活動":["其他營運費用","活動"],"行銷支出|影片":["其他營運費用","行銷"],"行銷支出|公關":["其他營運費用","行銷"],
+  "固定支出|":["固定營業費用","其他固定支出"],"固定支出|租金":["固定營業費用","租金"],"固定支出|稅金":["固定營業費用","稅捐"],"固定支出|二代健保":["固定營業費用","勞健保"],"固定支出|管理費":["固定營業費用","管理費"],
+  "固定支出|車位租金":["固定營業費用","租金"],"固定支出|水費":["固定營業費用","水電"],"固定支出|電費":["固定營業費用","水電"],"固定支出|電信費":["固定營業費用","電信"],
+  "日常消耗品|":["其他營運費用","耗材"],"器材添購|":["其他營運費用","設備"],"器材添購|器材添購":["其他營運費用","設備"],"器材添購|場館維修":["其他營運費用","維修"],
+  "系統費用|":["固定營業費用","系統費"],"其他雜支|":["其他營運費用","其他"]};
+let EXB=null;   // 填寫的館別
+const expTx=(p,b,k)=>TXm.filter(t=>t.exp===k&&t.period===p&&(t.branch||cfg.homeBranch)===b);
+function expInHTML(p){
+  if(!EXB||!cfg.branches.includes(EXB))EXB=FR.b||cfg.homeBranch;const b=EXB;
+  const amt=k=>expTx(p,b,k).reduce((a,t)=>a+num(t.amt),0);
+  const inp=(k,ph)=>{const v=amt(k);return `<input class="in n" inputmode="numeric" data-exk="${esc(k)}" value="${v||""}" placeholder="${ph||"0"}" style="width:120px;text-align:right">`};
+  let all=0;const rows=EXPC.map(([g,subs])=>{const tot=amt(g+"|")+subs.reduce((a,x)=>a+amt(g+"|"+x),0);all+=tot;
+    const sup=subs.includes("支援薪資")?(()=>{const a=(PL(allData().TX.filter(t=>t.src==="daily"),p,b).L["直接營運成本"]["非常態人事"]||0);return a?`<small style="color:var(--warn);margin-left:6px">日報人力支援已自動入帳 ${fmt(a)}，不用重複填</small>`:""})():"";
+    return `<tr class="exg"><td><b>${g}</b>${subs.length?` <small style="color:var(--tx2)">${subs.length} 個小項</small>`:""}</td><td class="r">${subs.length?`<span style="font-size:11.5px;color:var(--tx2);margin-right:6px">未分小項</span>`:""}${inp(g+"|",subs.length?"":"0")}</td><td class="r"><b>${tot?fmt(tot):"—"}</b></td></tr>`
+      +subs.map(x=>`<tr><td style="padding-left:22px">${x}${x==="支援薪資"?sup:""}</td><td class="r">${inp(g+"|"+x)}</td><td class="r" style="color:var(--tx2)">${amt(g+"|"+x)?fmt(amt(g+"|"+x)):""}</td></tr>`).join("")}).join("");
+  return `<div class="panel" id="exp-in"><div class="ph"><h2>各項支出填寫</h2><span class="sub">${ymLabel(p)} · 填完離開欄位即存檔，計入損益表</span><span class="sp"></span><select class="in" id="exp-br" style="width:auto">${branchOpts(b)}</select></div>
+    <div class="tbl-wrap"><table class="lst exp-t"><tr><th>項目</th><th class="r">金額</th><th class="r">小計</th></tr>${rows}<tr class="exg"><td><b>合計</b></td><td></td><td class="r"><b>${fmt(all)}</b></td></tr></table></div>
+    <p class="note">小項可不分，直接填在大項的「未分小項」。這裡的金額會記在「交易資料」（${ymLabel(p)}，付款日期預設月底，可到交易資料修改）。零用金庫、日報已記的支出會自動入帳，不用在這裡重複填。</p></div>`}
+function expSave(k,v){const p=ymOf(FR.y,FR.m),b=EXB||cfg.homeBranch;const [g,x]=k.split("|"),map=EXPMAP[k];if(!map)return;
+  const L=expTx(p,b,k);const a=num(v);
+  if(!a){if(!L.length)return;TXm=TXm.filter(t=>!L.includes(t))}
+  else if(L.length){L[0].amt=a;L[0].updatedAt=Date.now();if(L.length>1)TXm=TXm.filter(t=>!L.slice(1).includes(t))}
+  else TXm.push({id:uid(),date:monthEnd(p),branch:b,dir:"out",l1:map[0],l2:map[1],item:`${+p.slice(5)} 月${x||g}`,amt:a,pay:"轉帳",paydate:monthEnd(p),period:p,note:`各項支出填寫：${g}${x?"／"+x:""}`,exp:k,createdAt:Date.now()});
+  saveTXm();renderFin();toast(`已儲存 ${g}${x?"／"+x:""}：${a?fmt(a):"已清除"}`)}
+$("r-body").addEventListener("change",e=>{const t=e.target;
+  if(t.id==="exp-br"){EXB=t.value;renderFin();return}
+  if(t.dataset&&t.dataset.exk!=null){const y=window.scrollY;expSave(t.dataset.exk,t.value);window.scrollTo(0,y)}});
+$("r-body").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset&&e.target.dataset.exk!=null){e.preventDefault();e.target.blur()}});
 function lineChart(S){
   const W=520,H=220,pl=56,pr=16,pt=18,pb=28;const vals=S.flatMap(s=>[s.net,s.ni]);let mn=Math.min(0,...vals),mx=Math.max(1,...vals);
   const st=niceStep((mx-mn)/4);mn=Math.floor(mn/st)*st;mx=Math.ceil(mx/st)*st;
@@ -4079,13 +4120,13 @@ function missingFixed(get,p,b){const cur=get(p,b);if(!cur.n)return [];const out=
     if(h.length<2)return;h.sort((a,c)=>a-c);const med=h[Math.floor(h.length/2)];const c=cur.L["固定營業費用"][k]||0;
     if(c<med*.5)out.push({k,c,avg:Math.round(med),est:Math.round(med-c)})});return out}
 function ratios(x,miss=[]){const g=(s,k)=>(x.L[s]||{})[k]||0;const me=ks=>miss.filter(m=>ks.includes(m.k)).reduce((a,m)=>a+m.est,0);const est=miss.reduce((a,m)=>a+m.est,0);
-  const labor=g("固定營業費用","正職薪資")+g("固定營業費用","PT 薪資")+g("固定營業費用","勞健保")+g("直接營運成本","非常態人事")+me(["正職薪資","PT 薪資","勞健保"]);
+  const labor=g("固定營業費用","正職薪資")+g("固定營業費用","PT 薪資")+g("固定營業費用","獎金")+g("固定營業費用","勞健保")+g("直接營運成本","非常態人事")+me(["正職薪資","PT 薪資","勞健保"]);
   const occ=g("固定營業費用","租金")+g("固定營業費用","管理費")+g("固定營業費用","水電")+me(["租金","管理費","水電"]);
   const fixedAdj=x.fixed+est;const vr=x.net>0?(x.cogs+x.opex)/x.net:null;const bep=vr!=null&&vr<1?fixedAdj/(1-vr):null;
   return {disc:pctOf(x.disc,x.rev),labor:pctOf(labor,x.net),laborAmt:labor,occ:pctOf(occ,x.net),meal:pctOf(g("直接營運成本","玩家餐點"),x.net),vr:vr==null?null:vr*100,bep,safety:bep!=null&&x.net?pctOf(x.net-bep,x.net):null,fixedAdj}}
 const RATIO_DEF=[
   ["優惠折讓率","disc","優惠與折讓 ÷ 營業收入。越低代表折扣讓利越少"],
-  ["人事成本率","labor","正職＋PT＋勞健保＋非常態人事 ÷ 營業收入淨額"],
+  ["人事成本率","labor","正職＋PT＋獎金＋勞健保＋非常態人事 ÷ 營業收入淨額"],
   ["占用成本率","occ","租金＋管理費＋水電 ÷ 營業收入淨額"],
   ["餐點成本率","meal","玩家餐點 ÷ 營業收入淨額"],
   ["變動成本率","vr","直接營運成本＋其他營運費用 ÷ 營業收入淨額"],
